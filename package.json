@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
+    "@types/d3": "^7.4.1",
     "@types/mapbox-gl": "^2.7.16",
     "d3": "^7.8.5",
     "mapbox-gl": "^2.15.0",
