@@ -17,8 +17,9 @@ const config: Config = {
         blue_background: "#F1F4FA",
         blue_selected: "#D7E3FA",
         gray_background: "#EEEEEE",
-        demo: "#007CEE",
-        rep: "#D04E40",
+        demo: "#0057A8",
+        rep: "#A03327",
+        navy: "#121D3E"
       },
     },
   },

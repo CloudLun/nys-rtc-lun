@@ -20,7 +20,7 @@ const Legend = () => {
                     height={14}
                     alt="No Support, Democrat"
                 />
-                <div className='text-[14px] text-demo'>No Support, Democrat</div>
+                <div className='text-[14px] text-demo'>No Legislation Support, Democrat</div>
             </div>
             <div className='flex items-center gap-[10px]'>
                 <Image
@@ -29,15 +29,15 @@ const Legend = () => {
                     height={14}
                     alt="No Support, Republican"
                 />
-                <div className='text-[14px] text-rep'>No Support, Republican</div>
+                <div className='text-[14px] text-rep'>No Legislation Support, Republican</div>
             </div>
             <div className='flex items-center gap-[10px]'>
                 <div className='w-[14px] h-[14px] bg-[#802948] border-[2px] border-[#802948] rounded-full'></div>
-                <div className='text-[14px] text-[#802948]'>Right to Counsel Member</div>
+                <div className='text-[14px] text-[#802948]'>Right to Counsel Coalition Member</div>
             </div>
             <div className='flex items-center gap-[10px]'>
                 <div className='w-[14px] h-[14px] bg-white border-[2px] border-[#802948] rounded-full'></div>
-                <div className='text-[14px] text-[#802948]'>Right to Counsel Endorsers</div>
+                <div className='text-[14px] text-[#802948]'>Right to Counsel Coalition Endorser</div>
             </div>
         </div>
     )

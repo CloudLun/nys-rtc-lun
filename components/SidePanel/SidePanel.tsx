@@ -83,7 +83,7 @@ const SidePanel = () => {
         <div className="absolute p-[23px] w-[424px] h-full bg-blue_background z-20">
             <div className="mb-[42px]">
                 <h3 className="font-regular text-[12px] text-[#A0A0A0] ">Housing Courts Must Change! Campaign Legislation</h3>
-                <select className='mt-[3px] px-[15px] py-[20px] w-full text-[16px] text-black bg-blue_selected rounded-[8px] cursor-pointer ' onChange={legislationsSelectHandler}>
+                <select className='mt-[3px] px-[15px] py-[20px] w-full text-[16px] text-navy bg-blue_selected rounded-[8px] cursor-pointer ' onChange={legislationsSelectHandler}>
                     <option value="Statewide RTC">Statewide Right to Counsel (S2721 / A1493)</option>
                     <option value="Winter Eviction Moratorium">Winter Eviction Moratorium (S1403/A4093)</option>
                     <option value="Defend RTC">Defend Right to Counsel Legislation (S3254 / A4993)</option>
@@ -96,9 +96,9 @@ const SidePanel = () => {
                 <Introduction title={legislations["current"]} content={legislationsData[legislations["current"]]} />
             </div>
             <div>
-                <h3 className={`mb-[15px] pl-[16px] pb-[8px] font-bold text-[20px] text-black border-b-[1px] border-[#C7C7C7]`}>RTC Coalition Membership</h3>
+                <h3 className={`mb-[15px] pl-[16px] pb-[8px] font-bold text-[20px] text-navy border-b-[1px] border-[#C7C7C7]`}>RTC Coalition Membership</h3>
                 <div className={`flex justify-between items-center mb-[15px] pb-[8px] pl-[16px]  text-[16px] border-b-[1px] border-[#C7C7C7]  cursor-pointer`} >
-                    <div className='font-semibold text-black border-[#C7C7C7]'>Member Organizations</div>
+                    <div className='font-semibold text-navy border-[#C7C7C7]'>Member Organizations</div>
                     <div className="flex items-center gap-[20px]">
                         <ChevronDownIcon className='ml-[100px] w-[15px] h-[15px] text-[#7B7B7B]' />
                         <Toggler show={organizations["Members"]} clickHandler={() => organizationsClickHandler("Members")} />
@@ -106,7 +106,7 @@ const SidePanel = () => {
 
                 </div>
                 <div className={`flex justify-between items-center pb-[8px] pl-[16px]  text-[16px] border-b-[1px] border-[#C7C7C7]  cursor-pointer`}>
-                    <div className='font-semibold text-black border-[#C7C7C7]'>Endorsers</div>
+                    <div className='font-semibold text-navy border-[#C7C7C7]'>Endorsers</div>
                     <div className="flex items-center gap-[20px]">
                         <ChevronDownIcon className='w-[15px] h-[15px] text-[#7B7B7B]' />
                         <Toggler show={organizations["Endorsers"]} clickHandler={() => organizationsClickHandler("Endorsers")} />
