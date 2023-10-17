@@ -30,7 +30,7 @@ function Landing() {
         <div className={`${!shown ? "translate-x-[-100%] duration-200 ease-linear" : null} absolute px-[20px] py-[25px] w-[561px] h-full text-black bg-[#F1F4FA] z-30`}>
             <div className='flex justify-between items-center mb-[20px] pl-[16px] w-full h-[48px]'>
                 <Image
-                    src="/rtc.png"
+                    src="/RTC.png"
                     width={211}
                     height={50}
                     alt="RTC"

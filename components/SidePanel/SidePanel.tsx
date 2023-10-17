@@ -45,7 +45,6 @@ const SidePanel = () => {
 
     const legislationsSelectHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value as Legislations
-        console.log(value)
         const newLegislations = {
             previous: legislations["current"],
             current: value

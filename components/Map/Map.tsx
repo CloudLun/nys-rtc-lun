@@ -15,7 +15,6 @@ import counties from "../../public/nys_counties.geo.json"
 import DistrictsBtns from "./DistrictsBtns";
 import Legend from "./Legend";
 
-import Image from 'next/image'
 
 import "./Map.css"
 
@@ -64,6 +63,8 @@ const Map = () => {
             style: "mapbox://styles/cloudlun/clm6k2n6y02gi01ns267c139m",
             center: [lng, lat],
             zoom: zoom,
+            minZoom: 6.5,
+            maxZoom: 10,
             interactive: true,
             doubleClickZoom: false,
         });
@@ -125,8 +126,7 @@ const Map = () => {
 
             m.loadImage("./pattern_demo.png", (error, image) => {
                 if (error) throw error;
-                // @ts-ignore
-                m.addImage("pattern_demo", image, {
+                m.addImage("pattern_demo", image as ImageBitmap, {
                     sdf: true,
                 });
             });
@@ -233,8 +233,6 @@ const Map = () => {
             m.on("click", "districts", (e: MapMouseEvent & EventData) => {
                 const { properties } = e.features[0]
 
-                // console.log(properties)
-                // ${properties.Geography.replaceAll("/"," ")}
                 let content = `<div class="content">
                 <div class="grid grid-cols-[1fr_0.3fr] justify-between items-start px-[17px] py-[10px] width-full text-white ${properties.Party_x === "Democratic" ? "bg-[#0058AB]" : "bg-[#B60000]"}   rounded-t-[20px]">
                 <div class="col-start-1 col-end-2 font-bold text-[18px]">District ${properties.District}</div>
@@ -281,10 +279,9 @@ const Map = () => {
             m.on("click", "organizations_members", (e: MapMouseEvent & EventData) => {
 
                 const { properties } = e.features[0]
-                console.log(properties)
 
                 let content = `<div class="content">
-                <div class="flex justify-between items-center px-[17px] py-[10px] w-[249px] text-white bg-[#96315F] rounded-t-[20px]">
+                <div class="flex justify-between items-center px-[18px] py-[15px] w-[267px] text-white bg-[#96315F] rounded-t-[20px]">
                     <div class="w-[150px] font-bold text-[14px]">${properties.Name}</div>
                     <div class="flex flex-col items-center">
                         <img src="/icons/checked_member.svg" alt="" className="w-[16px] h-[16px]" />
@@ -322,10 +319,9 @@ const Map = () => {
             m.on("click", "organizations_endorsers", (e: MapMouseEvent & EventData) => {
 
                 const { properties } = e.features[0]
-                console.log(properties)
 
                 let content = `<div class="content px-[18px]">
-                <div class="flex justify-between items-center py-[10px] w-[249px] text-black bg-[#fff] rounded-t-[20px]">
+                <div class="flex justify-between items-center  py-[10px] w-[249px] text-black bg-[#fff] rounded-t-[20px]">
                     <div class="w-[150px] font-bold text-[14px]">${properties.Name}</div>
                     <div class="flex flex-col items-center">
                         <img src="/icons/empty_member.svg" alt="" className="w-[16px] h-[16px]" />
@@ -333,7 +329,7 @@ const Map = () => {
                     </div>
                 </div>
                 <div class="mt-[5px] w-full h-[1px] bg-black "></div>
-                <div class="flex flex-col gap-[16px]  pt-[10px] pb-[20px] text-black">
+                <div class="flex flex-col gap-[16px] pt-[10px] pb-[20px] text-black">
                     <div class="flex items-center gap-[12px]">
                         <img src="/icons/apartment.svg" alt="" className="w-[16px] h-[16px]" />
                         <div class="w-[120px] font-regular text-[12px]">361 Main Street (Catskill Mill Storefront) Catskill, NY 12414</div>
