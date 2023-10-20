@@ -58,7 +58,7 @@ const Legend = () => {
                 </div>
                 <div className='flex items-center gap-[10px]'>
                     <Image
-                        src="/pattern_demo.png"
+                        src="/icons/pattern_demo.png"
                         width={16}
                         height={16}
                         alt="No Support, Democrat"
@@ -67,7 +67,7 @@ const Legend = () => {
                 </div>
                 <div className='flex items-center gap-[10px]'>
                     <Image
-                        src="/pattern_rep.png"
+                        src="/icons/pattern_rep.png"
                         width={16}
                         height={16}
                         alt="No Support, Republican"
