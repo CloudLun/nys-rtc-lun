@@ -11,11 +11,11 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 
 type Props = {
     districts: Districts
-    districtsClickHandler: (x:Districts) => void
+    districtsClickHandler: (x: Districts) => void
 }
 
 
-const Legend = ({districts, districtsClickHandler}:Props) => {
+const Legend = ({ districts, districtsClickHandler }: Props) => {
 
     const { map } = useContext(MapContext) as MapContextType
 
@@ -29,7 +29,6 @@ const Legend = ({districts, districtsClickHandler}:Props) => {
     const panelClickHandler = (b: boolean) => {
         setPanelShown(b)
     }
-
 
     const organizationsClickHandler = (org: Organizations) => {
         let newOrg = { ...organizations }
@@ -90,14 +89,27 @@ const Legend = ({districts, districtsClickHandler}:Props) => {
                     />
                     <div className='text-label '>No Support, Republican</div>
                 </div>
-                <div className='flex items-center gap-[10px]'>
-                    <div className='w-[16px] h-[16px] bg-[#802948] border-[2px] border-[#802948] rounded-full'></div>
-                    <div className='text-label'>Member, Right to Counsel Coalition </div>
-                </div>
-                <div className='flex items-center gap-[10px]'>
-                    <div className='w-[16px] h-[16px] bg-white border-[2px] border-[#802948] rounded-full'></div>
-                    <div className='text-label'>Endorser, Right to Counsel Coalition </div>
-                </div>
+                {
+                    organizations["Members"] && (<div className='flex items-center gap-[10px]'>
+                        <div className='w-[16px] h-[16px] bg-[#802948] border-[2px] border-[#802948] rounded-full'></div>
+                        <div className='text-label'>Member, Right to Counsel Coalition </div>
+                    </div>)
+                }
+                {
+                    organizations["Supporters"] && (<div className='flex items-center gap-[10px]'>
+                        <div className='w-[16px] h-[16px] bg-[#802948] border-[2px] border-[#802948] rounded-full'></div>
+                        <div className='text-label'>Supporter, Right to Counsel Coalition </div>
+                    </div>)
+                }
+
+                {
+                    organizations["Endorsers"] && (<div className='flex items-center gap-[10px]'>
+                        <div className='w-[16px] h-[16px] bg-white border-[2px] border-[#802948] rounded-full'></div>
+                        <div className='text-label'>Endorser, Right to Counsel Coalition </div>
+                    </div>)
+                }
+
+
             </div>
             <div className='absolute left-[480px] bottom-[35px]  drop-shadow-xl cursor-pointer z-20 '>
                 <Image

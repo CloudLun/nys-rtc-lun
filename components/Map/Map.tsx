@@ -236,8 +236,8 @@ const Map = () => {
                     "circle-radius": 4,
                     "circle-stroke-width": 2.25,
                     "circle-opacity": 1,
-                    "circle-color": "#fff68f",
-                    "circle-stroke-color": "#fff68f",
+                    "circle-color": "#802948",
+                    "circle-stroke-color": "#802948",
                 },
             })
 
