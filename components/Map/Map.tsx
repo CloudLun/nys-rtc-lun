@@ -12,6 +12,7 @@ import organizations from "../../public/rtc_members.geo.json"
 import counties from "../../public/nys_counties.geo.json"
 // import zipcodes from "../public/nys_zipcodes.geo.json"
 
+
 import Legend from "./Legend";
 
 
@@ -24,12 +25,11 @@ const Map = () => {
 
     const senateFeatures = (senate as GeoJson).features
     const assemblyFeatures = (assembly as GeoJson).features
-    const organizationsMemberFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Member"))
+    const organizationsMemberFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Campaign Member") || o.properties["Membership Status"].includes("Coalition Member"))
     const organziationsSupporterFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Supporter"))
     const organizationsEndorserFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Endorser"))
     const countiesFeatures = (counties as GeoJson).features
     // const zipcodeFeatures = (zipcodes as GeoJson).features
-
 
     const [lng, setLng] = useState(-78.5);
     const [lat, setLat] = useState(43.05);
@@ -213,7 +213,7 @@ const Map = () => {
                 type: 'circle',
                 source: 'organizations_members',
                 layout: {
-                    "visibility":"none"
+                    "visibility": "none"
                 },
                 paint: {
                     "circle-radius": 4,
@@ -224,12 +224,13 @@ const Map = () => {
                 },
             })
 
+
             m.addLayer({
                 id: 'organizations_supporters',
                 type: 'circle',
                 source: 'organizations_supporters',
                 layout: {
-                    "visibility":"none"
+                    "visibility": "none"
                 },
                 paint: {
                     "circle-radius": 4,
@@ -246,7 +247,7 @@ const Map = () => {
                 type: 'circle',
                 source: 'organizations_endorsers',
                 layout: {
-                    "visibility":"none"
+                    "visibility": "none"
                 },
                 paint: {
                     "circle-radius": 4,
@@ -257,132 +258,132 @@ const Map = () => {
                 },
             })
 
-            m.on("click", "districts", (e: MapMouseEvent & EventData) => {
-                const { properties } = e.features[0]
+            // m.on("click", "districts", (e: MapMouseEvent & EventData) => {
+            //     const { properties } = e.features[0]
 
-                let content = `<div class="content">
-                <div class="grid grid-cols-[1fr_0.3fr] justify-between items-start px-[17px] py-[10px] width-full text-white ${properties.Party_x === "Democratic" ? "bg-demo" : "bg-rep"}   rounded-t-[20px]">
-                <div class="col-start-1 col-end-2 font-bold text-[18px]">District ${properties.District}</div>
-                <div class="col-start-3 col-end-4 font-bold text-[14px] text-start ">${properties.Name}</div>
-                <div class="col-start-1 col-end-2 font-bold text-[11px] ">${properties.City}</div>
-                <div class="col-start-3 col-end-4 font-bold text-[11px] text-start ">${properties.Party_y}</div>
-                </div>
-            <div class="px-[17px] pt-[8px] pb-[12px] text-navy bg-white rounded-b-[20px]">
-                <div class="font-regular text-[8px] text-[#7F7F7F]">Housing Courts Must Change! Campaign Support</div>
-                <div class="flex flex-col gap-[5px] mt-[6px] mb-[8px]">
-                    <div class="flex items-center gap-[5px]">
-                        <img src=${properties["HCMC support"].includes("Statewide RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
-                        <div class="font-bold text-[12px]">Statewide RTC</div>
-                    </div>
-                    <div class="flex items-center gap-[5px]">
-                        <img src=${properties["HCMC support"].includes("Winter Eviction Moratorium") ? "/icons/checked.svg" : "/icons/empty.svg"}  alt="" className="w-[16px] h-[16px]" />
-                        <div class="font-bold text-[12px]">Winter Eviction Moratorium</div>
-                    </div>
-                    <div class="flex items-center gap-[5px]">
-                        <img src=${properties["HCMC support"].includes("Defend RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
-                        <div class="font-bold text-[12px]">Defend RTC</div>
-                    </div>
-                    <div class="flex items-center gap-[5px]">
-                        <img src=${properties["HCMC support"].includes("Fund Local Law 53") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
-                        <div class="font-bold text-[12px]">Power to Organize:<br /> Fund Local Law 53</div>
-                    </div>
-                </div>
-                <a href="" class="font-regular text-[12px]">
-                    More Details
-                </a>
-            </div></div>`
+            //     let content = `<div class="content">
+            //     <div class="grid grid-cols-[1fr_0.3fr] justify-between items-start px-[17px] py-[10px] width-full text-white ${properties.Party_x === "Democratic" ? "bg-demo" : "bg-rep"}   rounded-t-[20px]">
+            //     <div class="col-start-1 col-end-2 font-bold text-[18px]">District ${properties.District}</div>
+            //     <div class="col-start-3 col-end-4 font-bold text-[14px] text-start ">${properties.Name}</div>
+            //     <div class="col-start-1 col-end-2 font-bold text-[11px] ">${properties.City}</div>
+            //     <div class="col-start-3 col-end-4 font-bold text-[11px] text-start ">${properties.Party_y}</div>
+            //     </div>
+            // <div class="px-[17px] pt-[8px] pb-[12px] text-navy bg-white rounded-b-[20px]">
+            //     <div class="font-regular text-[8px] text-[#7F7F7F]">Housing Courts Must Change! Campaign Support</div>
+            //     <div class="flex flex-col gap-[5px] mt-[6px] mb-[8px]">
+            //         <div class="flex items-center gap-[5px]">
+            //             <img src=${properties["HCMC support"].includes("Statewide RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
+            //             <div class="font-bold text-[12px]">Statewide RTC</div>
+            //         </div>
+            //         <div class="flex items-center gap-[5px]">
+            //             <img src=${properties["HCMC support"].includes("Winter Eviction Moratorium") ? "/icons/checked.svg" : "/icons/empty.svg"}  alt="" className="w-[16px] h-[16px]" />
+            //             <div class="font-bold text-[12px]">Winter Eviction Moratorium</div>
+            //         </div>
+            //         <div class="flex items-center gap-[5px]">
+            //             <img src=${properties["HCMC support"].includes("Defend RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
+            //             <div class="font-bold text-[12px]">Defend RTC</div>
+            //         </div>
+            //         <div class="flex items-center gap-[5px]">
+            //             <img src=${properties["HCMC support"].includes("Fund Local Law 53") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
+            //             <div class="font-bold text-[12px]">Power to Organize:<br /> Fund Local Law 53</div>
+            //         </div>
+            //     </div>
+            //     <a href="" class="font-regular text-[12px]">
+            //         More Details
+            //     </a>
+            // </div></div>`
 
-                const popup = new mapboxgl.Popup({
-                    offset: [0, -25],
-                    anchor: "bottom",
-                    closeButton: false,
-                    closeOnClick: true,
-                })
+            //     const popup = new mapboxgl.Popup({
+            //         offset: [0, -25],
+            //         anchor: "bottom",
+            //         closeButton: false,
+            //         closeOnClick: true,
+            //     })
 
-                popup.setMaxWidth("1200px")
-                popup.setLngLat([e.lngLat['lng'], e.lngLat["lat"]]).setHTML(content).addTo(m)
-            })
+            //     popup.setMaxWidth("1200px")
+            //     popup.setLngLat([e.lngLat['lng'], e.lngLat["lat"]]).setHTML(content).addTo(m)
+            // })
 
-            m.on("click", "organizations_members", (e: MapMouseEvent & EventData) => {
+            // m.on("click", "organizations_members", (e: MapMouseEvent & EventData) => {
 
-                const { properties } = e.features[0]
+            //     const { properties } = e.features[0]
 
-                let content = `<div class="content">
-                <div class="flex justify-between items-center px-[18px] py-[15px] w-[267px] text-white bg-[#96315F] rounded-t-[20px]">
-                    <div class="w-[150px] font-bold text-[14px]">${properties.Name}</div>
-                    <div class="flex flex-col items-center">
-                        <img src="/icons/checked_member.svg" alt="" className="w-[16px] h-[16px]" />
-                        <div class="font-regular text-[10px] text-start ">${properties.org}</div>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-[16px] px-[18px] pt-[10px] pb-[20px] text-navy">
-                    <div class="flex items-center gap-[12px]">
-                        <img src="/icons/apartment.svg" alt="" className="w-[16px] h-[16px]" />
-                        <div class="w-[120px] font-regular text-[12px]">361 Main Street (Catskill Mill Storefront) Catskill, NY 12414</div>
-                    </div>
-                    <div class="flex items-center gap-[12px]">
-                        <img src="/icons/phone.svg" alt="" className="w-[16px] h-[16px]" />
-                        <div class="font-regular text-[12px]">519-291-9415</div>
-                    </div>
-                    <div class="flex items-center gap-[12px]">
-                        <img src="/icons/email.svg" alt="" className="w-[16px] h-[16px]" />
-                        <div class="font-regular text-[12px]">hchc@hudsoncatskillhousing.org</div>
-                    </div>
-                </div>
-            </div>`
+            //     let content = `<div class="content">
+            //     <div class="flex justify-between items-center px-[18px] py-[15px] w-[267px] text-white bg-[#96315F] rounded-t-[20px]">
+            //         <div class="w-[150px] font-bold text-[14px]">${properties.Name}</div>
+            //         <div class="flex flex-col items-center">
+            //             <img src="/icons/checked_member.svg" alt="" className="w-[16px] h-[16px]" />
+            //             <div class="font-regular text-[10px] text-start ">${properties.org}</div>
+            //         </div>
+            //     </div>
+            //     <div class="flex flex-col gap-[16px] px-[18px] pt-[10px] pb-[20px] text-navy">
+            //         <div class="flex items-center gap-[12px]">
+            //             <img src="/icons/apartment.svg" alt="" className="w-[16px] h-[16px]" />
+            //             <div class="w-[120px] font-regular text-[12px]">361 Main Street (Catskill Mill Storefront) Catskill, NY 12414</div>
+            //         </div>
+            //         <div class="flex items-center gap-[12px]">
+            //             <img src="/icons/phone.svg" alt="" className="w-[16px] h-[16px]" />
+            //             <div class="font-regular text-[12px]">519-291-9415</div>
+            //         </div>
+            //         <div class="flex items-center gap-[12px]">
+            //             <img src="/icons/email.svg" alt="" className="w-[16px] h-[16px]" />
+            //             <div class="font-regular text-[12px]">hchc@hudsoncatskillhousing.org</div>
+            //         </div>
+            //     </div>
+            // </div>`
 
-                const popup = new mapboxgl.Popup({
-                    offset: [0, -25],
-                    anchor: "bottom",
-                    closeButton: false,
-                    closeOnClick: true,
-                })
-
-
-                popup.setMaxWidth("1200px")
-                popup.setLngLat([e.lngLat['lng'], e.lngLat["lat"]]).setHTML(content).addTo(m)
-            })
-
-            m.on("click", "organizations_endorsers", (e: MapMouseEvent & EventData) => {
-
-                const { properties } = e.features[0]
-
-                let content = `<div class="content px-[18px]">
-                <div class="flex justify-between items-center  py-[10px] w-[249px] text-navy bg-[#fff] rounded-t-[20px]">
-                    <div class="w-[150px] font-bold text-[14px]">${properties.Name}</div>
-                    <div class="flex flex-col items-center">
-                        <img src="/icons/empty_member.svg" alt="" className="w-[16px] h-[16px]" />
-                        <div class="font-regular text-[10px] text-start ">${properties.org}</div>
-                    </div>
-                </div>
-                <div class="mt-[5px] w-full h-[1px] bg-black "></div>
-                <div class="flex flex-col gap-[16px] pt-[10px] pb-[20px] text-navy">
-                    <div class="flex items-center gap-[12px]">
-                        <img src="/icons/apartment.svg" alt="" className="w-[16px] h-[16px]" />
-                        <div class="w-[120px] font-regular text-[12px]">361 Main Street (Catskill Mill Storefront) Catskill, NY 12414</div>
-                    </div>
-                    <div class="flex items-center gap-[12px]">
-                        <img src="/icons/phone.svg" alt="" className="w-[16px] h-[16px]" />
-                        <div class="font-regular text-[12px]">519-291-9415</div>
-                    </div>
-                    <div class="flex items-center gap-[12px]">
-                        <img src="/icons/email.svg" alt="" className="w-[16px] h-[16px]" />
-                        <div class="font-regular text-[12px]">hchc@hudsoncatskillhousing.org</div>
-                    </div>
-                </div>
-            </div>`
-
-                const popup = new mapboxgl.Popup({
-                    offset: [0, -25],
-                    anchor: "bottom",
-                    closeButton: false,
-                    closeOnClick: true,
-                })
+            //     const popup = new mapboxgl.Popup({
+            //         offset: [0, -25],
+            //         anchor: "bottom",
+            //         closeButton: false,
+            //         closeOnClick: true,
+            //     })
 
 
-                popup.setMaxWidth("1200px")
-                popup.setLngLat([e.lngLat['lng'], e.lngLat["lat"]]).setHTML(content).addTo(m)
-            })
+            //     popup.setMaxWidth("1200px")
+            //     popup.setLngLat([e.lngLat['lng'], e.lngLat["lat"]]).setHTML(content).addTo(m)
+            // })
+
+            // m.on("click", "organizations_endorsers", (e: MapMouseEvent & EventData) => {
+
+            //     const { properties } = e.features[0]
+
+            //     let content = `<div class="content px-[18px]">
+            //     <div class="flex justify-between items-center  py-[10px] w-[249px] text-navy bg-[#fff] rounded-t-[20px]">
+            //         <div class="w-[150px] font-bold text-[14px]">${properties.Name}</div>
+            //         <div class="flex flex-col items-center">
+            //             <img src="/icons/empty_member.svg" alt="" className="w-[16px] h-[16px]" />
+            //             <div class="font-regular text-[10px] text-start ">${properties.org}</div>
+            //         </div>
+            //     </div>
+            //     <div class="mt-[5px] w-full h-[1px] bg-black "></div>
+            //     <div class="flex flex-col gap-[16px] pt-[10px] pb-[20px] text-navy">
+            //         <div class="flex items-center gap-[12px]">
+            //             <img src="/icons/apartment.svg" alt="" className="w-[16px] h-[16px]" />
+            //             <div class="w-[120px] font-regular text-[12px]">361 Main Street (Catskill Mill Storefront) Catskill, NY 12414</div>
+            //         </div>
+            //         <div class="flex items-center gap-[12px]">
+            //             <img src="/icons/phone.svg" alt="" className="w-[16px] h-[16px]" />
+            //             <div class="font-regular text-[12px]">519-291-9415</div>
+            //         </div>
+            //         <div class="flex items-center gap-[12px]">
+            //             <img src="/icons/email.svg" alt="" className="w-[16px] h-[16px]" />
+            //             <div class="font-regular text-[12px]">hchc@hudsoncatskillhousing.org</div>
+            //         </div>
+            //     </div>
+            // </div>`
+
+            //     const popup = new mapboxgl.Popup({
+            //         offset: [0, -25],
+            //         anchor: "bottom",
+            //         closeButton: false,
+            //         closeOnClick: true,
+            //     })
+
+
+            //     popup.setMaxWidth("1200px")
+            //     popup.setLngLat([e.lngLat['lng'], e.lngLat["lat"]]).setHTML(content).addTo(m)
+            // })
 
 
         })
@@ -397,7 +398,7 @@ const Map = () => {
         <>
             <div className="absolute w-[100vw] h-[100vh] z-10" ref={mapContainer} >
             </div >
-            <Legend />
+            <Legend districts={districts} districtsClickHandler={districtsClickHandler}/>
 
 
 

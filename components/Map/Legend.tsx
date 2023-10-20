@@ -9,13 +9,20 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 
 
 
-const Legend = () => {
+type Props = {
+    districts: Districts
+    districtsClickHandler: (x:Districts) => void
+}
+
+
+const Legend = ({districts, districtsClickHandler}:Props) => {
 
     const { map } = useContext(MapContext) as MapContextType
 
     const [panelShown, setPanelShown] = useState(false)
     const [organizations, setOrganizations] = useState({
         Members: false,
+        Supporters: false,
         Endorsers: false,
     })
 
@@ -23,17 +30,26 @@ const Legend = () => {
         setPanelShown(b)
     }
 
+
     const organizationsClickHandler = (org: Organizations) => {
         let newOrg = { ...organizations }
         newOrg[org] = !newOrg[org]
         setOrganizations(newOrg)
     }
 
+
+
+
     useEffect(() => {
         if (organizations["Members"]) {
             map?.setLayoutProperty('organizations_members', "visibility", "visible")
         } else {
             map?.setLayoutProperty('organizations_members', "visibility", "none")
+        }
+        if (organizations["Supporters"]) {
+            map?.setLayoutProperty('organizations_supporters', "visibility", "visible")
+        } else {
+            map?.setLayoutProperty('organizations_supporters', "visibility", "none")
         }
         if (organizations["Endorsers"]) {
             map?.setLayoutProperty('organizations_endorsers', "visibility", "visible")
@@ -101,8 +117,10 @@ const Legend = () => {
                     <div className='flex flex-col gap-[9px] pt-[12px] pb-[17px] w-full border-b-[1px] border-grey_1'>
                         <h2 className='font-bold text-title'>Geographic Boundaries</h2>
                         <div className='flex w-full cursor-pointer'>
-                            <div className='flex justify-center items-center p-[8px] w-[50%] font-semibold text-label text-white bg-rtc_purple border-[3px] border-rtc_purple rounded-l-[8px]'>Senate Districts</div>
-                            <div className='flex justify-center items-center p-[8px] w-[50%] font-semibold text-label text-grey_1 bg-white border-[3px] border-grey_1 rounded-r-[8px]'>Assembly Districts</div>
+                            <div className={`flex justify-center items-center p-[8px] w-[50%] font-semibold text-label ${districts === "senate" ? "text-white bg-rtc_purple border-[3px] border-rtc_purple" : "text-grey_1 bg-white border-[3px] border-grey_1 "}  rounded-l-[8px]`}
+                                onClick={() => districtsClickHandler("senate")}>Senate Districts</div>
+                            <div className={`flex justify-center items-center p-[8px] w-[50%] font-semibold text-label ${districts === "assembly" ? "text-white bg-rtc_purple border-[3px] border-rtc_purple" : "text-grey_1 bg-white border-[3px] border-grey_1 "} rounded-r-[8px]`}
+                                onClick={() => districtsClickHandler("assembly")}>Assembly Districts</div>
                         </div>
                     </div>
                     <div className='flex flex-col gap-[15px] pt-[12px]'>
@@ -111,6 +129,10 @@ const Legend = () => {
                             <div className='flex justify-between items-center'>
                                 <h3 className='font-semibold text-label'>Member Organizations</h3>
                                 <Toggler show={organizations["Members"]} clickHandler={() => organizationsClickHandler("Members")} />
+                            </div>
+                            <div className='flex justify-between items-center'>
+                                <h3 className='font-semibold text-label'>Supporters</h3>
+                                <Toggler show={organizations["Supporters"]} clickHandler={() => organizationsClickHandler("Supporters")} />
                             </div>
                             <div className='flex justify-between items-center'>
                                 <h3 className='font-semibold text-label'>Endorsers</h3>

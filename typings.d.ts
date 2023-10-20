@@ -9,7 +9,7 @@ type Legislations = "Statewide RTC" | "Defend RTC" | "Winter Eviction Moratorium
 
 type Districts = "assembly" | "senate"
 
-type Organizations = "Members" | "Endorsers"
+type Organizations = "Members" | "Supporters" | "Endorsers"
 
 type dataType = {
   "Statewide RTC": string;
