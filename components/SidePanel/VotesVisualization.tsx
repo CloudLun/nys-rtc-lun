@@ -6,13 +6,12 @@ import BarChart from './BarChart';
 
 
 type Props = {
-  preLegislations: Legislations;
   legislations: Legislations;
 };
 
 
 
-function VotesVisualization({ preLegislations, legislations }: Props) {
+function VotesVisualization({ legislations }: Props) {
 
   const ref = useRef<HTMLInputElement>(null)
 
@@ -21,7 +20,6 @@ function VotesVisualization({ preLegislations, legislations }: Props) {
     const width = ref.current!.clientWidth
 
     d3.csv("/legislation_seats.csv").then(data => {
-      console.log(data)
       const demo = data.filter(d => d['Party'] === "Democrat")
       const rep = data.filter(d => d['Party'] === "Republican")
 
@@ -54,7 +52,7 @@ function VotesVisualization({ preLegislations, legislations }: Props) {
         .attr("class", "demoRects")
         .attr("x", assemblyX(0))
         .attr("y", d => y(d.House) as number)
-        .attr("width", d => d.House === "Assembly" ? assemblyX(+d[preLegislations]) : senateX(+d[preLegislations]))
+        .attr("width", d => d.House === "Assembly" ? assemblyX(+d[legislations]) : senateX(+d[legislations]))
         .attr('height', y.bandwidth() / 1.5)
         .attr('fill', "#007CEE")
 
@@ -62,25 +60,16 @@ function VotesVisualization({ preLegislations, legislations }: Props) {
         .data(rep)
         .join("rect")
         .attr("class", "repRects")
-        .attr("x", (d, i) => d.House === "Assembly" ? assemblyX(+demo[i][preLegislations]) : senateX(+demo[i][preLegislations]))
+        .attr("x", (d, i) => d.House === "Assembly" ? assemblyX(+demo[i][legislations]) : senateX(+demo[i][legislations]))
         .attr("y", d => y(d.House) as number)
-        .attr("width", d => d.House === "Assembly" ? assemblyX(+d[preLegislations]) : senateX(+d[preLegislations]))
+        .attr("width", d => d.House === "Assembly" ? assemblyX(+d[legislations]) : senateX(+d[legislations]))
         .attr('height', y.bandwidth() / 1.5)
         .attr('fill', "#D04E40")
 
-      svg.selectAll(".demoRects")
-        .transition()
-        .duration(1500)
-        .attr("width", (d: unknown, i) => (d as dataType).House === "Assembly" ? assemblyX(+(d as dataType)[legislations]) : senateX(+(d as dataType)[legislations]))
-
-      svg.selectAll(".repRects")
-        .transition()
-        .duration(1500)
-        .attr("x", (d: unknown, i) => (d as dataType).House === "Assembly" ? assemblyX(+demo[i][legislations]) : senateX(+demo[i][legislations]))
-        .attr("width", (d: unknown, i) => (d as dataType).House === "Assembly" ? assemblyX(+(d as dataType)[legislations]) : senateX(+(d as dataType)[legislations]))
 
 
-  
+
+
       // svg.append("text").attr("x", 0).attr("y", 20).style("font-size", "18px").style("font-weight", "semiBold").text("Assembly Support")   
     })
 
@@ -88,11 +77,7 @@ function VotesVisualization({ preLegislations, legislations }: Props) {
 
 
   return (
-    <div className='px-[16px] w-[380px] h-[251px] text-black bg-white rounded-[8px]' ref={ref}>
-      {/* <div className='w-full h-[50%] border-2'></div>
-      <div className='w-full h-[50%] border-2'></div> */}
-      {/* <BarChart  house={"Assembly"} preLegislations={preLegislations} legislations={legislations} /> */}
-      {/* <BarChart  house={"Senate"} preLegislations={preLegislations} legislations={legislations} /> */}
+    <div className='w-full h-[251px] text-black bg-white rounded-[8px]' ref={ref}>
     </div>
   )
 }

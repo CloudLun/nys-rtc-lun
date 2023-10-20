@@ -30,7 +30,7 @@ function Landing() {
         <div className={`${!shown ? "translate-x-[-100%] duration-200 ease-linear" : null} absolute px-[20px] py-[25px] w-[561px] h-full text-navy bg-[#F1F4FA] z-30`}>
             <div className='flex justify-between items-center mb-[20px] pl-[16px] w-full h-[48px]'>
                 <Image
-                    src="/RTC.png"
+                    src="/logos/RTC.png"
                     width={211}
                     height={50}
                     alt="RTC"
@@ -81,7 +81,7 @@ function Landing() {
                 <div className='absolute bottom-[-105px] left-[5px] flex items-center gap-[5px] text-[14px]'>
                     <p>Developed by</p>
                     <Image
-                        src="/betaNYC.png"
+                        src="/logos/betaNYC.png"
                         width={65}
                         height={50}
                         alt="BetaNYC"

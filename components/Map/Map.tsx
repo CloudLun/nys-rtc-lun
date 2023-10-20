@@ -8,11 +8,10 @@ import { GeoJSONSource } from 'mapbox-gl';
 
 import assembly from "../../public/nys_assembly.geo.json"
 import senate from "../../public/nys_senate.geo.json"
-import organizations from "../../public/rtc_coalition.geo.json"
+import organizations from "../../public/rtc_members.geo.json"
 import counties from "../../public/nys_counties.geo.json"
 // import zipcodes from "../public/nys_zipcodes.geo.json"
 
-import DistrictsBtns from "./DistrictsBtns";
 import Legend from "./Legend";
 
 
@@ -25,12 +24,12 @@ const Map = () => {
 
     const senateFeatures = (senate as GeoJson).features
     const assemblyFeatures = (assembly as GeoJson).features
-    const organizationsMemberFeatures = (organizations as GeoJson).features.filter(o => o.properties.member === true)
-    const organizationsEndorserFeatures = (organizations as GeoJson).features.filter(o => o.properties.member === false)
+    const organizationsMemberFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Member"))
+    const organziationsSupporterFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Supporter"))
+    const organizationsEndorserFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Endorser"))
     const countiesFeatures = (counties as GeoJson).features
     // const zipcodeFeatures = (zipcodes as GeoJson).features
 
-    console.log((organizations as GeoJson).features.length)
 
     const [lng, setLng] = useState(-78.5);
     const [lat, setLat] = useState(43.05);
@@ -110,6 +109,14 @@ const Map = () => {
                 data: {
                     type: "FeatureCollection",
                     features: organizationsMemberFeatures,
+                },
+            })
+
+            m.addSource("organizations_supporters", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features: organziationsSupporterFeatures,
                 },
             })
 
@@ -214,6 +221,22 @@ const Map = () => {
                     "circle-opacity": 1,
                     "circle-color": "#802948",
                     "circle-stroke-color": "#802948",
+                },
+            })
+
+            m.addLayer({
+                id: 'organizations_supporters',
+                type: 'circle',
+                source: 'organizations_supporters',
+                layout: {
+                    "visibility":"none"
+                },
+                paint: {
+                    "circle-radius": 4,
+                    "circle-stroke-width": 2.25,
+                    "circle-opacity": 1,
+                    "circle-color": "#fff68f",
+                    "circle-stroke-color": "#fff68f",
                 },
             })
 
@@ -374,7 +397,6 @@ const Map = () => {
         <>
             <div className="absolute w-[100vw] h-[100vh] z-10" ref={mapContainer} >
             </div >
-            <DistrictsBtns districts={districts} districtsClickHandler={districtsClickHandler} />
             <Legend />
 
 

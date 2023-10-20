@@ -1,45 +1,128 @@
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+
+import { MapContext, MapContextType } from '../../context/MapContext'
+
+import Toggler from '../elements/Toggler'
 
 import Image from 'next/image'
+import { XMarkIcon } from '@heroicons/react/24/solid'
+
+
 
 const Legend = () => {
+
+    const { map } = useContext(MapContext) as MapContextType
+
+    const [panelShown, setPanelShown] = useState(false)
+    const [organizations, setOrganizations] = useState({
+        Members: false,
+        Endorsers: false,
+    })
+
+    const panelClickHandler = (b: boolean) => {
+        setPanelShown(b)
+    }
+
+    const organizationsClickHandler = (org: Organizations) => {
+        let newOrg = { ...organizations }
+        newOrg[org] = !newOrg[org]
+        setOrganizations(newOrg)
+    }
+
+    useEffect(() => {
+        if (organizations["Members"]) {
+            map?.setLayoutProperty('organizations_members', "visibility", "visible")
+        } else {
+            map?.setLayoutProperty('organizations_members', "visibility", "none")
+        }
+        if (organizations["Endorsers"]) {
+            map?.setLayoutProperty('organizations_endorsers', "visibility", "visible")
+        } else {
+            map?.setLayoutProperty('organizations_endorsers', "visibility", "none")
+        }
+    }, [organizations])
+
     return (
-        <div className='absolute left-[464px] bottom-[23px] flex flex-col gap-[3px] p-[15px] bg-[rgba(255,255,255,.5)]  z-20'>
-            <div className='flex items-center gap-[10px]'>
-                <div className='w-[14px] h-[14px] bg-demo'></div>
-                <div className='text-[14px] text-demo'>Support, Democrat</div>
+        <>
+            <div className='absolute left-[480px] bottom-[100px] flex flex-col gap-[6px] p-[15px] text-rtc_navy bg-white rounded-[18.23px] drop-shadow-xl z-20'>
+                <div>
+                    <h2 className='mb-[8px] font-bold text-title leading-[22.5px]'>Statewide Right to Counsel <br /> Senate District Support Map</h2>
+                </div>
+                <div className='flex items-center gap-[10px]'>
+                    <div className='w-[16px] h-[16px] bg-demo'></div>
+                    <div className='text-label'>Support, Democrat</div>
+                </div>
+                <div className='flex items-center gap-[10px]'>
+                    <div className='w-[16px] h-[16px] bg-rep'></div>
+                    <div className='text-label'>Support, Republican</div>
+                </div>
+                <div className='flex items-center gap-[10px]'>
+                    <Image
+                        src="/pattern_demo.png"
+                        width={16}
+                        height={16}
+                        alt="No Support, Democrat"
+                    />
+                    <div className='text-label'>No Support, Democrat</div>
+                </div>
+                <div className='flex items-center gap-[10px]'>
+                    <Image
+                        src="/pattern_rep.png"
+                        width={16}
+                        height={16}
+                        alt="No Support, Republican"
+                    />
+                    <div className='text-label '>No Support, Republican</div>
+                </div>
+                <div className='flex items-center gap-[10px]'>
+                    <div className='w-[16px] h-[16px] bg-[#802948] border-[2px] border-[#802948] rounded-full'></div>
+                    <div className='text-label'>Member, Right to Counsel Coalition </div>
+                </div>
+                <div className='flex items-center gap-[10px]'>
+                    <div className='w-[16px] h-[16px] bg-white border-[2px] border-[#802948] rounded-full'></div>
+                    <div className='text-label'>Endorser, Right to Counsel Coalition </div>
+                </div>
             </div>
-            <div className='flex items-center gap-[10px]'>
-                <div className='w-[14px] h-[14px] bg-rep'></div>
-                <div className='text-[14px] text-rep'>Support, Republican</div>
-            </div>
-            <div className='flex items-center gap-[10px]'>
+            <div className='absolute left-[480px] bottom-[35px]  drop-shadow-xl cursor-pointer z-20 '>
                 <Image
-                    src="/pattern_demo.png"
-                    width={14}
-                    height={14}
-                    alt="No Support, Democrat"
+                    src="/icons/active_control.svg"
+                    width={50}
+                    height={50}
+                    alt="active control panel"
+                    onClick={() => panelClickHandler(true)}
                 />
-                <div className='text-[14px] text-demo'>No Legislation Support, Democrat</div>
             </div>
-            <div className='flex items-center gap-[10px]'>
-                <Image
-                    src="/pattern_rep.png"
-                    width={14}
-                    height={14}
-                    alt="No Support, Republican"
-                />
-                <div className='text-[14px] text-rep'>No Legislation Support, Republican</div>
-            </div>
-            <div className='flex items-center gap-[10px]'>
-                <div className='w-[14px] h-[14px] bg-[#802948] border-[2px] border-[#802948] rounded-full'></div>
-                <div className='text-[14px] text-[#802948]'>Right to Counsel Coalition Member</div>
-            </div>
-            <div className='flex items-center gap-[10px]'>
-                <div className='w-[14px] h-[14px] bg-white border-[2px] border-[#802948] rounded-full'></div>
-                <div className='text-[14px] text-[#802948]'>Right to Counsel Coalition Endorser</div>
-            </div>
-        </div>
+            {panelShown && (
+                <div className='absolute left-[480px] bottom-[100px] p-[25px] text-rtc_navy bg-white rounded-[18.23px] drop-shadow-xl z-20'>
+                    <div className='flex items-center gap-[29px] pb-[12px] border-b-[1px] border-grey_1'>
+                        <h2 className='font-bold text-title'>Statewide RTC Map Layers</h2>
+                        <XMarkIcon className='w-[22px] h-[22px] text-grey_2 cursor-pointer' onClick={() => panelClickHandler(false)} />
+                    </div>
+                    <div className='flex flex-col gap-[9px] pt-[12px] pb-[17px] w-full border-b-[1px] border-grey_1'>
+                        <h2 className='font-bold text-title'>Geographic Boundaries</h2>
+                        <div className='flex w-full cursor-pointer'>
+                            <div className='flex justify-center items-center p-[8px] w-[50%] font-semibold text-label text-white bg-rtc_purple border-[3px] border-rtc_purple rounded-l-[8px]'>Senate Districts</div>
+                            <div className='flex justify-center items-center p-[8px] w-[50%] font-semibold text-label text-grey_1 bg-white border-[3px] border-grey_1 rounded-r-[8px]'>Assembly Districts</div>
+                        </div>
+                    </div>
+                    <div className='flex flex-col gap-[15px] pt-[12px]'>
+                        <h2 className='font-bold text-title'>RTC Coalition Membership</h2>
+                        <div className='flex flex-col gap-[15px]'>
+                            <div className='flex justify-between items-center'>
+                                <h3 className='font-semibold text-label'>Member Organizations</h3>
+                                <Toggler show={organizations["Members"]} clickHandler={() => organizationsClickHandler("Members")} />
+                            </div>
+                            <div className='flex justify-between items-center'>
+                                <h3 className='font-semibold text-label'>Endorsers</h3>
+                                <Toggler show={organizations["Endorsers"]} clickHandler={() => organizationsClickHandler("Endorsers")} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+        </>
+
     )
 }
 

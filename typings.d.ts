@@ -1,7 +1,7 @@
 type GeoJson = {
   type: "FeatureCollection";
   name: string;
-  crs: {};
+  crs?: {};
   features: Feature<Geometry, GeoJsonProperties>[];
 };
 
