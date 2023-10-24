@@ -10,14 +10,13 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 
 
 type Props = {
-    districts: Districts
     districtsClickHandler: (x: Districts) => void
 }
 
 
-const Legend = ({ districts, districtsClickHandler }: Props) => {
+const Legend = ({ districtsClickHandler }: Props) => {
 
-    const { map } = useContext(MapContext) as MapContextType
+    const { map, districts } = useContext(MapContext) as MapContextType
 
     const [panelShown, setPanelShown] = useState(false)
     const [organizations, setOrganizations] = useState({
@@ -35,9 +34,6 @@ const Legend = ({ districts, districtsClickHandler }: Props) => {
         newOrg[org] = !newOrg[org]
         setOrganizations(newOrg)
     }
-
-
-
 
     useEffect(() => {
         if (organizations["Members"]) {

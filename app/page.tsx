@@ -1,15 +1,14 @@
 "use client";
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Map from '../components/Map/Map'
 import Landing from '@/components/Landing';
 import SidePanel from '@/components/SidePanel/SidePanel';
 
 import { MapProvider } from "../context/MapContext";
 
-import * as d3 from "d3"
-
 
 export default function Home() {
+  
 
   // useEffect(() => {
 

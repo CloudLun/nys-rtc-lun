@@ -21,7 +21,7 @@ import "./Map.css"
 const Map = () => {
     const mapContainer = useRef<HTMLInputElement>(null);
 
-    const { map, setMap } = useContext(MapContext) as MapContextType
+    const { map, setMap, setDistricts } = useContext(MapContext) as MapContextType
 
     const senateFeatures = (senate as GeoJson).features
     const assemblyFeatures = (assembly as GeoJson).features
@@ -34,8 +34,6 @@ const Map = () => {
     const [lng, setLng] = useState(-78.5);
     const [lat, setLat] = useState(43.05);
     const [zoom, setZoom] = useState(6.25);
-
-    const [districts, setDistricts] = useState<Districts>("senate")
 
     const districtsClickHandler = (districts: Districts) => {
         switch (districts) {
@@ -53,7 +51,6 @@ const Map = () => {
                 break
         }
         setDistricts(districts)
-
     }
 
     useEffect(() => {
@@ -398,7 +395,7 @@ const Map = () => {
         <>
             <div className="absolute w-[100vw] h-[100vh] z-10" ref={mapContainer} >
             </div >
-            <Legend districts={districts} districtsClickHandler={districtsClickHandler}/>
+            <Legend districtsClickHandler={districtsClickHandler} />
 
 
 
