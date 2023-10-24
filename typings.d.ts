@@ -12,9 +12,9 @@ type Districts = "assembly" | "senate"
 type Organizations = "Members" | "Supporters" | "Endorsers"
 
 type dataType = {
-  "Statewide RTC": string;
-  "Defend RTC": string;
-  "Winter Eviction Moratorium": string;
-  House: string;
-  Party: string;
+  "Statewide RTC"?: string;
+  "Defend RTC"?: string;
+  "Winter Eviction Moratorium"?: string;
+  House?: string;
+  Party?: string;
 };
