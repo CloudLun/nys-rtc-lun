@@ -20,8 +20,10 @@ const config: Config = {
         blue_selected: "#D7E3FA",
         grey_1: "#7B7B7B",
         grey_2: "#525252",
-        demo: "#0057A8",
-        rep: "#A03327",
+        demo: "#007CEE",
+        demo_1:"#0057A8",
+        rep: "#D04E40",
+        rep_1:"#A03327"
       },
       fontSize: {
         headline: "30px",

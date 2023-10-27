@@ -54,7 +54,7 @@ const SidePanel = () => {
             "Winter Eviction Moratorium": boolean,
             "Defend RTC": boolean
         }
-        (Object.keys(newExpand) as Columns[]).forEach((e: Columns) => e === l ? newExpand[e] = !newExpand[e] : newExpand[e] = false)
+        (Object.keys(newExpand) as Columns[]).forEach((e: Columns) => e === l ? newExpand[e] = true : newExpand[e] = false)
         setExpand(newExpand)
     }
 

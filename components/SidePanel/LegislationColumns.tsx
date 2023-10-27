@@ -28,7 +28,7 @@ const LegislationColumns = ({ legislation, title, name, number, content, expand,
             <VotesVisualization legislation={legislation} />
             <div>
                 <h2 className='mb-[14px] font-semibold text-title'>{title}</h2>
-                <p className='w-[340px] font-regular text-body'>{content}</p>
+                <p className='font-regular text-body'>{content}</p>
             </div>
         </div>
     )

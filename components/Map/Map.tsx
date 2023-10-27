@@ -14,6 +14,7 @@ import counties from "../../public/nys_counties.geo.json"
 
 
 import Legend from "./Legend";
+import MapLayers from "./MapLayers";
 
 
 import "./Map.css"
@@ -25,6 +26,7 @@ const Map = () => {
 
     const senateFeatures = (senate as GeoJson).features
     const assemblyFeatures = (assembly as GeoJson).features
+    const organizationsFeatures = (organizations as GeoJson).features
     const organizationsMemberFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Campaign Member") || o.properties["Membership Status"].includes("Coalition Member"))
     const organziationsSupporterFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Supporter"))
     const organizationsEndorserFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Endorser"))
@@ -100,6 +102,15 @@ const Map = () => {
             //         features: zipcodeFeatures,
             //     },
             // })
+
+            m.addSource("organizations", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features: organizationsFeatures,
+                },
+            })
+
 
             m.addSource("organizations_members", {
                 type: "geojson",
@@ -204,56 +215,76 @@ const Map = () => {
                 }
             });
 
-
             m.addLayer({
-                id: 'organizations_members',
+                id: 'organizations',
                 type: 'circle',
-                source: 'organizations_members',
+                source: 'organizations',
                 layout: {
                     "visibility": "none"
                 },
                 paint: {
                     "circle-radius": 4,
                     "circle-stroke-width": 2.25,
-                    "circle-opacity": 1,
-                    "circle-color": "#802948",
                     "circle-stroke-color": "#802948",
-                },
+                    "circle-color":
+                        [
+                            "case",
+                            ["in", `Member`, ["get", "Membership Status"]],
+                            "#802948","#ffffff"
+                        ],
+                }
             })
 
 
-            m.addLayer({
-                id: 'organizations_supporters',
-                type: 'circle',
-                source: 'organizations_supporters',
-                layout: {
-                    "visibility": "none"
-                },
-                paint: {
-                    "circle-radius": 4,
-                    "circle-stroke-width": 2.25,
-                    "circle-opacity": 1,
-                    "circle-color": "#802948",
-                    "circle-stroke-color": "#802948",
-                },
-            })
+            // m.addLayer({
+            //     id: 'organizations_members',
+            //     type: 'circle',
+            //     source: 'organizations_members',
+            //     layout: {
+            //         "visibility": "none"
+            //     },
+            //     paint: {
+            //         "circle-radius": 4,
+            //         "circle-stroke-width": 2.25,
+            //         "circle-opacity": 1,
+            //         "circle-color": "#802948",
+            //         "circle-stroke-color": "#802948",
+            //     },
+            // })
 
 
-            m.addLayer({
-                id: 'organizations_endorsers',
-                type: 'circle',
-                source: 'organizations_endorsers',
-                layout: {
-                    "visibility": "none"
-                },
-                paint: {
-                    "circle-radius": 4,
-                    "circle-stroke-width": 2.25,
-                    "circle-opacity": 1,
-                    "circle-color": "#ffffff",
-                    "circle-stroke-color": "#802948",
-                },
-            })
+            // m.addLayer({
+            //     id: 'organizations_supporters',
+            //     type: 'circle',
+            //     source: 'organizations_supporters',
+            //     layout: {
+            //         "visibility": "none"
+            //     },
+            //     paint: {
+            //         "circle-radius": 4,
+            //         "circle-stroke-width": 2.25,
+            //         "circle-opacity": 1,
+            //         "circle-color": "#802948",
+            //         "circle-stroke-color": "#802948",
+            //     },
+            // })
+
+
+            // m.addLayer({
+            //     id: 'organizations_endorsers',
+            //     type: 'circle',
+            //     source: 'organizations_endorsers',
+            //     layout: {
+            //         "visibility": "none"
+            //     },
+            //     paint: {
+            //         "circle-radius": 4,
+            //         "circle-stroke-width": 2.25,
+            //         "circle-opacity": 1,
+            //         "circle-color": "#ffffff",
+            //         "circle-stroke-color": "#802948",
+            //     },
+            // })
 
             // m.on("click", "districts", (e: MapMouseEvent & EventData) => {
             //     const { properties } = e.features[0]
@@ -395,10 +426,8 @@ const Map = () => {
         <>
             <div className="absolute w-[100vw] h-[100vh] z-10" ref={mapContainer} >
             </div >
-            <Legend districtsClickHandler={districtsClickHandler} />
-
-
-
+            <Legend />
+            <MapLayers districtsClickHandler={districtsClickHandler} />
         </>
     )
 
