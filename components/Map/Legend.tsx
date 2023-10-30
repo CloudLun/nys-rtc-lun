@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 
 import { MapContext, MapContextType } from '../../context/MapContext'
 
@@ -16,7 +16,9 @@ type Props = {
 
 const Legend = () => {
 
-    const [panelShown, setPanelShown] = useState(false)
+    const { membershipShown } = useContext(MapContext) as MapContextType
+
+    const [panelShown, setPanelShown] = useState(true)
     const panelClickHandler = (b: boolean) => {
         setPanelShown(b)
     }
@@ -38,7 +40,7 @@ const Legend = () => {
                 <div className='absolute left-[480px] top-[40px] p-[15px] text-rtc_navy bg-white rounded-[8px] drop-shadow-xl z-20'>
                     <div className='flex justify-between'>
                         <h2 className='mb-[8px] font-bold text-title leading-[22.5px]'>Statewide Right to Counsel Senate District Support Map</h2>
-                        <XMarkIcon className='w-[22px] h-[22px] text-grey_2 cursor-pointer' onClick={() => panelClickHandler(false)} />
+                        <XMarkIcon className='ml-[12px] w-[22px] h-[22px] text-grey_2 cursor-pointer' onClick={() => panelClickHandler(false)} />
                     </div>
                     <div className='flex gap-[30px]'>
                         <div className='flex flex-col gap-[5px]'>
@@ -71,16 +73,19 @@ const Legend = () => {
                                 <div className='text-label '>No Support, Republican</div>
                             </div>
                         </div>
-                        <div className='flex flex-col gap-[5px]'>
-                            <div className='flex items-center gap-[10px]'>
-                                <div className='w-[16px] h-[16px] bg-[#802948] border-[2px] border-[#802948] rounded-full'></div>
-                                <div className='text-label'>Member, Right to Counsel Coalition </div>
+                        {membershipShown && (
+                            <div className='flex flex-col gap-[5px]'>
+                                <div className='flex items-center gap-[10px]'>
+                                    <div className='w-[16px] h-[16px] bg-[#802948] border-[2px] border-[#802948] rounded-full'></div>
+                                    <div className='text-label'>Member, Right to Counsel Coalition </div>
+                                </div>
+                                <div className='flex items-center gap-[10px]'>
+                                    <div className='w-[16px] h-[16px] bg-white border-[2px] border-[#802948] rounded-full'></div>
+                                    <div className='text-label'>Endorser, Right to Counsel Coalition </div>
+                                </div>
                             </div>
-                            <div className='flex items-center gap-[10px]'>
-                                <div className='w-[16px] h-[16px] bg-white border-[2px] border-[#802948] rounded-full'></div>
-                                <div className='text-label'>Endorser, Right to Counsel Coalition </div>
-                            </div>
-                        </div>
+                        )}
+
                     </div>
 
                 </div>

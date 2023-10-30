@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Map from '../components/Map/Map'
 import Landing from '@/components/Landing';
 import SidePanel from '@/components/SidePanel/SidePanel';
+import Geopanel from '@/components/Geopanel/Geopanel';
 
 import { MapProvider } from "../context/MapContext";
 
@@ -40,6 +41,7 @@ export default function Home() {
       <MapProvider >
         <SidePanel />
         <Map />
+        <Geopanel />
       </MapProvider>
     </div>
   )

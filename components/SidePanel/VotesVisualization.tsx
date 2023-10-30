@@ -103,9 +103,9 @@ function VotesVisualization({ legislation }: Props) {
         .data(demo)
         .enter()
         .append("text")
-        .attr("x", 20)
+        .attr("x", 0)
         .attr("y", (d, i) => i === 0 ? y(d.House) as number - 30 : y(d.House) as number - 10)
-        .style("font-size", "18px")
+        .style("font-size", "16px")
         .style("font-weight", "semiBold")
         .text(d => `${d.House} Support`)
 
@@ -129,7 +129,7 @@ function VotesVisualization({ legislation }: Props) {
         .attr("y", (d, i) => i === 0 ? y(d.House) as number - 10 : y(d.House) as number + 10)
         .style("font-size", "13px")
         .style("font-weight", "semiBold")
-        .text((d, i) => i === 0 ? `${Math.round(senateTotalVotes/63*100)}%` : `${Math.round(assemblyTotalVotes/150*100)}%`)
+        .text((d, i) => i === 0 ? `${Math.round(senateTotalVotes / 63 * 100)}%` : `${Math.round(assemblyTotalVotes / 150 * 100)}%`)
 
       svg.selectAll('totalVotes')
         .data(demo)
@@ -164,7 +164,7 @@ function VotesVisualization({ legislation }: Props) {
         .attr('class', 'repPartyVotes')
         .attr("x", 0)
         .attr("y", (d, i) => i === 0 ? y(d.House) as number + y.bandwidth() + 2 : y(d.House) as number + y.bandwidth() + 22)
-        .attr('fill', "#A03327")
+        .attr('fill', "#D04E40")
         .attr("fill-opacity", 0)
         .style("font-size", "13px")
         .style("font-weight", "semiBold")
@@ -182,7 +182,20 @@ function VotesVisualization({ legislation }: Props) {
         .attr("fill-opacity", 0)
         .style("font-size", "13px")
         .style("font-weight", "semiBold")
-        .text((d, i) => `${i === 0 ? "33" : "76"} votes, simple majority`)
+        .text((d, i) => `${i === 0 ? "33" : "76"} votes`)
+
+      svg.selectAll('majorityLabelsSecond')
+        .data(demo)
+        .enter()
+        .append("text")
+        .attr('class', "majorityLabels")
+        .attr("x", (width) / 2 - 2)
+        .attr("y", (d, i) => i === 0 ? y(d.House) as number + y.bandwidth() + 17 : y(d.House) as number + y.bandwidth() + 37)
+        .attr('fill', "#7B7B7B")
+        .attr("fill-opacity", 0)
+        .style("font-size", "13px")
+        .style("font-weight", "semiBold")
+        .text(`simple majority`)
 
       svg.selectAll('superMajorityLabels')
         .data(demo)
@@ -195,39 +208,73 @@ function VotesVisualization({ legislation }: Props) {
         .attr("fill-opacity", 0)
         .style("font-size", "13px")
         .style("font-weight", "semiBold")
-        .text((d, i) => `${i === 0 ? "42" : "100"} votes,  supermajority`)
+        .text((d, i) => `${i === 0 ? "42" : "100"} votes`)
 
-      // Icons
-      svg.selectAll("districtsIcons")
+      svg.selectAll('superMajorityLabelsSecond')
         .data(demo)
         .enter()
+        .append("text")
+        .attr('class', "superMajorityLabels")
+        .attr("x", (width) / 4 * 3)
+        .attr("y", (d, i) => i === 0 ? y(d.House) as number + y.bandwidth() + 17 : y(d.House) as number + y.bandwidth() + 37)
+        .attr('fill', "#7B7B7B")
+        .attr("fill-opacity", 0)
+        .style("font-size", "13px")
+        .style("font-weight", "semiBold")
+        .text(`supermajority`)
+
+
+      // Icons
+      svg.selectAll(".districtsIcons").remove()
+
+      svg
         .append("image")
-        .attr("x", 0)
-        .attr("y", (d, i) => i === 0 ? y(d.House) as number - 44 : y(d.House) as number - 24)
+        .attr('class', "districtsIcons")
+        .attr("x", (districts === "senate") ? 112 : 131)
+        .attr("y", (districts === "senate") ? y(demo[0].House) as number - 44 : y(demo[1].House) as number - 24)
         .attr('width', 16)
         .attr("height", 16)
-        .attr("xlink:href", (d, i) => {
-          if (districts === "senate") {
-            if (i === 0) return "/icons/districts_fill.svg"
-            if (i === 1) return "/icons/districts_empty.svg"
-          } else {
-            if (i === 0) return "/icons/districts_empty.svg"
-            if (i === 1) return "/icons/districts_fill.svg"
-          }
-          return ""
-        })
+        .attr("xlink:href", "/icons/districts_fill.svg")
+
+      // (d, i) => {
+      //   if (districts === "senate") {
+      //     if (i === 0) return "/icons/districts_fill.svg"
+      //     if (i === 1) return "/icons/districts_empty.svg"
+      //   } else {
+      //     if (i === 0) return "/icons/districts_empty.svg"
+      //     if (i === 1) return "/icons/districts_fill.svg"
+      //   }
+      //   return ""
+      // }
 
       // Dash Lines
-      svg.selectAll("majority")
+      svg.selectAll("majorityLine")
         .data(demo)
         .enter()
         .append("line")
-        .attr("x1", (width - 30) / 2)
+        .attr("x1", (width) / 2)
         .attr("y1", (d, i) => i === 0 ? y(d.House) as number - 10 : y(d.House) as number + 10)
-        .attr("x2", (width - 30) / 2)
+        .attr("x2", (width) / 2)
         .attr("y2", (d, i) => i === 0 ? y(d.House) as number - 10 + y.bandwidth() + 2 : y(d.House) as number + 10 + y.bandwidth() + 2)
         .style("stroke", "#7B7B7B")
         .style("stroke-dasharray", ("2, 3"))
+      // .on("mouseover", () => {
+      //   svg.selectAll(".majorityLabels").attr("fill-opacity", 1)
+      // })
+      // .on("mouseout", () => {
+      //   svg.selectAll(".majorityLabels").attr("fill-opacity", 0)
+      // })
+
+      svg.selectAll("majorityRect")
+        .data(demo)
+        .enter()
+        .append("rect")
+        .attr("width", 15)
+        .attr("height", y.bandwidth() + 2)
+        .attr("x", (width) / 2 - 7.5)
+        .attr("y", (d, i) => i === 0 ? y(d.House) as number - 10 : y(d.House) as number + 10)
+        .attr("opacity", 0)
+        .style("fill", "#7B7B7B")
         .on("mouseover", () => {
           svg.selectAll(".majorityLabels").attr("fill-opacity", 1)
         })
@@ -235,16 +282,33 @@ function VotesVisualization({ legislation }: Props) {
           svg.selectAll(".majorityLabels").attr("fill-opacity", 0)
         })
 
-      svg.selectAll("superMajority")
+      svg.selectAll("superMajorityLine")
         .data(demo)
         .enter()
         .append("line")
-        .attr("x1", (width - 30) / 4 * 3)
+        .attr("x1", (width) / 4 * 3)
         .attr("y1", (d, i) => i === 0 ? y(d.House) as number - 10 : y(d.House) as number + 10)
-        .attr("x2", (width - 30) / 4 * 3)
+        .attr("x2", (width) / 4 * 3)
         .attr("y2", (d, i) => i === 0 ? y(d.House) as number - 10 + y.bandwidth() + 2 : y(d.House) as number + 10 + y.bandwidth() + 2)
         .style("stroke", "#7B7B7B")
         .style("stroke-dasharray", ("2, 3"))
+        .on("mouseover", () => {
+          svg.selectAll(".superMajorityLabels").attr("fill-opacity", 1)
+        })
+        .on("mouseout", () => {
+          svg.selectAll(".superMajorityLabels").attr("fill-opacity", 0)
+        })
+
+      svg.selectAll("superMajorityRect")
+        .data(demo)
+        .enter()
+        .append("rect")
+        .attr("width", 15)
+        .attr("height", y.bandwidth() + 2)
+        .attr("x", (width) / 4 * 3 - 7.5)
+        .attr("y", (d, i) => i === 0 ? y(d.House) as number - 10 : y(d.House) as number + 10)
+        .attr("opacity", 0)
+        .style("fill", "#7B7B7B")
         .on("mouseover", () => {
           svg.selectAll(".superMajorityLabels").attr("fill-opacity", 1)
         })

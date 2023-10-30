@@ -16,10 +16,9 @@ type Props = {
 
 const MapLayers = ({ districtsClickHandler }: Props) => {
 
-    const { map, districts } = useContext(MapContext) as MapContextType
+    const { map, districts, membershipShown, setMembershipShown } = useContext(MapContext) as MapContextType
 
     const [panelShown, setPanelShown] = useState(false)
-    const [membershipShown, setMembershipShown] = useState(false)
 
 
     const panelClickHandler = (b: boolean) => {

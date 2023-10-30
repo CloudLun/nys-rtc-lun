@@ -37,8 +37,7 @@ type Columns = "About" | "Statewide RTC" | "Winter Eviction Moratorium" | "Defen
 
 const SidePanel = () => {
 
-
-
+    const { map } = useContext(MapContext) as MapContextType
     const [expand, setExpand] = useState({
         "About": true,
         "Statewide RTC": false,
@@ -47,7 +46,7 @@ const SidePanel = () => {
     })
 
 
-    const expandClickHandler = (l: Columns) => {
+    const legislationsClickHandler = (l: Columns) => {
         const newExpand = { ...expand } as {
             "About": boolean,
             "Statewide RTC": boolean,
@@ -55,6 +54,14 @@ const SidePanel = () => {
             "Defend RTC": boolean
         }
         (Object.keys(newExpand) as Columns[]).forEach((e: Columns) => e === l ? newExpand[e] = true : newExpand[e] = false)
+
+        if (l !== "About") map?.setPaintProperty("districts", "fill-opacity", [
+            "case",
+            ["in", `${l}`, ["get", "HCMC support"]],
+            1, 0
+        ])
+
+
         setExpand(newExpand)
     }
 
@@ -87,7 +94,7 @@ const SidePanel = () => {
                     <div className="flex justify-between items-center">
                         <h2 className="font-semibold text-title ">ABOUT</h2>
                         {
-                            expand["About"] ? <ChevronUpIcon className="w-[20px] h-[20px] cursor-pointer" onClick={() => expandClickHandler("About")} /> : <ChevronDownIcon className="w-[20px] h-[20px] cursor-pointer" onClick={() => expandClickHandler("About")} />
+                            expand["About"] ? <ChevronUpIcon className="w-[20px] h-[20px] cursor-pointer" onClick={() => legislationsClickHandler("About")} /> : <ChevronDownIcon className="w-[20px] h-[20px] cursor-pointer" onClick={() => legislationsClickHandler("About")} />
                         }
                     </div>
                     <div className="flex justify-between items-start my-[16px]">
@@ -116,9 +123,9 @@ const SidePanel = () => {
 
             </div>
 
-            <LegislationColumns legislation={"Statewide RTC"} title={legislationsData["Statewide RTC"]['fullName']} name={legislationsData["Statewide RTC"]['legislation']} number={legislationsData["Statewide RTC"]['number']} content={legislationsData["Statewide RTC"]['content']} expand={expand["Statewide RTC"]} expandClickHandler={() => expandClickHandler("Statewide RTC")} />
-            <LegislationColumns legislation={"Winter Eviction Moratorium"} title={legislationsData["Winter Eviction Moratorium"]['fullName']} name={legislationsData["Winter Eviction Moratorium"]['legislation']} number={legislationsData["Winter Eviction Moratorium"]['number']} content={legislationsData["Winter Eviction Moratorium"]['content']} expand={expand["Winter Eviction Moratorium"]} expandClickHandler={() => expandClickHandler("Winter Eviction Moratorium")} />
-            <LegislationColumns legislation={"Defend RTC"} title={legislationsData["Defend RTC"]['fullName']} name={legislationsData["Defend RTC"]['legislation']} number={legislationsData["Defend RTC"]['number']} content={legislationsData["Defend RTC"]['content']} expand={expand["Defend RTC"]} expandClickHandler={() => expandClickHandler("Defend RTC")} />
+            <LegislationColumns legislation={"Statewide RTC"} title={legislationsData["Statewide RTC"]['fullName']} name={legislationsData["Statewide RTC"]['legislation']} number={legislationsData["Statewide RTC"]['number']} content={legislationsData["Statewide RTC"]['content']} expand={expand["Statewide RTC"]} legislationsClickHandler={() => legislationsClickHandler("Statewide RTC")} />
+            <LegislationColumns legislation={"Winter Eviction Moratorium"} title={legislationsData["Winter Eviction Moratorium"]['fullName']} name={legislationsData["Winter Eviction Moratorium"]['legislation']} number={legislationsData["Winter Eviction Moratorium"]['number']} content={legislationsData["Winter Eviction Moratorium"]['content']} expand={expand["Winter Eviction Moratorium"]} legislationsClickHandler={() => legislationsClickHandler("Winter Eviction Moratorium")} />
+            <LegislationColumns legislation={"Defend RTC"} title={legislationsData["Defend RTC"]['fullName']} name={legislationsData["Defend RTC"]['legislation']} number={legislationsData["Defend RTC"]['number']} content={legislationsData["Defend RTC"]['content']} expand={expand["Defend RTC"]} legislationsClickHandler={() => legislationsClickHandler("Defend RTC")} />
 
             <div className="absolute bottom-[15px] left-[30px] flex items-center gap-[15px]">
                 <Image
