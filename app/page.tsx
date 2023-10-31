@@ -37,7 +37,7 @@ export default function Home() {
 
 
   return (
-    <div className='relative w-[100vw] h-[100vh]'>
+    <div className='relative w-[100vw] max-h-[100vh]'>
       <MapProvider >
         <SidePanel />
         <Map />

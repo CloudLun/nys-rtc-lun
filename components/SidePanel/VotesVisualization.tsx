@@ -25,7 +25,6 @@ function VotesVisualization({ legislation }: Props) {
     const svg = d3.select(ref.current)
 
     d3.csv("/legislation_seats.csv").then(data => {
-      console.log(data)
       const demo = data.filter(d => d['Party'] === "Democrat")
       const rep = data.filter(d => d['Party'] === "Republican")
 

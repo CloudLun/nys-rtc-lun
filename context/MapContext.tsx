@@ -2,6 +2,7 @@
 import { createContext, useState, Dispatch, SetStateAction, ReactNode, } from "react";
 
 
+
 export type MapContextType = {
     map: mapboxgl.Map | null,
     setMap: Dispatch<SetStateAction<mapboxgl.Map | null>>
@@ -20,6 +21,10 @@ type Props = {
 const MapContext = createContext<MapContextType | null>(null)
 
 const MapProvider = ({ children }: Props) => {
+
+
+
+
     const [map, setMap] = useState<mapboxgl.Map | null>(null)
     const [districts, setDistricts] = useState<Districts>("senate")
     const [membershipShown, setMembershipShown] = useState<boolean>(false)

@@ -4,7 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 
 const Geopanel = () => {
 
-    const [panelShown, setPanelShown] = useState(true)
+    const [panelShown, setPanelShown] = useState(false)
     const panelClickHandler = (b: boolean) => {
         setPanelShown(b)
     }

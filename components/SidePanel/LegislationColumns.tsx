@@ -18,7 +18,7 @@ type Props = {
 const LegislationColumns = ({ legislation, title, name, number, content, expand, legislationsClickHandler }: Props) => {
 
     return (
-        <div className={`px-[30px] pt-[15px] pb-[35px] text-rtc_navy ${expand ? " bg-white" : "h-[45px] bg-background_blue"} border-t-[1px] border-grey_1  overflow-y-hidden cursor-pointer`} onClick={legislationsClickHandler}>
+        <div className={`px-[30px] pt-[15px] pb-[20px] text-rtc_navy ${expand ? " bg-white" : "h-[45px] bg-background_blue"} border-t-[1px] border-grey_1  overflow-y-hidden cursor-pointer`} onClick={legislationsClickHandler}>
             <div className="flex justify-between items-center mb-[15px]">
                 <h2 className="font-semibold text-title uppercase">{name}<span className='ml-[15px] font-regular text-label'>{number}</span></h2>
                 {
