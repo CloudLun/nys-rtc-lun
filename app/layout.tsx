@@ -23,7 +23,6 @@ export default function RootLayout({
           rel="stylesheet"
         />
         <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-        <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
       </head>
       <body className={sourceSans.className} suppressHydrationWarning={true}>{children}</body>
     </html>
