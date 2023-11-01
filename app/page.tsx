@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Map from '../components/Map/Map'
 import Landing from '@/components/Landing';
 import SidePanel from '@/components/SidePanel/SidePanel';

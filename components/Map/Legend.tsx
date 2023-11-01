@@ -2,8 +2,6 @@ import React, { useState, useContext } from 'react'
 
 import { MapContext, MapContextType } from '../../context/MapContext'
 
-import Toggler from '../elements/Toggler'
-
 import Image from 'next/image'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 

@@ -28,7 +28,7 @@ type Props = {
 
 const Map = ({ setGeopanelShown }: Props) => {
     const mapContainer = useRef<HTMLInputElement>(null);
-    const { map, setMap, setDistricts, setDistrictData, legislations, mapClickHandler } = useContext(MapContext) as MapContextType
+    const { map, setMap, setDistricts, legislations, mapClickHandler } = useContext(MapContext) as MapContextType
 
     const senateFeatures = (senate as GeoJson).features
     const assemblyFeatures = (assembly as GeoJson).features
