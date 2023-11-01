@@ -74,7 +74,6 @@ const SidePanel = () => {
                 .2, 0
             ])
             map?.on("click", "districts", (e) => mapClickHandler(map, e, l))
-            // map?.on("click", "districts", (e) => mapClickHandler(map!, e, l))
         }
 
         if (l !== "About") setLegislations(l)
