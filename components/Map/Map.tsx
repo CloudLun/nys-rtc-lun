@@ -40,7 +40,6 @@ const Map = ({ setGeopanelShown }: Props) => {
     // const organizationsEndorserFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Endorser"))
 
 
-    // console.log(assemblyFeatures)
 
     // senateFeatures.forEach((s, i) => {
     //     senateFeatures[i].properties.zipCodes = []
