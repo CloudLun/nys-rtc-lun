@@ -37,7 +37,7 @@ type Columns = "About" | "Statewide RTC" | "Winter Eviction Moratorium" | "Defen
 
 const SidePanel = () => {
 
-    const { map } = useContext(MapContext) as MapContextType
+    const { map, setLegislations, mapClickHandler } = useContext(MapContext) as MapContextType
     const [expand, setExpand] = useState({
         "About": true,
         "Statewide RTC": false,
@@ -55,11 +55,29 @@ const SidePanel = () => {
         }
         (Object.keys(newExpand) as Columns[]).forEach((e: Columns) => e === l ? newExpand[e] = true : newExpand[e] = false)
 
-        if (l !== "About") map?.setPaintProperty("districts", "fill-opacity", [
-            "case",
-            ["in", `${l}`, ["get", "HCMC support"]],
-            1, 0
-        ])
+        if (l !== "About") {
+
+            map?.setPaintProperty("districts", "fill-opacity", [
+                "case",
+                ["in", `${l}`, ["get", "HCMC support"]],
+                1, 0
+            ])
+            map?.setPaintProperty("pattern_rep", "fill-opacity", [
+                "case",
+                ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", l, ["get", "HCMC support"]]]],
+                0.2, 0
+            ]
+            )
+            map?.setPaintProperty("pattern_demo", "fill-opacity", [
+                "case",
+                ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", l, ["get", "HCMC support"]]]],
+                .2, 0
+            ])
+            map?.on("click", "districts", (e) => mapClickHandler(map, e, l))
+            // map?.on("click", "districts", (e) => mapClickHandler(map!, e, l))
+        }
+
+        if (l !== "About") setLegislations(l)
 
 
         setExpand(newExpand)

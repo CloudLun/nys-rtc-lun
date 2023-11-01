@@ -1,24 +1,52 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, Dispatch, SetStateAction } from 'react'
 
 import { XMarkIcon } from '@heroicons/react/24/solid'
+import { MapContext, MapContextType } from '@/context/MapContext'
 
-const Geopanel = () => {
+type Props = {
+    geopanelShown: boolean
+    setGeopanelShown: Dispatch<SetStateAction<boolean>>
+}
 
-    const [panelShown, setPanelShown] = useState(false)
-    const panelClickHandler = (b: boolean) => {
-        setPanelShown(b)
+
+const Geopanel = ({geopanelShown, setGeopanelShown}: Props) => {
+
+    const { map, legislations } = useContext(MapContext) as MapContextType
+
+    const panelClickHandler = () => {
+
+        map?.setPaintProperty("districts", "fill-opacity", [
+            "case",
+            ["in", legislations, ["get", "HCMC support"]],
+            .9, 0
+        ])
+
+        map?.setPaintProperty("pattern_rep", "fill-opacity", [
+            "case",
+            ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
+            0.2, 0
+        ])
+
+        map?.setPaintProperty("pattern_demo", "fill-opacity", [
+            "case",
+            ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
+            .2, 0
+        ])
+
+
+        setGeopanelShown(false)
     }
 
     return (
         <>
-            {panelShown && (
+            {geopanelShown && (
                 <div className='flex flex-col absolute top-0 right-0 w-[12%] h-full z-20'>
                     <div className='flex items-start justify-between p-[18px]  w-full bg-demo_1'>
                         <div>
                             <div className='text-label'>New York State Senate</div>
                             <div className='font-bold text-subheadline'>District 48</div>
                         </div>
-                        <XMarkIcon className=' w-[20px] h-[20px] text-white cursor-pointer' onClick={() => panelClickHandler(false)} />
+                        <XMarkIcon className=' w-[20px] h-[20px] text-white cursor-pointer' onClick={panelClickHandler} />
                     </div>
                     <div className='flex-1 px-[18px] w-full bg-white'>
                         <div className='py-[18px]'>

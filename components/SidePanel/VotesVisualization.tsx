@@ -102,7 +102,7 @@ function VotesVisualization({ legislation }: Props) {
         .data(demo)
         .enter()
         .append("text")
-        .attr("x", 0)
+        .attr("x", assemblyX(0) + 25)
         .attr("y", (d, i) => i === 0 ? y(d.House) as number - 30 : y(d.House) as number - 10)
         .style("font-size", "16px")
         .style("font-weight", "semiBold")
@@ -224,27 +224,30 @@ function VotesVisualization({ legislation }: Props) {
 
 
       // Icons
-      svg.selectAll(".districtsIcons").remove()
+      // svg.selectAll(".districtsIcons").remove()
 
       svg
+        .selectAll("districtsIcons")
+        .data(demo)
+        .enter()
         .append("image")
         .attr('class', "districtsIcons")
-        .attr("x", (districts === "senate") ? 112 : 131)
-        .attr("y", (districts === "senate") ? y(demo[0].House) as number - 44 : y(demo[1].House) as number - 24)
+        .attr("x", assemblyX(0))
+        .attr("y", (d, i) => i === 0 ? y(demo[0].House) as number - 44 : y(demo[1].House) as number - 24)
         .attr('width', 16)
         .attr("height", 16)
-        .attr("xlink:href", "/icons/districts_fill.svg")
+        .attr("xlink:href", (d, i) => {
+          if (districts === "senate") {
+            if (i === 0) return "/icons/districts_fill.svg"
+            if (i === 1) return "/icons/districts_empty.svg"
+          } else {
+            if (i === 0) return "/icons/districts_empty.svg"
+            if (i === 1) return "/icons/districts_fill.svg"
+          }
+          return ""
+        }
+        )
 
-      // (d, i) => {
-      //   if (districts === "senate") {
-      //     if (i === 0) return "/icons/districts_fill.svg"
-      //     if (i === 1) return "/icons/districts_empty.svg"
-      //   } else {
-      //     if (i === 0) return "/icons/districts_empty.svg"
-      //     if (i === 1) return "/icons/districts_fill.svg"
-      //   }
-      //   return ""
-      // }
 
       // Dash Lines
       svg.selectAll("majorityLine")

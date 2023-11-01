@@ -9,39 +9,15 @@ import { MapProvider } from "../context/MapContext";
 
 
 export default function Home() {
-  
 
-  // useEffect(() => {
-
-  //   d3.json("/rtc_members.json").then(data => {
-  //     const dataGeoJson = data.map((d) => {
-  //       return ({
-  //         "type": "Feature",
-  //         "properties": { ...d},
-  //         "geometry": {
-  //           "coordinates": [
-  //             +d["lon"],
-  //             +d["lat"]
-  //           ],
-  //           "type": "Point"
-  //         }
-  //       })
-  //     })
-
-  //     console.log(dataGeoJson)
-
-
-
-  //   })
-  // })
-
+  const [geopanelShown, setGeopanelShown] = useState(false)
 
   return (
     <div className='relative w-[100vw] max-h-[100vh]'>
       <MapProvider >
         <SidePanel />
-        <Map />
-        <Geopanel />
+        <Map setGeopanelShown={setGeopanelShown} />
+        <Geopanel geopanelShown={geopanelShown} setGeopanelShown={setGeopanelShown} />
       </MapProvider>
     </div>
   )

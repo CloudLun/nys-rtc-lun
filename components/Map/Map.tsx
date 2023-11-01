@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext, Dispatch, SetStateAction } from "react";
 import { MapContext, MapContextType } from "../../context/MapContext";
 
-import mapboxgl, { EventData, MapMouseEvent } from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 import { GeoJSONSource } from 'mapbox-gl';
 
 import assembly from "../../public/nys_assembly.geo.json"
@@ -21,12 +21,14 @@ import MapLayers from "./MapLayers";
 
 import "./Map.css"
 
+type Props = {
+    setGeopanelShown: Dispatch<SetStateAction<boolean>>
+}
 
 
-const Map = () => {
+const Map = ({ setGeopanelShown }: Props) => {
     const mapContainer = useRef<HTMLInputElement>(null);
-
-    const { map, setMap, setDistricts } = useContext(MapContext) as MapContextType
+    const { map, setMap, setDistricts, setDistrictData, legislations, mapClickHandler } = useContext(MapContext) as MapContextType
 
     const senateFeatures = (senate as GeoJson).features
     const assemblyFeatures = (assembly as GeoJson).features
@@ -38,9 +40,11 @@ const Map = () => {
     // const organizationsEndorserFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Endorser"))
 
 
-    senateFeatures.forEach((s, i) => {
-        senateFeatures[i].properties.zipCodes = []
-    })
+    // console.log(assemblyFeatures)
+
+    // senateFeatures.forEach((s, i) => {
+    //     senateFeatures[i].properties.zipCodes = []
+    // })
     // useEffect(() => {
     // senateFeatures.forEach((s, i) => {
     //     senateFeatures[i].properties.zipCodes = []
@@ -90,6 +94,23 @@ const Map = () => {
                 break
         }
         setDistricts(districts)
+
+        map?.setPaintProperty("districts", "fill-opacity", [
+            "case",
+            ["in", `${legislations}`, ["get", "HCMC support"]],
+            1, 0
+        ])
+        map?.setPaintProperty("pattern_rep", "fill-opacity", [
+            "case",
+            ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
+            0.2, 0
+        ]
+        )
+        map?.setPaintProperty("pattern_demo", "fill-opacity", [
+            "case",
+            ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
+            .2, 0
+        ])
     }
 
 
@@ -119,7 +140,6 @@ const Map = () => {
             setMap(m);
 
             const senateFiltered = senateFeatures.filter((s, i) => i === 25)
-            console.log(senateFiltered)
 
             m.addSource("districts", {
                 type: "geojson",
@@ -133,7 +153,7 @@ const Map = () => {
                 type: "geojson",
                 data: {
                     type: "FeatureCollection",
-                    features: countiesFeatures,
+                    features: [],
                 },
             })
 
@@ -208,39 +228,11 @@ const Map = () => {
                     ],
                     'fill-opacity': [
                         "case",
-                        ["in", "Statewide RTC", ["get", "HCMC support"]],
-                        .9, 0
+                        ["in", legislations, ["get", "HCMC support"]],
+                        1, 0
                     ]
                 },
             });
-
-            m.addLayer({
-                id: "pattern_rep",
-                type: "fill",
-                source: 'districts',
-                paint: {
-                    "fill-pattern": 'pattern_rep',
-                    'fill-opacity': [
-                        "case",
-                        ["all", ["==", ["get", "Party_x"], "Republican"]],
-                        .2, 0
-                    ]
-                }
-            })
-
-            m.addLayer({
-                id: "pattern_demo",
-                type: "fill",
-                source: 'districts',
-                paint: {
-                    "fill-pattern": 'pattern_demo',
-                    'fill-opacity': [
-                        "case",
-                        ["all", ["==", ["get", "Party_x"], "Democratic"]],
-                        .2, 0
-                    ]
-                }
-            })
 
             m.addLayer({
                 'id': 'districts_outline',
@@ -257,6 +249,47 @@ const Map = () => {
                     'line-width': 1
                 }
             });
+
+            m.addLayer({
+                id: "pattern_rep",
+                type: "fill",
+                source: 'districts',
+                paint: {
+                    "fill-pattern": 'pattern_rep',
+                    'fill-opacity': [
+                        "case",
+                        ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
+                        0.2, 0
+                    ]
+                }
+            })
+
+            m.addLayer({
+                id: "pattern_demo",
+                type: "fill",
+                source: 'districts',
+                paint: {
+                    "fill-pattern": 'pattern_demo',
+                    'fill-opacity': [
+                        "case",
+                        ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
+                        .2, 0
+                    ]
+                }
+            })
+
+            m.addLayer({
+                'id': 'counties_outline',
+                'type': 'line',
+                'source': 'counties',
+                'layout': {},
+                'paint': {
+                    'line-color': "#fff",
+                    'line-opacity': 1
+                },
+            });
+
+
 
             // m.addLayer({
             //     'id': 'zipcodes',
@@ -319,7 +352,20 @@ const Map = () => {
             //     },
             // })
 
-            // m.on("click", "districts", (e: MapMouseEvent & EventData) => {
+
+
+
+            m.on("click", "districts", (e) => mapClickHandler(m, e, legislations))
+
+
+
+
+
+
+
+
+
+
             //     const targetPolygon = turf.polygon([e.features[0].geometry.coordinates[0]])
 
             //     const filtered = zipcodeFeatures.filter((z, i) => i !== 1299).filter((z, i) => i !== 1407)
@@ -340,35 +386,35 @@ const Map = () => {
             //     m.getSource("zipcodes").setData({
             //         "type": "FeatureCollection",
             //         "features": filteredZipcodesFeatures
-            //     })
-
-                // const zipcodeFeaturesArray = []
-
-                // for (let i = 0; i < senateFeatures.length; i++) {
-                //     console.log(i)
-                //     if (i !== 25) {
-                //         const senatePolygon = turf.polygon([senateFeatures[i].geometry.coordinates[0]])
-                //         const filtered = zipcodeFeatures.filter((z, i) => i !== 1299).filter((z, i) => i !== 1407)
-                //         const filteredZipcodesFeatures = filtered.filter((z, i) => {
-                //             let zipcodesPolygon
-                //             if (z.geometry.coordinates[0].length === 1) {
-                //                 zipcodesPolygon = turf.polygon([z.geometry.coordinates[0][0]])
-                //                 if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
-                //                 return false
-                //             } else {
-                //                 zipcodesPolygon = turf.polygon([z.geometry.coordinates[0]])
-                //                 if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
-                //                 return false
-                //             }
-                //         })
-                //         zipcodeFeaturesArray.push(filteredZipcodesFeatures)
-                //     } else {
-                //         zipcodeFeaturesArray.push([])
-                //     }
-                // }
-
-                // console.log(zipcodeFeaturesArray)
             // })
+
+            // const zipcodeFeaturesArray = []
+
+            // for (let i = 0; i < senateFeatures.length; i++) {
+            //     console.log(i)
+            //     if (i !== 25) {
+            //         const senatePolygon = turf.polygon([senateFeatures[i].geometry.coordinates[0]])
+            //         const filtered = zipcodeFeatures.filter((z, i) => i !== 1299).filter((z, i) => i !== 1407)
+            //         const filteredZipcodesFeatures = filtered.filter((z, i) => {
+            //             let zipcodesPolygon
+            //             if (z.geometry.coordinates[0].length === 1) {
+            //                 zipcodesPolygon = turf.polygon([z.geometry.coordinates[0][0]])
+            //                 if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
+            //                 return false
+            //             } else {
+            //                 zipcodesPolygon = turf.polygon([z.geometry.coordinates[0]])
+            //                 if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
+            //                 return false
+            //             }
+            //         })
+            //         zipcodeFeaturesArray.push(filteredZipcodesFeatures)
+            //     } else {
+            //         zipcodeFeaturesArray.push([])
+            //     }
+            // }
+
+            // console.log(zipcodeFeaturesArray)
+
 
 
 
