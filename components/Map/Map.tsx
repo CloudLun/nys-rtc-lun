@@ -12,7 +12,7 @@ import organizations from "../../public/rtc_members.geo.json"
 import counties from "../../public/nys_counties.geo.json"
 // import zipcodes from "../../public/nys_zipcodes.geo.json"
 
-import * as turf from "@turf/turf";
+// import * as turf from "@turf/turf";
 
 
 import Legend from "./Legend";
