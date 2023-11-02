@@ -1,6 +1,11 @@
 import React, { useRef, useEffect, useContext } from 'react'
 import { MapContext, MapContextType } from '../../context/MapContext'
 
+import { GeoJSONSource } from 'mapbox-gl';
+
+import assembly from "../../public/nys_assembly.geo.json"
+import senate from "../../public/nys_senate.geo.json"
+
 import * as d3 from "d3"
 
 
@@ -12,10 +17,48 @@ type Props = {
 
 function VotesVisualization({ legislation }: Props) {
 
-  const { districts } = useContext(MapContext) as MapContextType
+  const {map, districts, setDistricts } = useContext(MapContext) as MapContextType
 
   const ref = useRef<SVGSVGElement | null>(null)
   const effectRan = useRef(false)
+
+  const senateFeatures = (senate as GeoJson).features
+  const assemblyFeatures = (assembly as GeoJson).features
+
+  const districtsClickHandler = (districts: Districts) => {
+    switch (districts) {
+        case "senate":
+            (map?.getSource("districts") as GeoJSONSource).setData({
+                type: "FeatureCollection",
+                features: senateFeatures
+            });
+            break
+        case "assembly":
+            (map?.getSource("districts") as GeoJSONSource).setData({
+                type: "FeatureCollection",
+                features: assemblyFeatures
+            });
+            break
+    }
+    setDistricts(districts)
+
+    map?.setPaintProperty("districts", "fill-opacity", [
+        "case",
+        ["in", `${legislation}`, ["get", "HCMC support"]],
+        1, 0
+    ])
+    map?.setPaintProperty("pattern_rep", "fill-opacity", [
+        "case",
+        ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislation, ["get", "HCMC support"]]]],
+        0.2, 0
+    ]
+    )
+    map?.setPaintProperty("pattern_demo", "fill-opacity", [
+        "case",
+        ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislation, ["get", "HCMC support"]]]],
+        .2, 0
+    ])
+}
 
   useEffect(() => {
 
@@ -232,6 +275,7 @@ function VotesVisualization({ legislation }: Props) {
         .enter()
         .append("image")
         .attr('class', "districtsIcons")
+        .attr("id", (d,i) => i === 0 ? "senate" : "assembly")
         .attr("x", assemblyX(0))
         .attr("y", (d, i) => i === 0 ? y(demo[0].House) as number - 44 : y(demo[1].House) as number - 24)
         .attr('width', 16)
@@ -247,6 +291,11 @@ function VotesVisualization({ legislation }: Props) {
           return ""
         }
         )
+        .on('click', (e) => {
+          const id = e.target.id
+          if(id === "senate") districtsClickHandler("senate")
+          if(id === "assembly") districtsClickHandler("assembly")
+        })
 
 
       // Dash Lines
@@ -322,7 +371,7 @@ function VotesVisualization({ legislation }: Props) {
 
     return () => { effectRan.current = true }
 
-  }, [districts])
+  })
 
 
   return (

@@ -101,13 +101,13 @@ const SidePanel = () => {
 
 
     return (
-        <div className="flex flex-col justify-between absolute pt-[20px] pb-[20px] w-[450px] h-full bg-background_blue z-20">
+        <div className="flex flex-col justify-between absolute pt-[20px] pb-[20px] w-[450px] h-full bg-background_blue z-50">
             <div>
                 <div className="mb-[20px] px-[30px]">
                     <h1 className="font-bold text-headline text-rtc_purple">Housing Courts Must Change!</h1>
                     <h2 className="font-bold text-subheadline text-rtc_navy">NY State Right to Counsel Map for HCMC Support</h2>
                 </div>
-                <div className={`flex flex-col justify-between px-[30px] pt-[15px] pb-[20px] text-rtc_navy ${expand["About"] ? "h-[500px] bg-white" : "h-[45px] bg-background_blue"} border-t-[1px] border-grey_1 overflow-y-hidden`}>
+                <div className={`flex flex-col justify-between px-[30px] pt-[10.5px] pb-[20px] text-rtc_navy ${expand["About"] ? "h-[500px] bg-white" : "h-[45px] bg-background_blue"} border-t-[1px] border-grey_1 overflow-y-hidden`}>
                     <div>
                         <div className="flex justify-between items-center">
                             <h2 className="font-semibold text-title ">ABOUT</h2>
