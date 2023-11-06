@@ -8,6 +8,8 @@ import senate from "../../public/nys_senate.geo.json"
 
 import * as d3 from "d3"
 
+import "./voteVisualization.css"
+
 
 type Props = {
   legislation: Legislations;
@@ -17,7 +19,7 @@ type Props = {
 
 function VotesVisualization({ legislation }: Props) {
 
-  const {map, districts, setDistricts } = useContext(MapContext) as MapContextType
+  const { map, districts, setDistricts } = useContext(MapContext) as MapContextType
 
   const ref = useRef<SVGSVGElement | null>(null)
   const effectRan = useRef(false)
@@ -27,38 +29,38 @@ function VotesVisualization({ legislation }: Props) {
 
   const districtsClickHandler = (districts: Districts) => {
     switch (districts) {
-        case "senate":
-            (map?.getSource("districts") as GeoJSONSource).setData({
-                type: "FeatureCollection",
-                features: senateFeatures
-            });
-            break
-        case "assembly":
-            (map?.getSource("districts") as GeoJSONSource).setData({
-                type: "FeatureCollection",
-                features: assemblyFeatures
-            });
-            break
+      case "senate":
+        (map?.getSource("districts") as GeoJSONSource).setData({
+          type: "FeatureCollection",
+          features: senateFeatures
+        });
+        break
+      case "assembly":
+        (map?.getSource("districts") as GeoJSONSource).setData({
+          type: "FeatureCollection",
+          features: assemblyFeatures
+        });
+        break
     }
     setDistricts(districts)
 
     map?.setPaintProperty("districts", "fill-opacity", [
-        "case",
-        ["in", `${legislation}`, ["get", "HCMC support"]],
-        1, 0
+      "case",
+      ["in", `${legislation}`, ["get", "HCMC support"]],
+      1, 0
     ])
     map?.setPaintProperty("pattern_rep", "fill-opacity", [
-        "case",
-        ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislation, ["get", "HCMC support"]]]],
-        0.2, 0
+      "case",
+      ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislation, ["get", "HCMC support"]]]],
+      0.2, 0
     ]
     )
     map?.setPaintProperty("pattern_demo", "fill-opacity", [
-        "case",
-        ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislation, ["get", "HCMC support"]]]],
-        .2, 0
+      "case",
+      ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislation, ["get", "HCMC support"]]]],
+      .2, 0
     ])
-}
+  }
 
   useEffect(() => {
 
@@ -145,11 +147,15 @@ function VotesVisualization({ legislation }: Props) {
         .data(demo)
         .enter()
         .append("text")
+        .attr("class", "districtSupport")
         .attr("x", assemblyX(0) + 25)
         .attr("y", (d, i) => i === 0 ? y(d.House) as number - 30 : y(d.House) as number - 10)
-        .style("font-size", "16px")
-        .style("font-weight", "semiBold")
+        .attr('fill', "#121D3E")
+        .attr("shape-rendering", "geometricPrecision")
+        .attr("font-weight", 400)
+        .attr("font-smooth", "none")
         .text(d => `${d.House} Support`)
+
 
       svg.selectAll("totalSeats")
         .data(demo)
@@ -158,19 +164,21 @@ function VotesVisualization({ legislation }: Props) {
         .attr("class", 'totalSeats')
         .attr("x", (d, i) => i === 0 ? width - 40 : width - 46)
         .attr("y", (d, i) => i === 0 ? y(d.House) as number - 10 : y(d.House) as number + 10)
-        .style("font-size", "12px")
-        .style("font-weight", "regular")
+        .style('fill', "#121D3E")
+        .style("font-size", 12)
+        .style("font-weight", 300)
         .text((d, i) => i === 0 ? "63 seats" : "150 seats")
 
       svg.selectAll("supportPercentage")
         .data(demo)
         .enter()
         .append("text")
-        .attr("class", 'totalSeats')
+        .attr("class", 'supportPercentage')
         .attr("x", 0)
         .attr("y", (d, i) => i === 0 ? y(d.House) as number - 10 : y(d.House) as number + 10)
-        .style("font-size", "13px")
-        .style("font-weight", "semiBold")
+        .style('fill', "#121D3E")
+        .style("font-size", 13)
+        .style("font-weight", 400)
         .text((d, i) => i === 0 ? `${Math.round(senateTotalVotes / 63 * 100)}%` : `${Math.round(assemblyTotalVotes / 150 * 100)}%`)
 
       svg.selectAll('totalVotes')
@@ -180,9 +188,9 @@ function VotesVisualization({ legislation }: Props) {
         .attr('class', "totalVotes")
         .attr("x", 0)
         .attr("y", (d, i) => i === 0 ? y(d.House) as number + y.bandwidth() + 2 : y(d.House) as number + y.bandwidth() + 22)
-        .attr('fill', "#121D3E")
-        .style("font-size", "13px")
-        .style("font-weight", "semiBold")
+        .style('fill', "#121D3E")
+        .style("font-size", 13)
+        .style("font-weight", 400)
         .text((d, i) => i === 0 ? `${senateTotalVotes} votes` : `${assemblyTotalVotes} votes`)
 
 
@@ -196,7 +204,7 @@ function VotesVisualization({ legislation }: Props) {
         .attr('fill', "#0057A8")
         .attr("fill-opacity", 0)
         .style("font-size", "13px")
-        .style("font-weight", "semiBold")
+        .style("font-weight", 400)
         .text(d => `${+d[legislation]} Democratic votes`)
 
       svg.selectAll('repPartyVotes')
@@ -218,12 +226,12 @@ function VotesVisualization({ legislation }: Props) {
         .enter()
         .append("text")
         .attr('class', "majorityLabels")
-        .attr("x", (width) / 2)
+        .attr("x", (width) / 2 + 2)
         .attr("y", (d, i) => i === 0 ? y(d.House) as number + y.bandwidth() + 2 : y(d.House) as number + y.bandwidth() + 22)
         .attr('fill', "#7B7B7B")
         .attr("fill-opacity", 0)
         .style("font-size", "13px")
-        .style("font-weight", "semiBold")
+        .style("font-weight", 300)
         .text((d, i) => `${i === 0 ? "33" : "76"} votes`)
 
       svg.selectAll('majorityLabelsSecond')
@@ -231,12 +239,12 @@ function VotesVisualization({ legislation }: Props) {
         .enter()
         .append("text")
         .attr('class', "majorityLabels")
-        .attr("x", (width) / 2 - 2)
+        .attr("x", (width) / 2 + 2)
         .attr("y", (d, i) => i === 0 ? y(d.House) as number + y.bandwidth() + 17 : y(d.House) as number + y.bandwidth() + 37)
         .attr('fill', "#7B7B7B")
         .attr("fill-opacity", 0)
         .style("font-size", "13px")
-        .style("font-weight", "semiBold")
+        .style("font-weight", 300)
         .text(`simple majority`)
 
       svg.selectAll('superMajorityLabels')
@@ -244,12 +252,12 @@ function VotesVisualization({ legislation }: Props) {
         .enter()
         .append("text")
         .attr('class', "superMajorityLabels")
-        .attr("x", (width) / 4 * 3)
+        .attr("x", (width) / 4 * 3 + 2)
         .attr("y", (d, i) => i === 0 ? y(d.House) as number + y.bandwidth() + 2 : y(d.House) as number + y.bandwidth() + 22)
         .attr('fill', "#7B7B7B")
         .attr("fill-opacity", 0)
         .style("font-size", "13px")
-        .style("font-weight", "semiBold")
+        .style("font-weight", 300)
         .text((d, i) => `${i === 0 ? "42" : "100"} votes`)
 
       svg.selectAll('superMajorityLabelsSecond')
@@ -257,13 +265,16 @@ function VotesVisualization({ legislation }: Props) {
         .enter()
         .append("text")
         .attr('class', "superMajorityLabels")
-        .attr("x", (width) / 4 * 3)
+        .attr("x", (width) / 4 * 3 + 2)
         .attr("y", (d, i) => i === 0 ? y(d.House) as number + y.bandwidth() + 17 : y(d.House) as number + y.bandwidth() + 37)
         .attr('fill', "#7B7B7B")
         .attr("fill-opacity", 0)
         .style("font-size", "13px")
-        .style("font-weight", "semiBold")
+        .style("font-weight", 300)
         .text(`supermajority`)
+
+
+      svg.selectAll("text").style("stroke", "none").style("shape-rendering", "crispEdges")
 
 
       // Icons
@@ -275,7 +286,7 @@ function VotesVisualization({ legislation }: Props) {
         .enter()
         .append("image")
         .attr('class', "districtsIcons")
-        .attr("id", (d,i) => i === 0 ? "senate" : "assembly")
+        .attr("id", (d, i) => i === 0 ? "senate" : "assembly")
         .attr("x", assemblyX(0))
         .attr("y", (d, i) => i === 0 ? y(demo[0].House) as number - 44 : y(demo[1].House) as number - 24)
         .attr('width', 16)
@@ -293,9 +304,10 @@ function VotesVisualization({ legislation }: Props) {
         )
         .on('click', (e) => {
           const id = e.target.id
-          if(id === "senate") districtsClickHandler("senate")
-          if(id === "assembly") districtsClickHandler("assembly")
+          if (id === "senate") districtsClickHandler("senate")
+          if (id === "assembly") districtsClickHandler("assembly")
         })
+
 
 
       // Dash Lines
@@ -376,9 +388,14 @@ function VotesVisualization({ legislation }: Props) {
 
   return (
 
-    <svg className='w-full h-[251px] text-black bg-white rounded-[8px]' ref={ref}>
+    <svg className='w-full h-[251px] text-black bg-white rounded-[8px] ' ref={ref}>
     </svg>
   )
 }
 
 export default VotesVisualization
+// "origin/main is the main branch on the remote repo and origin/HEAD is the active branch on the remote repo."
+// above 600
+// git status
+// git diff
+// make the commit message tot be concise

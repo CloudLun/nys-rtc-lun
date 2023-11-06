@@ -1,21 +1,25 @@
 "use client";
 import { createContext, useState, Dispatch, SetStateAction, ReactNode, } from "react";
 
-
 import mapboxgl, { EventData, MapMouseEvent } from 'mapbox-gl';
+
+import * as turf from "@turf/turf";
 
 export type MapContextType = {
     map: mapboxgl.Map | null,
     setMap: Dispatch<SetStateAction<mapboxgl.Map | null>>
     districts: Districts
     setDistricts: Dispatch<SetStateAction<Districts>>
-    districtData: GeoJson["features"] | null
-    setDistrictData: Dispatch<SetStateAction<GeoJson["features"] | null>>
+    // selectedDistrictFeatures: GeoJson["features"] | null
+    // setSelectedDistrictFeatures: Dispatch<SetStateAction<GeoJson["features"] | null>>
     membershipShown: boolean
     setMembershipShown: Dispatch<SetStateAction<boolean>>
     legislations: Legislations
     setLegislations: Dispatch<SetStateAction<Legislations>>
+    geopanelShown: boolean
+    setGeopanelShown: Dispatch<SetStateAction<boolean>>
     mapClickHandler: (m: mapboxgl.Map, e: MapMouseEvent & EventData, legislations: Legislations) => void
+    defaultMapHandler: () => void
 }
 
 type Props = {
@@ -27,19 +31,18 @@ const MapContext = createContext<MapContextType | null>(null)
 
 const MapProvider = ({ children }: Props) => {
 
-
-
-
     const [map, setMap] = useState<mapboxgl.Map | null>(null)
     const [districts, setDistricts] = useState<Districts>("senate")
-    const [districtData, setDistrictData] = useState<GeoJson["features"] | null>(null)
+    // const [selectedDistrictFeatures, setSelectedDistrictFeatures] = useState<GeoJson["features"] | null>(null)
+    const [geopanelShown, setGeopanelShown] = useState(false)
     const [membershipShown, setMembershipShown] = useState<boolean>(false)
     const [legislations, setLegislations] = useState<Legislations>("Statewide RTC")
 
-
-
     const mapClickHandler = (m: mapboxgl.Map, e: MapMouseEvent & EventData, legislations: Legislations) => {
         const district = e.features[0].properties.District
+        const targetPolygon = turf.polygon(e.features[0].geometry.coordinates)
+        const targetCentroid = turf.centroid(targetPolygon).geometry.coordinates
+
         if (e.features[0].properties["HCMC support"].includes(legislations)) {
             m.setPaintProperty("districts", "fill-opacity", [
                 "case",
@@ -106,14 +109,51 @@ const MapProvider = ({ children }: Props) => {
             ])
 
         }
-        // setGeopanelShown(true)
-        setDistrictData(e.features[0])
+        setGeopanelShown(true)
+        m.flyTo({
+            center: targetCentroid as [number, number],
+            zoom: 8
+        })
     }
 
+    const defaultMapHandler = () => {
+        map?.setPaintProperty("districts", "fill-opacity", [
+            "case",
+            ["in", `${legislations}`, ["get", "HCMC support"]],
+            1, 0
+        ])
+        map?.setPaintProperty("pattern_rep", "fill-opacity", [
+            "case",
+            ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
+            0.2, 0
+        ]
+        )
+        map?.setPaintProperty("pattern_demo", "fill-opacity", [
+            "case",
+            ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
+            .2, 0
+        ])
+
+        map?.flyTo({
+            center: [-78.5, 43.05] as [number, number],
+            zoom: -6.25
+        })
+
+
+        map?.getSource("zipcodes").setData({
+            type: "FeatureCollection",
+            features: [],
+        })
+
+        setGeopanelShown(false)
+    }
+
+    
 
 
 
-    return <MapContext.Provider value={{ map, setMap, districts, setDistricts, districtData, setDistrictData, membershipShown, setMembershipShown, legislations, setLegislations, mapClickHandler }}>
+
+    return <MapContext.Provider value={{ map, setMap, districts, setDistricts, membershipShown, setMembershipShown, geopanelShown, setGeopanelShown, legislations, setLegislations, mapClickHandler, defaultMapHandler }}>
         {children}
     </MapContext.Provider>
 }

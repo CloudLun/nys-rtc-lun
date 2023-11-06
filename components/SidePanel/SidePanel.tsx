@@ -3,9 +3,13 @@ import React, { useState, useContext } from "react";
 import { MapContext, MapContextType } from '../../context/MapContext'
 
 import LegislationColumns from "./LegislationColumns";
+import About from "./About";
 
 import Image from 'next/image'
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid'
+
+
+export type Columns = "About" | "Statewide RTC" | "Winter Eviction Moratorium" | "Defend RTC"
+
 
 const legislationsData = {
     "Statewide RTC": {
@@ -32,12 +36,12 @@ const legislationsData = {
 }
 
 
-type Columns = "About" | "Statewide RTC" | "Winter Eviction Moratorium" | "Defend RTC"
+
 
 
 const SidePanel = () => {
 
-    const { map, setLegislations, mapClickHandler } = useContext(MapContext) as MapContextType
+    const { map, setLegislations, mapClickHandler, setGeopanelShown, defaultMapHandler } = useContext(MapContext) as MapContextType
     const [expand, setExpand] = useState({
         "About": true,
         "Statewide RTC": false,
@@ -54,32 +58,15 @@ const SidePanel = () => {
             "Defend RTC": boolean
         }
         (Object.keys(newExpand) as Columns[]).forEach((e: Columns) => e === l ? newExpand[e] = true : newExpand[e] = false)
+        setExpand(newExpand)
 
         if (l !== "About") {
-
-            map?.setPaintProperty("districts", "fill-opacity", [
-                "case",
-                ["in", `${l}`, ["get", "HCMC support"]],
-                1, 0
-            ])
-            map?.setPaintProperty("pattern_rep", "fill-opacity", [
-                "case",
-                ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", l, ["get", "HCMC support"]]]],
-                0.2, 0
-            ]
-            )
-            map?.setPaintProperty("pattern_demo", "fill-opacity", [
-                "case",
-                ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", l, ["get", "HCMC support"]]]],
-                .2, 0
-            ])
-            map?.on("click", "districts", (e) => mapClickHandler(map, e, l))
+            defaultMapHandler()
         }
 
-        if (l !== "About") setLegislations(l)
 
 
-        setExpand(newExpand)
+
     }
 
 
@@ -101,46 +88,20 @@ const SidePanel = () => {
 
 
     return (
-        <div className="flex flex-col justify-between absolute pt-[20px] pb-[20px] w-[450px] h-full bg-background_blue z-50">
-            <div>
-                <div className="mb-[20px] px-[30px]">
-                    <h1 className="font-bold text-headline text-rtc_purple">Housing Courts Must Change!</h1>
-                    <h2 className="font-bold text-subheadline text-rtc_navy">NY State Right to Counsel Map for HCMC Support</h2>
-                </div>
-                <div className={`flex flex-col justify-between px-[30px] pt-[10.5px] pb-[20px] text-rtc_navy ${expand["About"] ? "h-[500px] bg-white" : "h-[45px] bg-background_blue"} border-t-[1px] border-grey_1 overflow-y-hidden`}>
-                    <div>
-                        <div className="flex justify-between items-center">
-                            <h2 className="font-semibold text-title ">ABOUT</h2>
-                            {
-                                expand["About"] ? <ChevronUpIcon className="w-[20px] h-[20px] cursor-pointer" onClick={() => legislationsClickHandler("About")} /> : <ChevronDownIcon className="w-[20px] h-[20px] cursor-pointer" onClick={() => legislationsClickHandler("About")} />
-                            }
-                        </div>
-                        <div className="flex justify-between items-start my-[16px]">
-                            <h2 className="pb-[3px] font-semibold text-title border-b-2 border-rtc_navy">the HCMC! Campaign Legislation Map</h2>
-                            <h2 className="font-semibold text-title text-grey_1">Credits</h2>
-                        </div>
-                        <div className="text-body">
-                            <p>
-                                Housing Courts Must Change! (HCMC) is a New York statewide campaign launched by the Right to Counsel NYC Coalition in 2020 to transform the courts from an “eviction machine” to a place that holds landlords accountable, upholds tenants’ rights, and enables tenants to remain in their homes.
-                            </p>
-                            <p className="my-[20px]">
-                                New York State (NYS) support for HCMC campaign legislation is shown in the map through Senate and Assembly districts. The HCMC campaign focuses on three legislation campagins:
-                                Statewide Right to Counsel (S2721 / A1493)
-                                Defend Right to Counsel (S3254 / A4993)
-                                Winter Eviction Moratorium (S1403 / A4093)
-                            </p>
-                            <p>
-                                Explore the map to view co-located geographic support between Right to Counsel NYC Coalition’s base support, zip code boundaries, counties, assembly districts, and senate districts.
-                            </p>
-                        </div>
+        <div className="flex flex-col justify-between absolute py-[20px] w-[450px] h-full bg-background_blue z-50">
+            <div className="flex flex-col justify-between">
+                <div>
+                    <div className="mb-[20px] px-[30px]">
+                        <h1 className="font-bold text-headline text-rtc_purple">Housing Courts Must Change!</h1>
+                        <h2 className="font-bold text-subheadline text-rtc_navy">NY State Right to Counsel Map for HCMC Support</h2>
                     </div>
-                    <div className="mt-[20px] font-semibold text-title text-rtc_purple">
-                        Click on each tab below to start using the map.
-                    </div>
+                    <About expand={expand} legislationsClickHandler={legislationsClickHandler} />
                 </div>
-                <LegislationColumns legislation={"Statewide RTC"} title={legislationsData["Statewide RTC"]['fullName']} name={legislationsData["Statewide RTC"]['legislation']} number={legislationsData["Statewide RTC"]['number']} content={legislationsData["Statewide RTC"]['content']} expand={expand["Statewide RTC"]} legislationsClickHandler={() => legislationsClickHandler("Statewide RTC")} />
-                <LegislationColumns legislation={"Winter Eviction Moratorium"} title={legislationsData["Winter Eviction Moratorium"]['fullName']} name={legislationsData["Winter Eviction Moratorium"]['legislation']} number={legislationsData["Winter Eviction Moratorium"]['number']} content={legislationsData["Winter Eviction Moratorium"]['content']} expand={expand["Winter Eviction Moratorium"]} legislationsClickHandler={() => legislationsClickHandler("Winter Eviction Moratorium")} />
-                <LegislationColumns legislation={"Defend RTC"} title={legislationsData["Defend RTC"]['fullName']} name={legislationsData["Defend RTC"]['legislation']} number={legislationsData["Defend RTC"]['number']} content={legislationsData["Defend RTC"]['content']} expand={expand["Defend RTC"]} legislationsClickHandler={() => legislationsClickHandler("Defend RTC")} />
+                <div>
+                    <LegislationColumns legislation={"Statewide RTC"} title={legislationsData["Statewide RTC"]['fullName']} name={legislationsData["Statewide RTC"]['legislation']} number={legislationsData["Statewide RTC"]['number']} content={legislationsData["Statewide RTC"]['content']} expand={expand["Statewide RTC"]} legislationsClickHandler={() => legislationsClickHandler("Statewide RTC")} />
+                    <LegislationColumns legislation={"Winter Eviction Moratorium"} title={legislationsData["Winter Eviction Moratorium"]['fullName']} name={legislationsData["Winter Eviction Moratorium"]['legislation']} number={legislationsData["Winter Eviction Moratorium"]['number']} content={legislationsData["Winter Eviction Moratorium"]['content']} expand={expand["Winter Eviction Moratorium"]} legislationsClickHandler={() => legislationsClickHandler("Winter Eviction Moratorium")} />
+                    <LegislationColumns legislation={"Defend RTC"} title={legislationsData["Defend RTC"]['fullName']} name={legislationsData["Defend RTC"]['legislation']} number={legislationsData["Defend RTC"]['number']} content={legislationsData["Defend RTC"]['content']} expand={expand["Defend RTC"]} legislationsClickHandler={() => legislationsClickHandler("Defend RTC")} />
+                </div>
             </div>
             <div className="flex items-center gap-[15px] px-[30px]">
                 <Image

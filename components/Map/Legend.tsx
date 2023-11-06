@@ -14,7 +14,7 @@ type Props = {
 
 const Legend = () => {
 
-    const { membershipShown } = useContext(MapContext) as MapContextType
+    const { districts, membershipShown, legislations } = useContext(MapContext) as MapContextType
 
     const [panelShown, setPanelShown] = useState(true)
     const panelClickHandler = (b: boolean) => {
@@ -23,7 +23,7 @@ const Legend = () => {
 
     return (
         <>
-            <div className='absolute left-[480px] top-[40px] drop-shadow-xl cursor-pointer z-20 '>
+            <div className='absolute left-[480px] top-[20px] drop-shadow-xl cursor-pointer z-20 '>
                 <div className='w-[48px] h-[48px] bg-rtc_purple rounded-full'></div>
                 <Image
                     src="/icons/legend_active.svg"
@@ -35,9 +35,12 @@ const Legend = () => {
                 />
             </div>
             {panelShown && (
-                <div className='absolute left-[480px] top-[40px] p-[15px] text-rtc_navy bg-white rounded-[8px] drop-shadow-xl z-20'>
+                <div className='absolute left-[480px] top-[20px] p-[15px] text-rtc_navy bg-white rounded-[8px] drop-shadow-xl z-20'>
                     <div className='flex justify-between'>
-                        <h2 className='mb-[8px] font-bold text-title leading-[22.5px]'>Statewide Right to Counsel Senate District Support Map</h2>
+                        <h2 className='mb-[8px] font-bold text-title leading-[22.5px]'>
+                            {legislations === "Statewide RTC" ? "Statewide Right to Counsel " : legislations === "Defend RTC" ? "Defend Right to Counsel " : "Winter Eviction Moratorium "}
+                            {districts.charAt(0).toUpperCase() + districts.slice(1)} District Support Map
+                        </h2>
                         <XMarkIcon className='ml-[12px] w-[22px] h-[22px] text-grey_2 cursor-pointer' onClick={() => panelClickHandler(false)} />
                     </div>
                     <div className='flex gap-[30px]'>

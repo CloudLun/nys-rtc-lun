@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useContext, Dispatch, SetStateAction } from "react";
 import { MapContext, MapContextType } from "../../context/MapContext";
 
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { EventData, MapMouseEvent } from 'mapbox-gl';
 import { GeoJSONSource } from 'mapbox-gl';
 
 import assembly from "../../public/nys_assembly.geo.json"
@@ -12,29 +12,25 @@ import organizations from "../../public/rtc_members.geo.json"
 import counties from "../../public/nys_counties.geo.json"
 // import zipcodes from "../../public/nys_zipcodes.geo.json"
 
-// import * as turf from "@turf/turf";
+import * as turf from "@turf/turf";
 
 
 import Legend from "./Legend";
 import MapLayers from "./MapLayers";
-
+import Geopanel from "../Geopanel/Geopanel";
 
 import "./Map.css"
 
-type Props = {
-    setGeopanelShown: Dispatch<SetStateAction<boolean>>
-}
 
 
-const Map = ({ setGeopanelShown }: Props) => {
+const Map = () => {
     const mapContainer = useRef<HTMLInputElement>(null);
-    const { map, setMap, setDistricts, legislations, mapClickHandler } = useContext(MapContext) as MapContextType
+    const { map, setMap, setDistricts, setGeopanelShown, legislations, mapClickHandler, defaultMapHandler } = useContext(MapContext) as MapContextType
 
     const senateFeatures = (senate as GeoJson).features
     const assemblyFeatures = (assembly as GeoJson).features
     const organizationsFeatures = (organizations as GeoJson).features
     const countiesFeatures = (counties as GeoJson).features
-    // const zipcodeFeatures = (zipcodes as GeoJson).features
     // const organizationsMemberFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Campaign Member") || o.properties["Membership Status"].includes("Coalition Member"))
     // const organziationsSupporterFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Supporter"))
     // const organizationsEndorserFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Endorser"))
@@ -67,17 +63,16 @@ const Map = ({ setGeopanelShown }: Props) => {
 
 
 
-
-
-
-
-
-
     const [lng, setLng] = useState(-78.5);
     const [lat, setLat] = useState(43.05);
-    const [zoom, setZoom] = useState(6.25);
+    const [zoom, setZoom] = useState(-6.25);
+
+    const [selectedDistrictFeatures, setSelectedDistrictFeatures] = useState(null)
+
 
     const districtsClickHandler = (districts: Districts) => {
+        setDistricts(districts)
+
         switch (districts) {
             case "senate":
                 (map?.getSource("districts") as GeoJSONSource).setData({
@@ -92,26 +87,9 @@ const Map = ({ setGeopanelShown }: Props) => {
                 });
                 break
         }
-        setDistricts(districts)
 
-        map?.setPaintProperty("districts", "fill-opacity", [
-            "case",
-            ["in", `${legislations}`, ["get", "HCMC support"]],
-            1, 0
-        ])
-        map?.setPaintProperty("pattern_rep", "fill-opacity", [
-            "case",
-            ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-            0.2, 0
-        ]
-        )
-        map?.setPaintProperty("pattern_demo", "fill-opacity", [
-            "case",
-            ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-            .2, 0
-        ])
+        defaultMapHandler()
     }
-
 
     useEffect(() => {
         mapboxgl.accessToken =
@@ -122,7 +100,7 @@ const Map = ({ setGeopanelShown }: Props) => {
             center: [lng, lat],
             zoom: zoom,
             minZoom: 6,
-            maxZoom: 10,
+            maxZoom: 12,
             interactive: true,
             doubleClickZoom: false,
         });
@@ -132,13 +110,13 @@ const Map = ({ setGeopanelShown }: Props) => {
         m.on("move", () => {
             setLng(Number(m.getCenter().lng.toFixed(4)));
             setLat(Number(m.getCenter().lat.toFixed(4)));
-            setZoom(Number(m.getZoom().toFixed(2)));
+            setZoom(Number(m.getZoom()));
         });
 
         m.on("load", () => {
             setMap(m);
 
-            const senateFiltered = senateFeatures.filter((s, i) => i === 25)
+            // const senateFiltered = senateFeatures.filter((s, i) => i === 25)
 
             m.addSource("districts", {
                 type: "geojson",
@@ -334,6 +312,11 @@ const Map = ({ setGeopanelShown }: Props) => {
                 }
             })
 
+            m.on("click", "districts", (e: MapMouseEvent & EventData) => {
+                setSelectedDistrictFeatures(e.features[0])
+                mapClickHandler(m, e, legislations)
+            })
+
 
             // m.addLayer({
             //     id: 'organizations_members',
@@ -350,13 +333,6 @@ const Map = ({ setGeopanelShown }: Props) => {
             //         "circle-stroke-color": "#802948",
             //     },
             // })
-
-
-
-
-            m.on("click", "districts", (e) => mapClickHandler(m, e, legislations))
-
-
 
 
 
@@ -592,6 +568,7 @@ const Map = ({ setGeopanelShown }: Props) => {
             </div >
             <Legend />
             <MapLayers districtsClickHandler={districtsClickHandler} />
+            <Geopanel selectedDistrictFeatures={selectedDistrictFeatures} />
         </>
     )
 
