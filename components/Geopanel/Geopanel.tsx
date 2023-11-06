@@ -48,6 +48,7 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
 
     const zipcodeClickHandler = (e: any) => {
         const clickedZipcode = (zipcodes as GeoJson).features.filter((z, i) => z.properties.ZCTA5CE10 === e.target.innerText)
+        /* @ts-ignore */
         map?.getSource("zipcodes").setData({
             type: "FeatureCollection",
             features: clickedZipcode,
@@ -114,23 +115,36 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
                         <div>
                             <div className='mb-[5px] text-[10px] text-grey_1'>Assembly Districts</div>
                             <div className='grid grid-cols-4 gap-[8px]'>
+                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="116" clickHandler={(e) => zipcodeClickHandler(e)} />
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="120" clickHandler={(e) => zipcodeClickHandler(e)} />
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="125" clickHandler={(e) => zipcodeClickHandler(e)} />
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="127" clickHandler={(e) => zipcodeClickHandler(e)} />
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="128" clickHandler={(e) => zipcodeClickHandler(e)} />
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="129" clickHandler={(e) => zipcodeClickHandler(e)} />
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="130" clickHandler={(e) => zipcodeClickHandler(e)} />
                             </div>
                         </div>
                         <div className='my-[16px]'>
                             <div className='mb-[5px] text-[10px] text-grey_1'>Counties</div>
                             <div className='grid grid-cols-2 gap-[12px]'>
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="Cayuga" clickHandler={(e) => zipcodeClickHandler(e)} /> 
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="Oswego" clickHandler={(e) => zipcodeClickHandler(e)} /> 
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="Cortland" clickHandler={(e) => zipcodeClickHandler(e)} /> 
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="Wayne" clickHandler={(e) => zipcodeClickHandler(e)} />
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="Seneca" clickHandler={(e) => zipcodeClickHandler(e)} />
+                                                                {/* @ts-ignore */}
                                 <GeoInfoBtns name="Tompkins" clickHandler={(e) => zipcodeClickHandler(e)} />
                             </div>
                         </div>

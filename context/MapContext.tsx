@@ -139,7 +139,7 @@ const MapProvider = ({ children }: Props) => {
             zoom: -6.25
         })
 
-
+                                {/* @ts-ignore */}
         map?.getSource("zipcodes").setData({
             type: "FeatureCollection",
             features: [],
