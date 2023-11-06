@@ -23,8 +23,6 @@ const About = ({ expand, legislationsClickHandler }: Props) => {
     const contentClickHandler = (c: "intro" | "credits") => setSelectedContent(c)
 
 
-
-
     return (
         <div className={`flex flex-col px-[30px] pt-[10.5px] pb-[20px] text-rtc_navy ${expand["About"] ? "h-[calc(100vh-112px-220px)] bg-white" : "h-[45px] bg-background_blue"} border-y-[1px] border-grey_1 overflow-y-scroll`}>
                 <div className="flex justify-between items-center">
@@ -44,12 +42,12 @@ const About = ({ expand, legislationsClickHandler }: Props) => {
                                 <p>
                                     Housing Courts Must Change! (HCMC) is a New York statewide campaign launched by the Right to Counsel NYC Coalition in 2020 to transform the courts from an “eviction machine” to a place that holds landlords accountable, upholds tenants’ rights, and enables tenants to remain in their homes.
                                 </p>
-                                <p className="my-[20px]">
+                                <div className="my-[20px]">
                                     New York State (NYS) support for HCMC campaign legislation is shown in the map through Senate and Assembly districts. The HCMC campaign focuses on three legislation campagins:
-                                    Statewide Right to Counsel (S2721 / A1493)
-                                    Defend Right to Counsel (S3254 / A4993)
-                                    Winter Eviction Moratorium (S1403 / A4093)
-                                </p>
+                                    <li>Statewide Right to Counsel (S2721 / A1493)</li>
+                                    <li>Defend Right to Counsel (S3254 / A4993)</li>
+                                    <li>Winter Eviction Moratorium (S1403 / A4093)</li>
+                                </div>
                                 <p>
                                     Explore the map to view co-located geographic support between Right to Counsel NYC Coalition’s base support, zip code boundaries, counties, assembly districts, and senate districts.
                                 </p>

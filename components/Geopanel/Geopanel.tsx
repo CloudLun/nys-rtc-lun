@@ -10,8 +10,8 @@ import assemblyZipcodes from "../../public/assembly_zipcodes.json"
 import senateZipcodes from "../../public/senate_zipcodes.json"
 import zipcodes from "../../public/nys_zipcodes.geo.json"
 
-import * as turf from "@turf/turf";
-import mapboxgl, { EventData, MapMouseEvent } from 'mapbox-gl';
+// import * as turf from "@turf/turf";
+// import mapboxgl, { EventData, MapMouseEvent } from 'mapbox-gl';
 
 type Props = {
     selectedDistrictFeatures: {
@@ -44,21 +44,10 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
 
     const { map, districts, legislations, geopanelShown, setGeopanelShown, defaultMapHandler } = useContext(MapContext) as MapContextType
     const selectedDistrictZipcodes = (districts === "senate" ? senateZipcodes : assemblyZipcodes).filter(z => z.district === selectedDistrictFeatures?.properties.District)
-    const selectedDistrictPolygon = turf.polygon([(senate as GeoJson).features[0].geometry.coordinates[0]])
-
-    // if (selectedDistrictPolygon !== null) {
-    //     const filteredAssemblyDistricts = (assembly as GeoJson).features.filter((a, i) => {
-    //         const assemblyPolygon = turf.polygon([a.geometry.coordinates[0]])
-    //         if (turf.booleanOverlap(assemblyPolygon, selectedDistrictPolygon) || turf.booleanContains(selectedDistrictPolygon, assemblyPolygon)) return true
-    //         return false
-    //     })
-    // }
-
+    // const selectedDistrictPolygon = turf.polygon([(senate as GeoJson).features[0].geometry.coordinates[0]])
 
     const zipcodeClickHandler = (e: any) => {
         const clickedZipcode = (zipcodes as GeoJson).features.filter((z, i) => z.properties.ZCTA5CE10 === e.target.innerText)
-        console.log(clickedZipcode)
-
         map?.getSource("zipcodes").setData({
             type: "FeatureCollection",
             features: clickedZipcode,

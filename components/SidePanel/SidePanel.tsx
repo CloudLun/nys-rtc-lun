@@ -61,12 +61,9 @@ const SidePanel = () => {
         setExpand(newExpand)
 
         if (l !== "About") {
+            setLegislations(l)
             defaultMapHandler()
         }
-
-
-
-
     }
 
 
