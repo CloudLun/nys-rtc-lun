@@ -274,7 +274,7 @@ const Map = () => {
                 'source': 'zipcodes',
                 'layout': {},
                 'paint': {
-                    'fill-color': "orange",
+                    'fill-color': "black",
                     "fill-opacity": 0.5
                 }
             })
@@ -285,7 +285,7 @@ const Map = () => {
                 'source': 'zipcodes',
                 'layout': {},
                 'paint': {
-                    'line-color': "orange",
+                    'line-color': "black",
                     'line-width': 1
                 }
             })

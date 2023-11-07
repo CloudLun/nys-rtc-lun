@@ -7,8 +7,12 @@ import About from "./About";
 
 import Image from 'next/image'
 
+import legislationsInfo from "../../public/legislation_info.json"
 
 export type Columns = "About" | "Statewide RTC" | "Winter Eviction Moratorium" | "Defend RTC"
+
+
+console.log(legislationsInfo)
 
 
 const legislationsData = {
@@ -95,9 +99,10 @@ const SidePanel = () => {
                     <About expand={expand} legislationsClickHandler={legislationsClickHandler} />
                 </div>
                 <div>
-                    <LegislationColumns legislation={"Statewide RTC"} title={legislationsData["Statewide RTC"]['fullName']} name={legislationsData["Statewide RTC"]['legislation']} number={legislationsData["Statewide RTC"]['number']} content={legislationsData["Statewide RTC"]['content']} expand={expand["Statewide RTC"]} legislationsClickHandler={() => legislationsClickHandler("Statewide RTC")} />
-                    <LegislationColumns legislation={"Winter Eviction Moratorium"} title={legislationsData["Winter Eviction Moratorium"]['fullName']} name={legislationsData["Winter Eviction Moratorium"]['legislation']} number={legislationsData["Winter Eviction Moratorium"]['number']} content={legislationsData["Winter Eviction Moratorium"]['content']} expand={expand["Winter Eviction Moratorium"]} legislationsClickHandler={() => legislationsClickHandler("Winter Eviction Moratorium")} />
-                    <LegislationColumns legislation={"Defend RTC"} title={legislationsData["Defend RTC"]['fullName']} name={legislationsData["Defend RTC"]['legislation']} number={legislationsData["Defend RTC"]['number']} content={legislationsData["Defend RTC"]['content']} expand={expand["Defend RTC"]} legislationsClickHandler={() => legislationsClickHandler("Defend RTC")} />
+                    <LegislationColumns legislation={"Statewide RTC"} title={legislationsInfo[0]["Bill Name"]} name={legislationsInfo[0]["Bill Name"]} number={legislationsInfo[0]["Senate Number"]+" / "+legislationsInfo[0]["Assembly Number"]} content={legislationsInfo[0]["Bill Description"]} expand={expand["Statewide RTC"]} legislationsClickHandler={() => legislationsClickHandler("Statewide RTC")} />
+                    <LegislationColumns legislation={"Defend RTC"} title={legislationsInfo[2]["Bill Name"]} name={legislationsInfo[2]["Bill Name"]} number={legislationsInfo[2]["Senate Number"]+" / "+legislationsInfo[2]["Assembly Number"]} content={legislationsInfo[2]["Bill Description"]} expand={expand["Defend RTC"]} legislationsClickHandler={() => legislationsClickHandler("Defend RTC")} />
+                    <LegislationColumns legislation={"Winter Eviction Moratorium"} title={legislationsInfo[3]["Bill Name"]} name={legislationsInfo[3]["Bill Name"]} number={legislationsInfo[3]["Senate Number"]+" / "+legislationsInfo[3]["Assembly Number"]} content={legislationsInfo[3]["Bill Description"]} expand={expand["Winter Eviction Moratorium"]} legislationsClickHandler={() => legislationsClickHandler("Winter Eviction Moratorium")} />
+
                 </div>
             </div>
             <div className="flex items-center gap-[15px] px-[30px]">
