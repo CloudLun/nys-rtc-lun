@@ -35,7 +35,7 @@ const MapProvider = ({ children }: Props) => {
     const [districts, setDistricts] = useState<Districts>("senate")
     // const [selectedDistrictFeatures, setSelectedDistrictFeatures] = useState<GeoJson["features"] | null>(null)
     const [geopanelShown, setGeopanelShown] = useState(false)
-    const [membershipShown, setMembershipShown] = useState<boolean>(false)
+    const [membershipShown, setMembershipShown] = useState(false)
     const [legislations, setLegislations] = useState<Legislations>("Statewide RTC")
 
     const mapClickHandler = (m: mapboxgl.Map, e: MapMouseEvent & EventData, legislations: Legislations) => {
@@ -112,7 +112,7 @@ const MapProvider = ({ children }: Props) => {
         setGeopanelShown(true)
         m.flyTo({
             center: targetCentroid as [number, number],
-            zoom: 8
+            zoom: 6.9
         })
     }
 
@@ -139,11 +139,11 @@ const MapProvider = ({ children }: Props) => {
             zoom: -6.25
         })
 
-                                {/* @ts-ignore */}
-        map?.getSource("zipcodes").setData({
-            type: "FeatureCollection",
-            features: [],
-        })
+        //                         {/* @ts-ignore */}
+        // map?.getSource("hoveredArea").setData({
+        //     type: "FeatureCollection",
+        //     features: [],
+        // })
 
         setGeopanelShown(false)
     }

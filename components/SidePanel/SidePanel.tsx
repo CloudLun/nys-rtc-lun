@@ -12,8 +12,6 @@ import legislationsInfo from "../../public/legislation_info.json"
 export type Columns = "About" | "Statewide RTC" | "Winter Eviction Moratorium" | "Defend RTC"
 
 
-console.log(legislationsInfo)
-
 
 const legislationsData = {
     "Statewide RTC": {

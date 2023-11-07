@@ -31,10 +31,6 @@ const Map = () => {
     const assemblyFeatures = (assembly as GeoJson).features
     const organizationsFeatures = (organizations as GeoJson).features
     const countiesFeatures = (counties as GeoJson).features
-    // const organizationsMemberFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Campaign Member") || o.properties["Membership Status"].includes("Coalition Member"))
-    // const organziationsSupporterFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Supporter"))
-    // const organizationsEndorserFeatures = (organizations as GeoJson).features.filter(o => o.properties["Membership Status"].includes("Endorser"))
-
 
 
     // senateFeatures.forEach((s, i) => {
@@ -116,8 +112,6 @@ const Map = () => {
         m.on("load", () => {
             setMap(m);
 
-            // const senateFiltered = senateFeatures.filter((s, i) => i === 25)
-
             m.addSource("districts", {
                 type: "geojson",
                 data: {
@@ -126,17 +120,7 @@ const Map = () => {
                 },
             })
 
-            m.addSource("counties", {
-                type: "geojson",
-                data: {
-                    type: "FeatureCollection",
-                    features: [],
-                },
-            })
-
-            // const filtered = zipcodeFeatures.filter((z, i) => i === 25)
-
-            m.addSource("zipcodes", {
+            m.addSource("hover_area", {
                 type: "geojson",
                 data: {
                     type: "FeatureCollection",
@@ -152,30 +136,17 @@ const Map = () => {
                 },
             })
 
+            m.addSource("hover_label", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features: []
+                },
+            })
 
-            // m.addSource("organizations_members", {
-            //     type: "geojson",
-            //     data: {
-            //         type: "FeatureCollection",
-            //         features: organizationsMemberFeatures,
-            //     },
-            // })
 
-            // m.addSource("organizations_supporters", {
-            //     type: "geojson",
-            //     data: {
-            //         type: "FeatureCollection",
-            //         features: organziationsSupporterFeatures,
-            //     },
-            // })
 
-            // m.addSource("organizations_endorsers", {
-            //     type: "geojson",
-            //     data: {
-            //         type: "FeatureCollection",
-            //         features: organizationsEndorserFeatures,
-            //     },
-            // })
+
 
             m.loadImage("./icons/pattern_rep.png", (error, image) => {
                 if (error) throw error;
@@ -256,39 +227,27 @@ const Map = () => {
             })
 
             m.addLayer({
-                'id': 'counties_outline',
-                'type': 'line',
-                'source': 'counties',
-                'layout': {},
-                'paint': {
-                    'line-color': "#fff",
-                    'line-opacity': 1
-                },
-            });
-
-
-
-            m.addLayer({
-                'id': 'zipcodes',
+                'id': 'hover_area',
                 'type': 'fill',
-                'source': 'zipcodes',
+                'source': 'hover_area',
                 'layout': {},
                 'paint': {
                     'fill-color': "black",
-                    "fill-opacity": 0.5
+                    "fill-opacity": .3
                 }
             })
 
+
             m.addLayer({
-                'id': 'zipcodes_outline',
+                'id': 'hover_area_outline',
                 'type': 'line',
-                'source': 'zipcodes',
+                'source': 'hover_area',
                 'layout': {},
                 'paint': {
                     'line-color': "black",
-                    'line-width': 1
-                }
-            })
+                    'line-opacity': 1
+                },
+            });
 
 
 
@@ -309,6 +268,25 @@ const Map = () => {
                             ["in", `Member`, ["get", "Membership Status"]],
                             "#802948", "#ffffff"
                         ],
+                }
+            })
+
+
+
+            m.addLayer({
+                id: 'hover_label',
+                type: 'symbol',
+                source: 'hover_label',
+                layout: {
+                    'text-field': ['get', 'label'],
+                    'text-justify': 'auto',
+                    'text-size': 13,
+                    'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+                    'text-radial-offset': 0.5,
+                    'text-font': ["Arial Unicode MS Bold"]
+                },
+                paint: {
+                    'text-color': 'white'
                 }
             })
 

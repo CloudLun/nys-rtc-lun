@@ -1,17 +1,19 @@
-import React, { useState, useContext, Dispatch, SetStateAction } from 'react'
+import React, { useState, useContext, Dispatch, SetStateAction, ReactNode, MouseEvent } from 'react'
 
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { MapContext, MapContextType } from '@/context/MapContext'
-import GeoInfoBtns from '../elements/GeoInfoBtns'
+import GeoInfoBtns from './GeoInfoBtns'
 
 import assembly from "../../public/nys_assembly.geo.json"
 import senate from "../../public/nys_senate.geo.json"
-import assemblyZipcodes from "../../public/assembly_zipcodes.json"
-import senateZipcodes from "../../public/senate_zipcodes.json"
-import zipcodes from "../../public/nys_zipcodes.geo.json"
 
-// import * as turf from "@turf/turf";
-// import mapboxgl, { EventData, MapMouseEvent } from 'mapbox-gl';
+import assemblyOverlapped from "../../public/assembly_overlapping_boundaries.json"
+import senateOverlapped from "../../public/senate_overlapping_boundaries.json"
+import zipcodes from "../../public/nys_zipcodes.geo.json"
+import counties from "../../public/nys_counties.geo.json"
+
+import * as turf from "@turf/turf";
+import { GeoJSONSource } from 'mapbox-gl';
 
 type Props = {
     selectedDistrictFeatures: {
@@ -40,18 +42,104 @@ type Props = {
 
     } | null
 }
+
+
+
 const Geopanel = ({ selectedDistrictFeatures }: Props) => {
 
-    const { map, districts, legislations, geopanelShown, setGeopanelShown, defaultMapHandler } = useContext(MapContext) as MapContextType
-    const selectedDistrictZipcodes = (districts === "senate" ? senateZipcodes : assemblyZipcodes).filter(z => z.district === selectedDistrictFeatures?.properties.District)
-    // const selectedDistrictPolygon = turf.polygon([(senate as GeoJson).features[0].geometry.coordinates[0]])
+    const { map, districts, geopanelShown, defaultMapHandler } = useContext(MapContext) as MapContextType
 
-    const zipcodeClickHandler = (e: any) => {
-        const clickedZipcode = (zipcodes as GeoJson).features.filter((z, i) => z.properties.ZCTA5CE10 === e.target.innerText)
+    const selectedDistrictOverlappedData = (districts === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => d.district === selectedDistrictFeatures?.properties.District)[0]
+
+
+
+
+    const zipcodeMouseEnterHandler = (e: MouseEvent<HTMLElement>) => {
+        const hoveredZipcode = (zipcodes as GeoJson).features.filter((z, i) => z.properties.ZCTA5CE10 === (e.target as HTMLElement).innerText)
         /* @ts-ignore */
-        map?.getSource("zipcodes").setData({
+        map?.getSource("hover_area").setData({
             type: "FeatureCollection",
-            features: clickedZipcode,
+            features: hoveredZipcode,
+        })
+
+        let coordinatesArray = hoveredZipcode[0].geometry.coordinates[0]
+        while (coordinatesArray.length === 1) coordinatesArray = coordinatesArray[0]
+
+        const targetPolygon = turf.polygon([coordinatesArray])
+        /* @ts-ignore */
+        const targetCentroid = turf.center(targetPolygon).geometry.coordinates
+        const labelData = {
+            'type': 'FeatureCollection',
+            'features': [
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "label": hoveredZipcode[0].properties.ZCTA5CE10
+                    },
+                    "geometry": {
+                        'type': 'Point',
+                        'coordinates': targetCentroid
+                    }
+                }
+            ]
+        }
+
+
+        /* @ts-ignore */
+        map?.getSource("hover_label").setData({
+            type: "FeatureCollection",
+            features: labelData.features as GeoJson["features"]
+        })
+
+
+
+    }
+
+    const countyMouseEnterHandler = (e: MouseEvent<HTMLElement>) => {
+        const hoveredCounty = (counties as GeoJson).features.filter((c, i) => c.properties.name.replace("County", "").trim() === (e.target as HTMLElement).innerText)
+        /* @ts-ignore */
+        map?.getSource("hover_area").setData({
+            type: "FeatureCollection",
+            features: hoveredCounty,
+        })
+
+        const targetPolygon = turf.polygon(hoveredCounty[0].geometry.coordinates[0])
+        /* @ts-ignore */
+        const targetCentroid = turf.center(targetPolygon).geometry.coordinates
+        const labelData = {
+            'type': 'FeatureCollection',
+            'features': [
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "label": hoveredCounty[0].properties.name.replace("County", "").trim()
+                    },
+                    "geometry": {
+                        'type': 'Point',
+                        'coordinates': targetCentroid
+                    }
+                }
+            ]
+        }
+        /* @ts-ignore */
+        map?.getSource("hover_label").setData({
+            type: "FeatureCollection",
+            features: labelData.features as GeoJson["features"]
+        })
+
+
+    }
+
+    const removeHoverEventHandler = () => {
+        /* @ts-ignore */
+        map?.getSource("hover_area").setData({
+            type: "FeatureCollection",
+            features: [],
+        })
+        /* @ts-ignore */
+        map?.getSource("hover_label").setData({
+            type: "FeatureCollection",
+            features: []
         })
     }
 
@@ -113,46 +201,34 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
                             Click below to view intersecting geographic boundaries with Senate District 48.
                         </div>
                         <div>
-                            <div className='mb-[5px] text-[10px] text-grey_1'>Assembly Districts</div>
-                            <div className='grid grid-cols-4 gap-[8px]'>
-                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="116" clickHandler={(e) => zipcodeClickHandler(e)} />
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="120" clickHandler={(e) => zipcodeClickHandler(e)} />
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="125" clickHandler={(e) => zipcodeClickHandler(e)} />
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="127" clickHandler={(e) => zipcodeClickHandler(e)} />
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="128" clickHandler={(e) => zipcodeClickHandler(e)} />
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="129" clickHandler={(e) => zipcodeClickHandler(e)} />
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="130" clickHandler={(e) => zipcodeClickHandler(e)} />
-                            </div>
+                            <div className='mb-[5px] text-[10px] text-grey_1'>{districts === "senate" ? "Assembly" : "Senate"} Districts</div>
+                            {/* <div className='grid grid-cols-4 gap-[8px]'>
+                                {
+                                    selectedDistrictOverlappedData &&
+                                    selectedDistrictOverlappedData.congressions
+                                        .map((c, i) =>
+                                            <GeoInfoBtns key={i} name={c.toString()} mouseEnterHandler={zipcodeMouseEnterHandler} mouseOutHandler={() => removeEventHandler("counties")} />)
+                                }
+                            </div> */}
                         </div>
                         <div className='my-[16px]'>
                             <div className='mb-[5px] text-[10px] text-grey_1'>Counties</div>
                             <div className='grid grid-cols-2 gap-[12px]'>
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="Cayuga" clickHandler={(e) => zipcodeClickHandler(e)} /> 
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="Oswego" clickHandler={(e) => zipcodeClickHandler(e)} /> 
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="Cortland" clickHandler={(e) => zipcodeClickHandler(e)} /> 
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="Wayne" clickHandler={(e) => zipcodeClickHandler(e)} />
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="Seneca" clickHandler={(e) => zipcodeClickHandler(e)} />
-                                                                {/* @ts-ignore */}
-                                <GeoInfoBtns name="Tompkins" clickHandler={(e) => zipcodeClickHandler(e)} />
+                                {
+                                    selectedDistrictOverlappedData &&
+                                    selectedDistrictOverlappedData.counties.map((c, i) =>
+                                        <GeoInfoBtns key={i} name={c.replace("County", "")} mouseEnterHandler={countyMouseEnterHandler} mouseOutHandler={removeHoverEventHandler} />)
+                                }
                             </div>
                         </div>
                         <div>
                             <div className='mb-[5px] text-[10px] text-grey_1'>Zip Codes</div>
                             <div className='grid grid-cols-3 gap-[12px]'>
-                                {/* @ts-ignore */}
-                                {selectedDistrictZipcodes[0] && selectedDistrictZipcodes[0].zips.map((z, i) => <GeoInfoBtns key={i} name={z} clickHandler={(e) => zipcodeClickHandler(e)} />)}
+                                {
+                                    selectedDistrictOverlappedData &&
+                                    selectedDistrictOverlappedData.zip_codes.map((z, i) =>
+                                        <GeoInfoBtns key={i} name={z} mouseEnterHandler={zipcodeMouseEnterHandler} mouseOutHandler={removeHoverEventHandler} />)
+                                }
                             </div>
                         </div>
                     </div>
