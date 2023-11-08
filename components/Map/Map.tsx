@@ -120,6 +120,14 @@ const Map = () => {
                 },
             })
 
+            m.addSource("click_area", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features: [],
+                },
+            })
+
             m.addSource("hover_area", {
                 type: "geojson",
                 data: {
@@ -136,6 +144,15 @@ const Map = () => {
                 },
             })
 
+            m.addSource("district_label", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features: []
+                },
+            })
+
+
             m.addSource("hover_label", {
                 type: "geojson",
                 data: {
@@ -145,7 +162,13 @@ const Map = () => {
             })
 
 
-
+            m.addSource("click_label", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features: []
+                },
+            })
 
 
             m.loadImage("./icons/pattern_rep.png", (error, image) => {
@@ -177,7 +200,7 @@ const Map = () => {
                     'fill-opacity': [
                         "case",
                         ["in", legislations, ["get", "HCMC support"]],
-                        1, 0
+                        .75, 0
                     ]
                 },
             });
@@ -226,6 +249,7 @@ const Map = () => {
                 }
             })
 
+
             m.addLayer({
                 'id': 'hover_area',
                 'type': 'fill',
@@ -247,6 +271,38 @@ const Map = () => {
                     'line-color': "black",
                     'line-opacity': 1
                 },
+            });
+
+            m.addLayer({
+                'id': 'click_area',
+                'type': 'fill',
+                'source': 'click_area',
+                'layout': {},
+                'paint': {
+                    'fill-color': [
+                        "case",
+                        ["all", ["==", ["get", "Party_x"], "Democratic"]],
+                        "#0057A8",
+                        "#A03327"
+                    ],
+                    "fill-opacity": .75
+                },
+            });
+
+            m.addLayer({
+                'id': 'click_area_outline',
+                'type': 'line',
+                'source': 'click_area',
+                'layout': {},
+                'paint': {
+                    'line-color': [
+                        "case",
+                        ["all", ["==", ["get", "Party_x"], "Democratic"]],
+                        "#0057A8",
+                        "#A03327"
+                    ],
+                    'line-width': 1.25
+                }
             });
 
 
@@ -272,7 +328,6 @@ const Map = () => {
             })
 
 
-
             m.addLayer({
                 id: 'hover_label',
                 type: 'symbol',
@@ -289,6 +344,50 @@ const Map = () => {
                     'text-color': 'white'
                 }
             })
+
+            m.addLayer({
+                id: 'click_label',
+                type: 'symbol',
+                source: 'click_label',
+                layout: {
+                    'text-field': ['get', 'label'],
+                    'text-justify': 'auto',
+                    'text-size': 13,
+                    'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+                    // 'text-radial-offset': 0.5,
+                    'text-font': ["Arial Unicode MS Bold"]
+                },
+                paint: {
+                    'text-color': 'white'
+                }
+            })
+
+            m.addLayer({
+                id: "district_label",
+                type: 'symbol',
+                source: 'district_label',
+                layout: {
+                    'text-field': ['get', 'label'],
+                    'text-justify': 'auto',
+                    'text-size': 14,
+                    'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+                    // 'text-radial-offset': 0.5,
+                    'text-font': ["Arial Unicode MS Bold"],
+                    "text-offset": [0, -1.5]
+                },
+                paint: {
+                    'text-opacity': 1,
+                    "text-color": [
+                        "case",
+                        ["all", ["==", ["get", "party"], "Democratic"]],
+                        "#007CEE",
+                        "#D04E40"
+                    ],
+                    'text-halo-color': 'white',
+                    "text-halo-width": 0.35
+                }
+            })
+
 
             m.on("click", "districts", (e: MapMouseEvent & EventData) => {
                 setSelectedDistrictFeatures(e.features[0])

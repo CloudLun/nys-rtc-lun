@@ -64,7 +64,27 @@ const SidePanel = () => {
 
         if (l !== "About") {
             setLegislations(l)
-            defaultMapHandler()
+            map?.setPaintProperty("districts", "fill-opacity", [
+                "case",
+                ["in", `${l}`, ["get", "HCMC support"]],
+                1, 0
+            ])
+            map?.setPaintProperty("pattern_rep", "fill-opacity", [
+                "case",
+                ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", l, ["get", "HCMC support"]]]],
+                0.2, 0
+            ]
+            )
+            map?.setPaintProperty("pattern_demo", "fill-opacity", [
+                "case",
+                ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", l, ["get", "HCMC support"]]]],
+                .2, 0
+            ])
+    
+            map?.flyTo({
+                center: [-78.5, 43.05] as [number, number],
+                zoom: -6.25
+            })
         }
     }
 

@@ -10,8 +10,6 @@ export type MapContextType = {
     setMap: Dispatch<SetStateAction<mapboxgl.Map | null>>
     districts: Districts
     setDistricts: Dispatch<SetStateAction<Districts>>
-    // selectedDistrictFeatures: GeoJson["features"] | null
-    // setSelectedDistrictFeatures: Dispatch<SetStateAction<GeoJson["features"] | null>>
     membershipShown: boolean
     setMembershipShown: Dispatch<SetStateAction<boolean>>
     legislations: Legislations
@@ -39,17 +37,16 @@ const MapProvider = ({ children }: Props) => {
     const [legislations, setLegislations] = useState<Legislations>("Statewide RTC")
 
     const mapClickHandler = (m: mapboxgl.Map, e: MapMouseEvent & EventData, legislations: Legislations) => {
+
         const district = e.features[0].properties.District
-        const targetPolygon = turf.polygon(e.features[0].geometry.coordinates)
-        const targetCentroid = turf.centroid(targetPolygon).geometry.coordinates
 
         if (e.features[0].properties["HCMC support"].includes(legislations)) {
             m.setPaintProperty("districts", "fill-opacity", [
                 "case",
                 ["all", ["==", ["get", "District"], district], ["in", legislations, ["get", "HCMC support"]]],
-                .9,
+                .75,
                 ["in", legislations, ["get", "HCMC support"]],
-                .4,
+                .1,
                 0
             ])
             m.setPaintProperty("pattern_rep", "fill-opacity", [
@@ -69,7 +66,7 @@ const MapProvider = ({ children }: Props) => {
             m.setPaintProperty("districts", "fill-opacity", [
                 "case",
                 ["in", legislations, ["get", "HCMC support"]],
-                .4, 0
+                .1, 0
             ])
             m.setPaintProperty("pattern_rep", "fill-opacity", [
                 "case",
@@ -92,7 +89,7 @@ const MapProvider = ({ children }: Props) => {
             m.setPaintProperty("districts", "fill-opacity", [
                 "case",
                 ["in", legislations, ["get", "HCMC support"]],
-                .4, 0
+                .1, 0
             ])
             m.setPaintProperty("pattern_rep", "fill-opacity", [
                 "case",
@@ -109,11 +106,44 @@ const MapProvider = ({ children }: Props) => {
             ])
 
         }
-        setGeopanelShown(true)
+
+
+        let coordinatesArray = e.features[0].geometry.coordinates[0]
+        while (coordinatesArray.length === 1) coordinatesArray = coordinatesArray[0]
+        const targetPolygon = turf.polygon([coordinatesArray])
+        /* @ts-ignore */
+        const targetCentroid = turf.center(targetPolygon).geometry.coordinates
+
+        const labelData = {
+            'type': 'FeatureCollection',
+            'features': [
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "label": "District " + e.features[0].properties.District.toString(),
+                        "party":e.features[0].properties.Party_x
+                    },
+                    "geometry": {
+                        'type': 'Point',
+                        'coordinates': targetCentroid
+                    }
+                }
+            ]
+        }
+
+        /* @ts-ignore */
+        m.getSource("district_label").setData({
+            type: "FeatureCollection",
+            features: labelData.features as GeoJson["features"]
+        })
+
+
         m.flyTo({
             center: targetCentroid as [number, number],
             zoom: 6.9
         })
+
+        setGeopanelShown(true)
     }
 
     const defaultMapHandler = () => {
@@ -139,16 +169,28 @@ const MapProvider = ({ children }: Props) => {
             zoom: -6.25
         })
 
-        //                         {/* @ts-ignore */}
-        // map?.getSource("hoveredArea").setData({
-        //     type: "FeatureCollection",
-        //     features: [],
-        // })
+        /* @ts-ignore */
+        map?.getSource("click_area").setData({
+            type: "FeatureCollection",
+            features: []
+        })
+
+        /* @ts-ignore */
+        map?.getSource("click_label").setData({
+            type: "FeatureCollection",
+            features: []
+        })
+        
+        /* @ts-ignore */
+        map?.getSource("district_label").setData({
+            type: "FeatureCollection",
+            features: []
+        })
 
         setGeopanelShown(false)
     }
 
-    
+
 
 
 

@@ -48,10 +48,51 @@ type Props = {
 const Geopanel = ({ selectedDistrictFeatures }: Props) => {
 
     const { map, districts, geopanelShown, defaultMapHandler } = useContext(MapContext) as MapContextType
-
     const selectedDistrictOverlappedData = (districts === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => d.district === selectedDistrictFeatures?.properties.District)[0]
 
 
+
+    const congressionsClickHandler = (e: MouseEvent<HTMLElement>) => {
+        const congressions = (districts === "senate" ? assembly : senate)
+        const clickedCongressions = (congressions as GeoJson).features.filter((c, i) => c.properties.District.toString() === (e.target as HTMLElement).innerText)
+
+        /* @ts-ignore */
+        map?.getSource("click_area").setData({
+            type: "FeatureCollection",
+            features: clickedCongressions,
+        })
+
+        let coordinatesArray = clickedCongressions[0].geometry.coordinates[0]
+        while (coordinatesArray.length === 1) coordinatesArray = coordinatesArray[0]
+        const targetPolygon = turf.polygon([coordinatesArray])
+        /* @ts-ignore */
+        const targetCentroid = turf.center(targetPolygon).geometry.coordinates
+
+
+        const labelData = {
+            'type': 'FeatureCollection',
+            'features': [
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "label": clickedCongressions[0].properties.District.toString()
+                    },
+                    "geometry": {
+                        'type': 'Point',
+                        'coordinates': targetCentroid
+                    }
+                }
+            ]
+        }
+
+        /* @ts-ignore */
+        map?.getSource("click_label").setData({
+            type: "FeatureCollection",
+            features: labelData.features as GeoJson["features"]
+        })
+        map?.setPaintProperty("district_label", "text-opacity", 0)
+
+    }
 
 
     const zipcodeMouseEnterHandler = (e: MouseEvent<HTMLElement>) => {
@@ -90,6 +131,7 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
             type: "FeatureCollection",
             features: labelData.features as GeoJson["features"]
         })
+        map?.setPaintProperty("district_label", "text-opacity", 0)
 
 
 
@@ -127,6 +169,7 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
             features: labelData.features as GeoJson["features"]
         })
 
+        map?.setPaintProperty("district_label", "text-opacity", 0)
 
     }
 
@@ -141,6 +184,10 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
             type: "FeatureCollection",
             features: []
         })
+
+        map?.setPaintProperty("district_label", "text-opacity", 1)
+
+
     }
 
     return (
@@ -202,14 +249,14 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
                         </div>
                         <div>
                             <div className='mb-[5px] text-[10px] text-grey_1'>{districts === "senate" ? "Assembly" : "Senate"} Districts</div>
-                            {/* <div className='grid grid-cols-4 gap-[8px]'>
+                            <div className='grid grid-cols-4 gap-[8px]'>
                                 {
                                     selectedDistrictOverlappedData &&
                                     selectedDistrictOverlappedData.congressions
                                         .map((c, i) =>
-                                            <GeoInfoBtns key={i} name={c.toString()} mouseEnterHandler={zipcodeMouseEnterHandler} mouseOutHandler={() => removeEventHandler("counties")} />)
+                                            <GeoInfoBtns key={i} name={c.toString()} clickHandler={congressionsClickHandler} />)
                                 }
-                            </div> */}
+                            </div>
                         </div>
                         <div className='my-[16px]'>
                             <div className='mb-[5px] text-[10px] text-grey_1'>Counties</div>
