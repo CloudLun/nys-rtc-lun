@@ -50,8 +50,6 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
     const { map, districts, geopanelShown, defaultMapHandler } = useContext(MapContext) as MapContextType
     const selectedDistrictOverlappedData = (districts === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => d.district === selectedDistrictFeatures?.properties.District)[0]
 
-
-
     const congressionsClickHandler = (e: MouseEvent<HTMLElement>) => {
         const congressions = (districts === "senate" ? assembly : senate)
         const clickedCongressions = (congressions as GeoJson).features.filter((c, i) => c.properties.District.toString() === (e.target as HTMLElement).innerText)
@@ -90,7 +88,7 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
             type: "FeatureCollection",
             features: labelData.features as GeoJson["features"]
         })
-        map?.setPaintProperty("district_label", "text-opacity", 0)
+        map?.setPaintProperty("district_label", "text-opacity", 1)
 
     }
 
@@ -207,19 +205,19 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
                         <div className='text-[10px] text-regular text-grey_1'>HCMC Campaign Support</div>
                         <div className="flex flex-col gap-[5px] mt-[6px] text-rtc_navy">
                             <div className="flex items-center gap-[5px] ">
-                                {/* <img src=${properties["HCMC support"].includes("Statewide RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" /> */}
+                                <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Statewide RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Statewide RTC</div>
                             </div>
                             <div className="flex items-center gap-[5px]">
-                                {/* <img src=${properties["HCMC support"].includes("Winter Eviction Moratorium") ? "/icons/checked.svg" : "/icons/empty.svg"}  alt="" className="w-[16px] h-[16px]" /> */}
+                                <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Winter Eviction Moratorium") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Winter Eviction Moratorium</div>
                             </div>
                             <div className="flex items-center gap-[5px]">
-                                {/* <img src=${properties["HCMC support"].includes("Defend RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" /> */}
+                                <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Defend RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Defend RTC</div>
                             </div>
                             <div className="flex items-center gap-[5px]">
-                                {/* <img src=${properties["HCMC support"].includes("Fund Local Law 53") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" /> */}
+                                <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Fund Local Law 53") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Power to Organize:<br /> Fund Local Law 53</div>
                             </div>
                         </div>
@@ -230,18 +228,26 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
                                 <img src="/icons/person.svg" alt="" className="w-[16px] h-[16px]" />
                                 <div className={`w-[120px] font-regular text-label ${selectedDistrictFeatures?.properties.Party_x === "Democratic" ? "text-demo_1" : "text-rep_1"}`}><span className='font-bold'>{selectedDistrictFeatures?.properties!.NAME}</span><br /> Democrat</div>
                             </div>
-                            <div className="flex items-center gap-[12px]">
-                                <img src="/icons/apartment.svg" alt="" className="w-[16px] h-[16px]" />
-                                <div className="w-[120px] font-regular text-label">{selectedDistrictFeatures?.properties.Address}</div>
-                            </div>
+                            {
+                                (selectedDistrictFeatures?.properties.Address) !== undefined &&
+                                <div className="flex items-center gap-[12px]">
+                                    <img src="/icons/apartment.svg" alt="" className="w-[16px] h-[16px]" />
+                                    <div className="w-[120px] font-regular text-label">{selectedDistrictFeatures?.properties.Address}</div>
+                                </div>
+                            }
                             <div className="flex items-center gap-[12px]">
                                 <img src="/icons/phone.svg" alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-regular text-label">{selectedDistrictFeatures?.properties.Phone}</div>
                             </div>
-                            <div className="flex items-center gap-[12px]">
-                                <img src="/icons/email.svg" alt="" className="w-[16px] h-[16px]" />
-                                <div className="font-regular text-label">{selectedDistrictFeatures?.properties.email}</div>
-                            </div>
+                            {
+                                (selectedDistrictFeatures?.properties.email) !== undefined &&
+                                (
+                                    <div className="flex items-center gap-[12px]">
+                                        <img src="/icons/email.svg" alt="" className="w-[16px] h-[16px]" />
+                                        <div className="font-regular text-label">{selectedDistrictFeatures?.properties.email}</div>
+                                    </div>
+                                )
+                            }
                         </div>
                         <div className='my-[12px] w-full h-[1px] bg-grey_1'></div>
                         <div className='mb-[20px] text-[10px] text-grey_1'>

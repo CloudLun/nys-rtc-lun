@@ -85,7 +85,6 @@ const MapProvider = ({ children }: Props) => {
         }
 
         if (e.features[0].properties.Party_x === "Democratic" && !e.features[0].properties["HCMC support"].includes(legislations)) {
-            console.log('a')
             m.setPaintProperty("districts", "fill-opacity", [
                 "case",
                 ["in", legislations, ["get", "HCMC support"]],
@@ -121,7 +120,7 @@ const MapProvider = ({ children }: Props) => {
                     "type": "Feature",
                     "properties": {
                         "label": "District " + e.features[0].properties.District.toString(),
-                        "party":e.features[0].properties.Party_x
+                        "party": e.features[0].properties.Party_x
                     },
                     "geometry": {
                         'type': 'Point',
@@ -137,6 +136,20 @@ const MapProvider = ({ children }: Props) => {
             features: labelData.features as GeoJson["features"]
         })
 
+        map?.setPaintProperty("district_label", "text-opacity", 1)
+
+        /* @ts-ignore */
+        map?.getSource("click_area").setData({
+            type: "FeatureCollection",
+            features: []
+        })
+
+        /* @ts-ignore */
+        map?.getSource("click_label").setData({
+            type: "FeatureCollection",
+            features: []
+        })
+
 
         m.flyTo({
             center: targetCentroid as [number, number],
@@ -144,6 +157,7 @@ const MapProvider = ({ children }: Props) => {
         })
 
         setGeopanelShown(true)
+
     }
 
     const defaultMapHandler = () => {
@@ -180,7 +194,7 @@ const MapProvider = ({ children }: Props) => {
             type: "FeatureCollection",
             features: []
         })
-        
+
         /* @ts-ignore */
         map?.getSource("district_label").setData({
             type: "FeatureCollection",

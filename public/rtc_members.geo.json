@@ -110,7 +110,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "212-465-0907",
         "Address": "450 7th Avenue, Rm. 2109, New York, NY 10123",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "450%207th%20Avenue%2C%20Rm.%202109%2C%20New%20York%2C%20NY%2010123",
         "lat": 40.75148166666666,
         "lon": -73.99038824242425
@@ -164,7 +164,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "716-833-0442",
         "Address": "18 Sussex St, Buffalo, NY 14215",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "18%20Sussex%20St%2C%20Buffalo%2C%20NY%2014215",
         "lat": 42.92732933333333,
         "lon": -78.828398
@@ -182,7 +182,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-374-3371",
         "Address": "121-18 Liberty Ave 2nd floor, South Richmond Hill, NY 11419",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "121-18%20Liberty%20Ave%202nd%20floor%2C%20South%20Richmond%20Hill%2C%20NY%2011419",
         "lat": 40.687039,
         "lon": -73.821751
@@ -200,7 +200,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "212-362-3179",
         "Address": "263 W 86th St, New York, NY 10024",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "263%20W%2086th%20St%2C%20New%20York%2C%20NY%2010024",
         "lat": 40.78855775,
         "lon": -73.97686024999999
@@ -348,7 +348,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "716-881-0660",
         "Address": "1064 Brighton Road, Tonawanda, NY 14150",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "1064%20Brighton%20Road%2C%20Tonawanda%2C%20NY%2014150",
         "lat": 42.9914215,
         "lon": -78.833507
@@ -442,7 +442,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "212-669-6100",
         "Address": "4 W 43rd St Suite #407, New York, NY 10036",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "4%20W%2043rd%20St%20Suite%20%23407%2C%20New%20York%2C%20NY%2010036",
         "lat": 40.7544434,
         "lon": -73.9813232
@@ -541,7 +541,7 @@
         "Name": "Greater New York Labor Religion Coalition",
         "Legislation": ["Statewide Right to Counsel"],
         "Address": "85 Chestnut St., Albany, NY 12210",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "85%20Chestnut%20St.%2C%20Albany%2C%20NY%2012210",
         "lat": 42.6535144,
         "lon": -73.7613522
@@ -669,7 +669,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "585-247-5292",
         "Address": "1049 Wegman Rd, Rochester, NY 14624",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "1049%20Wegman%20Rd%2C%20Rochester%2C%20NY%2014624",
         "lat": 43.1491088,
         "lon": -77.7124535
@@ -705,7 +705,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "518-793-9728",
         "Address": "460 Aviation Rd, Queensbury, NY 12804",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "460%20Aviation%20Rd%2C%20Queensbury%2C%20NY%2012804",
         "lat": 43.3285808,
         "lon": -73.68721606139513
@@ -741,7 +741,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "212-879-1558",
         "Address": "335 E 77th St, New York, NY 10075",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "335%20E%2077th%20St%2C%20New%20York%2C%20NY%2010075",
         "lat": 40.77165130434783,
         "lon": -73.95491673913044
@@ -813,7 +813,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-356-1050",
         "Address": "205 Jefferson Blvd, Staten Island, NY 10312",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "205%20Jefferson%20Blvd%2C%20Staten%20Island%2C%20NY%2010312",
         "lat": 40.544665800000004,
         "lon": -74.1816976
@@ -877,7 +877,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "518-449-7332",
         "Address": "362 State St, Albany, NY 12210",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "362%20State%20St%2C%20Albany%2C%20NY%2012210",
         "lat": 42.6559972,
         "lon": -73.765033
@@ -893,7 +893,7 @@
         "Name": "Sanctuary Church",
         "Legislation": ["Statewide Right to Counsel"],
         "Address": "14 W 170th St, Bronx, NY 10452",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "14%20W%20170th%20St%2C%20Bronx%2C%20NY%2010452",
         "lat": 40.8406424375,
         "lon": -73.9186986875
@@ -934,7 +934,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-749-8534",
         "Address": "405 RXR Plaza, Uniondale, NY 11556",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "405%20RXR%20Plaza%2C%20Uniondale%2C%20NY%2011556",
         "lat": 40.720289,
         "lon": -73.58378
@@ -1215,7 +1215,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "585-456 - 1979",
         "Address": "1124 Culver Road, Rochester, NY 14609",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "1124%20Culver%20Road%2C%20Rochester%2C%20NY%2014609",
         "lat": 43.165713,
         "lon": -77.5628964
@@ -1358,7 +1358,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "315-475-8092",
         "Address": "751 James St, Syracuse, NY 13203",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "751%20James%20St%2C%20Syracuse%2C%20NY%2013203",
         "lat": 43.05573830612245,
         "lon": -76.14178948979593
@@ -1399,7 +1399,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "518-449-7332",
         "Address": "85 Chestnut St, Albany, NY 12210",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "85%20Chestnut%20St%2C%20Albany%2C%20NY%2012210",
         "lat": 42.6535144,
         "lon": -73.7613522
@@ -1417,7 +1417,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-984-4526",
         "Address": "239 Seguine Ave, Staten Island, NY 10309",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "239%20Seguine%20Ave%2C%20Staten%20Island%2C%20NY%2010309",
         "lat": 40.520652,
         "lon": -74.197552
@@ -1512,7 +1512,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "518-783-3500",
         "Address": "385 Watervliet-Shaker Road, Latham, NY 12110-4799",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "385%20Watervliet-Shaker%20Road%2C%20Latham%2C%20NY%2012110-4799",
         "lat": 42.7293503,
         "lon": -73.7385651
@@ -1589,7 +1589,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-588-4262",
         "Address": "120 E 169th St, Bronx, NY 10452",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "120%20E%20169th%20St%2C%20Bronx%2C%20NY%2010452",
         "lat": 40.83690720408163,
         "lon": -73.917442
@@ -1727,7 +1727,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "845-359-5691",
         "Address": "496 Western Hwy S, Blauvelt, NY 10913",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "496%20Western%20Hwy%20S%2C%20Blauvelt%2C%20NY%2010913",
         "lat": 41.053427,
         "lon": -73.955152
@@ -1745,7 +1745,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-465-8881",
         "Address": "194-59 Murdock Ave, Queens, NY 11412",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "194-59%20Murdock%20Ave%2C%20Queens%2C%20NY%2011412",
         "lat": 40.6991422,
         "lon": -73.7584484
@@ -1860,7 +1860,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-761-6782",
         "Address": "2024 Richmond Ave, Staten Island, NY 10314",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "2024%20Richmond%20Ave%2C%20Staten%20Island%2C%20NY%2010314",
         "lat": 40.59845055555556,
         "lon": -74.162671
@@ -1940,7 +1940,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "212-477-0351",
         "Address": "55 Washington Square S, New York, NY 10012",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "55%20Washington%20Square%20S%2C%20New%20York%2C%20NY%2010012",
         "lat": 40.730295,
         "lon": -73.998307
@@ -1958,7 +1958,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-681-2361",
         "Address": "14 W 170th St, Bronx, NY 10452",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "14%20W%20170th%20St%2C%20Bronx%2C%20NY%2010452",
         "lat": 40.8406424375,
         "lon": -73.9186986875
@@ -2017,7 +2017,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "585-223-9560",
         "Address": "31 W Church St, Fairport, NY 14450",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "31%20W%20Church%20St%2C%20Fairport%2C%20NY%2014450",
         "lat": 43.098488764705884,
         "lon": -77.44356035294118
@@ -2035,7 +2035,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "516-785-1829",
         "Address": "1845 Wantagh Ave, Wantagh, NY 11793",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "1845%20Wantagh%20Ave%2C%20Wantagh%2C%20NY%2011793",
         "lat": 40.67625542755695,
         "lon": -73.50971336370301
@@ -2089,7 +2089,7 @@
         "Name": "LIFEhouse Community of Faith",
         "Legislation": ["Statewide Right to Counsel"],
         "Address": "460 Irving Ave, Brooklyn, NY 11237",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "460%20Irving%20Ave%2C%20Brooklyn%2C%20NY%2011237",
         "lat": 40.6958048,
         "lon": -73.9089887
@@ -2225,7 +2225,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "914-615-2233",
         "Address": "20 Soundview Ave - White Plains, NY 10606",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "20%20Soundview%20Ave%20-%20White%20Plains%2C%20NY%2010606",
         "lat": 41.01947205029323,
         "lon": -73.77473885212137
@@ -2261,7 +2261,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "516-489-3610",
         "Address": "416 Woodland Dr, South Hempstead, NY 11550",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "416%20Woodland%20Dr%2C%20South%20Hempstead%2C%20NY%2011550",
         "lat": 40.686444,
         "lon": -73.620765
@@ -2279,7 +2279,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-748-9502",
         "Address": "6917 4th Ave, Brooklyn, NY 11209",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "6917%204th%20Ave%2C%20Brooklyn%2C%20NY%2011209",
         "lat": 40.6341291,
         "lon": -74.0235101
@@ -2337,7 +2337,7 @@
         "Name": "Upper Room Inclusive Catholic Community",
         "Legislation": ["Statewide Right to Counsel"],
         "Address": "431 New Karner Rd, Blg 1, Albany, NY 12205",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "431%20New%20Karner%20Rd%2C%20Blg%201%2C%20Albany%2C%20NY%2012205",
         "lat": 42.7379789,
         "lon": -73.8420552
@@ -2390,7 +2390,7 @@
         "Name": "Albany County Central Federation of Labor (ACCFL)",
         "Legislation": ["Statewide Right to Counsel"],
         "Address": "196 Mt Hope Dr, Albany, NY 12202",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "196%20Mt%20Hope%20Dr%2C%20Albany%2C%20NY%2012202",
         "lat": 42.631529581054245,
         "lon": -73.76978020286079
@@ -2431,7 +2431,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "212-362-4008",
         "Address": "250 W 87th St # 2, New York, NY 10024",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "250%20W%2087th%20St%20%23%202%2C%20New%20York%2C%20NY%2010024",
         "lat": 40.78919236734694,
         "lon": -73.97671902040815
@@ -2449,7 +2449,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "716-933-6699",
         "Address": "79 Brooklyn St, Portville, NY 14770",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "79%20Brooklyn%20St%2C%20Portville%2C%20NY%2014770",
         "lat": 42.03855361193963,
         "lon": -78.33174363607166
@@ -2467,7 +2467,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "518-445-2328",
         "Address": "80 New Scotland Ave, Albany, NY 12208",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "80%20New%20Scotland%20Ave%2C%20Albany%2C%20NY%2012208",
         "lat": 42.65391809090909,
         "lon": -73.77299968181818
@@ -2485,7 +2485,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "212-870-2221",
         "Address": "475 Riverside Dr, New York, NY 10115",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "475%20Riverside%20Dr%2C%20New%20York%2C%20NY%2010115",
         "lat": 40.8109391,
         "lon": -73.9640163
@@ -2710,7 +2710,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "516-515-1469",
         "Address": "11 E Fulton Ave, Roosevelt, NY 11575",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "11%20E%20Fulton%20Ave%2C%20Roosevelt%2C%20NY%2011575",
         "lat": 40.67603684782608,
         "lon": -73.58757002173913
@@ -2746,7 +2746,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "518-462-5450",
         "Address": "646 State Street, Albany, NY 12203",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "646%20State%20Street%2C%20Albany%2C%20NY%2012203",
         "lat": 42.66238037142857,
         "lon": -73.77569460000001
@@ -2810,7 +2810,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-528-2095",
         "Address": "117-35 235th Street, Cambria Heights, NY 11411",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "117-35%20235th%20Street%2C%20Cambria%20Heights%2C%20NY%2011411",
         "lat": 40.689863,
         "lon": -73.727502
@@ -3033,7 +3033,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "212-243-5470",
         "Address": "201 W 13th St, New York, NY 10011",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "201%20W%2013th%20St%2C%20New%20York%2C%20NY%2010011",
         "lat": 40.7381368,
         "lon": -74.0005681
@@ -3171,7 +3171,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "585-271-1050",
         "Address": "1050 East Ave, Rochester, NY 14607",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "1050%20East%20Ave%2C%20Rochester%2C%20NY%2014607",
         "lat": 43.151003,
         "lon": -77.5760248
@@ -3230,7 +3230,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-268-4036",
         "Address": "70-35 112th St, Queens, NY 11375",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "70-35%20112th%20St%2C%20Queens%2C%20NY%2011375",
         "lat": 40.7233409,
         "lon": -73.83916533108979
@@ -3347,7 +3347,7 @@
         "Name": "Prophetic Whirlwind Ministries",
         "Legislation": ["Statewide Right to Counsel"],
         "Address": "New York, NY",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "New%20York%2C%20NY"
       },
       "geometry": {
@@ -3549,7 +3549,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-499-6704",
         "Address": "1012 8th Ave, Brooklyn, NY 11215",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "1012%208th%20Ave%2C%20Brooklyn%2C%20NY%2011215",
         "lat": 40.66504663265306,
         "lon": -73.9799382857143
@@ -3567,7 +3567,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "716-386-7280",
         "Address": "3748 NY-430, Bemus Point, NY 14712",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "3748%20NY-430%2C%20Bemus%20Point%2C%20NY%2014712",
         "lat": 42.14367100359165,
         "lon": -79.36437128040943
@@ -3626,7 +3626,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "585.546-7669",
         "Address": "121 Fitzhugh Street North, Rochester, NY 14614",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "121%20Fitzhugh%20Street%20North%2C%20Rochester%2C%20NY%2014614",
         "lat": 43.1574356,
         "lon": -77.6160992
@@ -3703,7 +3703,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "212-736-4536",
         "Address": "424 W. 33rd Street, Suite 580, New York, NY 10001",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "424%20W.%2033rd%20Street%2C%20Suite%20580%2C%20New%20York%2C%20NY%2010001",
         "lat": 40.753019,
         "lon": -73.9982095
@@ -3764,7 +3764,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "914-948-3095",
         "Address": "20 Greenridge Ave, White Plains, NY 10605",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "20%20Greenridge%20Ave%2C%20White%20Plains%2C%20NY%2010605",
         "lat": 41.02454326034737,
         "lon": -73.76509294491235
@@ -3865,7 +3865,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "718-324-1648",
         "Address": "4750 White Plains Rd, Bronx, NY 10470",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "4750%20White%20Plains%20Rd%2C%20Bronx%2C%20NY%2010470",
         "lat": 40.904422000000004,
         "lon": -73.84964566666667
@@ -3952,7 +3952,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "518-443-0460",
         "Address": "275 State St, Albany, NY 12210",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "275%20State%20St%2C%20Albany%2C%20NY%2012210",
         "lat": 42.65432980585089,
         "lon": -73.76143171606307
@@ -4085,7 +4085,7 @@
         "Name": "Episcopal Diocese of New York",
         "Legislation": ["Statewide Right to Counsel"],
         "Address": "1047 Amsterdam Ave, New York, NY 10025",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "1047%20Amsterdam%20Ave%2C%20New%20York%2C%20NY%2010025",
         "lat": 40.803047612244896,
         "lon": -73.96368224489795
@@ -4121,7 +4121,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "914-963-6440",
         "Address": "28 Wells Ave, Yonkers, NY 10701",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "28%20Wells%20Ave%2C%20Yonkers%2C%20NY%2010701",
         "lat": 40.936496,
         "lon": -73.89989
@@ -4285,7 +4285,7 @@
         "Legislation": ["Statewide Right to Counsel"],
         "Phone": "347-618-2450",
         "Address": "729 W 181st St, New York, NY 10033",
-        "Membership Status": ["Supporter"],
+        "Membership Status": "Supporter",
         "address_code": "729%20W%20181st%20St%2C%20New%20York%2C%20NY%2010033",
         "lat": 40.850344428571425,
         "lon": -73.93603685714285

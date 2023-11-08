@@ -85,6 +85,12 @@ const SidePanel = () => {
                 center: [-78.5, 43.05] as [number, number],
                 zoom: -6.25
             })
+
+            /* @ts-ignore */
+            map?.getSource("district_label").setData({
+                type: "FeatureCollection",
+                features: []
+            })
         }
     }
 
