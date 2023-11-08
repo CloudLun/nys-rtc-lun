@@ -7,6 +7,8 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 
 
 
+
+
 type Props = {
     districtsClickHandler: (x: Districts) => void
 }
@@ -57,7 +59,7 @@ const Legend = () => {
                         <div className='flex flex-col gap-[5px]'>
                             <div className='flex items-center gap-[10px]'>
                                 <Image
-                                    src="/icons/pattern_demo.png"
+                                    src="/icons/pattern_demo.svg"
                                     width={16}
                                     height={16}
                                     alt="No Support, Democrat"
@@ -66,7 +68,7 @@ const Legend = () => {
                             </div>
                             <div className='flex items-center gap-[10px]'>
                                 <Image
-                                    src="/icons/pattern_rep.png"
+                                    src="/icons/pattern_rep.svg"
                                     width={16}
                                     height={16}
                                     alt="No Support, Republican"

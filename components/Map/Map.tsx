@@ -21,6 +21,9 @@ import Geopanel from "../Geopanel/Geopanel";
 
 import "./Map.css"
 
+import pattern_rep from "../../public/icons/pattern_rep.svg"
+import pattern_demo from "../../public/icons/pattern_demo.svg"
+
 
 
 const Map = () => {
@@ -31,7 +34,6 @@ const Map = () => {
     const assemblyFeatures = (assembly as GeoJson).features
     const organizationsFeatures = (organizations as GeoJson).features
     const countiesFeatures = (counties as GeoJson).features
-
 
     // senateFeatures.forEach((s, i) => {
     //     senateFeatures[i].properties.zipCodes = []
@@ -100,6 +102,9 @@ const Map = () => {
             interactive: true,
             doubleClickZoom: false,
         });
+
+        m.dragRotate.disable();
+        m.touchZoomRotate.disableRotation();
 
         m.addControl(new mapboxgl.NavigationControl())
 
@@ -170,20 +175,31 @@ const Map = () => {
                 },
             })
 
+            let patternRepImg = new Image(100,100)
+            patternRepImg.onload = () => m.addImage("pattern_rep", patternRepImg, {
+                sdf: true,
+            })
+            patternRepImg.src = pattern_rep.src
 
-            m.loadImage("./icons/pattern_rep.png", (error, image) => {
-                if (error) throw error;
-                m.addImage("pattern_rep", image as ImageBitmap, {
-                    sdf: true,
-                });
-            });
+            let patternDemoImg = new Image(100,100)
+            patternDemoImg.onload = () => m.addImage("pattern_demo", patternDemoImg, {
+                sdf: true,
+            })
+            patternDemoImg.src = pattern_demo.src
 
-            m.loadImage("./icons/pattern_demo.png", (error, image) => {
-                if (error) throw error;
-                m.addImage("pattern_demo", image as ImageBitmap, {
-                    sdf: true,
-                });
-            });
+            // m.loadImage(patternRepImg, (error, image) => {
+            //     if (error) throw error;
+            //     m.addImage("pattern_rep", image as ImageBitmap, {
+            //         sdf: true,
+            //     });
+            // });
+
+            // m.loadImage("./icons/pattern_demo.png", (error, image) => {
+            //     if (error) throw error;
+            //     m.addImage("pattern_demo", image as ImageBitmap, {
+            //         sdf: true,
+            //     });
+            // });
 
             m.addLayer({
                 'id': 'districts',
@@ -221,6 +237,7 @@ const Map = () => {
                 }
             });
 
+
             m.addLayer({
                 id: "pattern_rep",
                 type: "fill",
@@ -230,7 +247,7 @@ const Map = () => {
                     'fill-opacity': [
                         "case",
                         ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                        0.2, 0
+                        .5, 0
                     ]
                 }
             })
@@ -244,7 +261,7 @@ const Map = () => {
                     'fill-opacity': [
                         "case",
                         ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                        .2, 0
+                        .5, 0
                     ]
                 }
             })
@@ -452,11 +469,11 @@ const Map = () => {
                 const { properties } = e.features[0]
 
                 let content = `<div class="content">
-                <div class="flex justify-between items-center px-[18px] py-[15px] w-[267px] text-white bg-[#96315F] rounded-t-[20px]">
+                <div class="flex justify-between items-center px-[18px] py-[15px] w-[285px] text-white bg-[#96315F] rounded-t-[20px]">
                     <div class="w-[150px] font-bold text-[14px]">${properties.Name}</div>
                     <div class="flex flex-col items-center">
-                        <img src="/icons/checked_member.svg" alt="" className="w-[16px] h-[16px]" />
-                        <div class="font-regular text-[10px] text-start ">${properties['Membership Status']}</div>
+                        <img src=${properties['Membership Status'].includes('Member') ? "/icons/checked_member.svg" : "/icons/empty_member.svg"} alt="" className="w-[16px] h-[16px]" />
+                        <div class="font-regular text-[8px] text-center">${properties['Membership Status']}</div>
                     </div>
                 </div>
                 <div class="px-[17px] pt-[8px] pb-[12px] text-navy bg-white rounded-b-[20px]">

@@ -12,6 +12,8 @@ export type MapContextType = {
     setDistricts: Dispatch<SetStateAction<Districts>>
     membershipShown: boolean
     setMembershipShown: Dispatch<SetStateAction<boolean>>
+    memberpanelShown: boolean
+    setMemberpanelShown: Dispatch<SetStateAction<boolean>>
     legislations: Legislations
     setLegislations: Dispatch<SetStateAction<Legislations>>
     geopanelShown: boolean
@@ -31,10 +33,10 @@ const MapProvider = ({ children }: Props) => {
 
     const [map, setMap] = useState<mapboxgl.Map | null>(null)
     const [districts, setDistricts] = useState<Districts>("senate")
-    // const [selectedDistrictFeatures, setSelectedDistrictFeatures] = useState<GeoJson["features"] | null>(null)
     const [geopanelShown, setGeopanelShown] = useState(false)
     const [membershipShown, setMembershipShown] = useState(false)
     const [legislations, setLegislations] = useState<Legislations>("Statewide RTC")
+    const [memberpanelShown, setMemberpanelShown] = useState(false)
 
     const mapClickHandler = (m: mapboxgl.Map, e: MapMouseEvent & EventData, legislations: Legislations) => {
 
@@ -52,13 +54,13 @@ const MapProvider = ({ children }: Props) => {
             m.setPaintProperty("pattern_rep", "fill-opacity", [
                 "case",
                 ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                .1, 0
+                .25, 0
             ])
 
             m.setPaintProperty("pattern_demo", "fill-opacity", [
                 "case",
                 ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                .1, 0
+                .25, 0
             ])
         }
 
@@ -71,15 +73,15 @@ const MapProvider = ({ children }: Props) => {
             m.setPaintProperty("pattern_rep", "fill-opacity", [
                 "case",
                 ["all", ["==", ["get", "District"], district], ["==", ["get", "Party_x"], "Republican"]],
-                .5,
+                .75,
                 ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                .1, 0
+                .25, 0
             ])
 
             m.setPaintProperty("pattern_demo", "fill-opacity", [
                 "case",
                 ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                .1, 0
+                .25, 0
             ])
 
         }
@@ -93,15 +95,15 @@ const MapProvider = ({ children }: Props) => {
             m.setPaintProperty("pattern_rep", "fill-opacity", [
                 "case",
                 ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                .1, 0
+                .25, 0
             ])
 
             m.setPaintProperty("pattern_demo", "fill-opacity", [
                 "case",
                 ["all", ["==", ["get", "District"], district]],
-                .5,
+                .75,
                 ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                .1, 0
+                .25, 0
             ])
 
         }
@@ -164,18 +166,18 @@ const MapProvider = ({ children }: Props) => {
         map?.setPaintProperty("districts", "fill-opacity", [
             "case",
             ["in", `${legislations}`, ["get", "HCMC support"]],
-            1, 0
+            .75, 0
         ])
         map?.setPaintProperty("pattern_rep", "fill-opacity", [
             "case",
             ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-            0.2, 0
+            .5, 0
         ]
         )
         map?.setPaintProperty("pattern_demo", "fill-opacity", [
             "case",
             ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-            .2, 0
+            .5, 0
         ])
 
         map?.flyTo({
@@ -209,7 +211,7 @@ const MapProvider = ({ children }: Props) => {
 
 
 
-    return <MapContext.Provider value={{ map, setMap, districts, setDistricts, membershipShown, setMembershipShown, geopanelShown, setGeopanelShown, legislations, setLegislations, mapClickHandler, defaultMapHandler }}>
+    return <MapContext.Provider value={{ map, setMap, districts, setDistricts, membershipShown, setMembershipShown, geopanelShown, setGeopanelShown,memberpanelShown, setMemberpanelShown  ,legislations, setLegislations, mapClickHandler, defaultMapHandler }}>
         {children}
     </MapContext.Provider>
 }

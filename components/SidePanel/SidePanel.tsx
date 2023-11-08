@@ -67,18 +67,18 @@ const SidePanel = () => {
             map?.setPaintProperty("districts", "fill-opacity", [
                 "case",
                 ["in", `${l}`, ["get", "HCMC support"]],
-                1, 0
+                .75, 0
             ])
             map?.setPaintProperty("pattern_rep", "fill-opacity", [
                 "case",
                 ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", l, ["get", "HCMC support"]]]],
-                0.2, 0
+                .5, 0
             ]
             )
             map?.setPaintProperty("pattern_demo", "fill-opacity", [
                 "case",
                 ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", l, ["get", "HCMC support"]]]],
-                .2, 0
+                .5, 0
             ])
     
             map?.flyTo({

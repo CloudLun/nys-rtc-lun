@@ -1,4 +1,4 @@
-import React, { useState, useContext, Dispatch, SetStateAction, ReactNode, MouseEvent } from 'react'
+import React, { useContext, MouseEvent } from 'react'
 
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { MapContext, MapContextType } from '@/context/MapContext'
@@ -55,7 +55,7 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
         const clickedCongressions = (congressions as GeoJson).features.filter((c, i) => c.properties.District.toString() === (e.target as HTMLElement).innerText)
 
         /* @ts-ignore */
-        map?.getSource("click_area").setData({
+        map?.getSource("hover_area").setData({
             type: "FeatureCollection",
             features: clickedCongressions,
         })
@@ -84,11 +84,11 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
         }
 
         /* @ts-ignore */
-        map?.getSource("click_label").setData({
+        map?.getSource("hover_label").setData({
             type: "FeatureCollection",
             features: labelData.features as GeoJson["features"]
         })
-        map?.setPaintProperty("district_label", "text-opacity", 1)
+        // map?.setPaintProperty("district_label", "text-opacity", 1)
 
     }
 
@@ -205,18 +205,22 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
                         <div className='text-[10px] text-regular text-grey_1'>HCMC Campaign Support</div>
                         <div className="flex flex-col gap-[5px] mt-[6px] text-rtc_navy">
                             <div className="flex items-center gap-[5px] ">
+                                {/* @ts-ignore */}
                                 <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Statewide RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Statewide RTC</div>
                             </div>
                             <div className="flex items-center gap-[5px]">
+                                {/* @ts-ignore */}
                                 <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Winter Eviction Moratorium") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Winter Eviction Moratorium</div>
                             </div>
                             <div className="flex items-center gap-[5px]">
+                                {/* @ts-ignore */}
                                 <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Defend RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Defend RTC</div>
                             </div>
                             <div className="flex items-center gap-[5px]">
+                                {/* @ts-ignore */}
                                 <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Fund Local Law 53") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Power to Organize:<br /> Fund Local Law 53</div>
                             </div>
@@ -251,7 +255,7 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
                         </div>
                         <div className='my-[12px] w-full h-[1px] bg-grey_1'></div>
                         <div className='mb-[20px] text-[10px] text-grey_1'>
-                            Click below to view intersecting geographic boundaries with Senate District 48.
+                            Click below to view intersecting geographic boundaries with {districts.charAt(0).toUpperCase() + districts.slice(1)} District {selectedDistrictFeatures?.properties!.District}.
                         </div>
                         <div>
                             <div className='mb-[5px] text-[10px] text-grey_1'>{districts === "senate" ? "Assembly" : "Senate"} Districts</div>
@@ -260,7 +264,7 @@ const Geopanel = ({ selectedDistrictFeatures }: Props) => {
                                     selectedDistrictOverlappedData &&
                                     selectedDistrictOverlappedData.congressions
                                         .map((c, i) =>
-                                            <GeoInfoBtns key={i} name={c.toString()} clickHandler={congressionsClickHandler} />)
+                                            <GeoInfoBtns key={i} name={c.toString()} mouseEnterHandler={congressionsClickHandler} mouseOutHandler={removeHoverEventHandler}/>)
                                 }
                             </div>
                         </div>
