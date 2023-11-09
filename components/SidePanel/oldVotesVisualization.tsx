@@ -398,49 +398,73 @@ export default VotesVisualization
 // make the commit message tot be concise
 
 
-            //     const targetPolygon = turf.polygon([e.features[0].geometry.coordinates[0]])
+//     const targetPolygon = turf.polygon([e.features[0].geometry.coordinates[0]])
 
-            //     const filtered = zipcodeFeatures.filter((z, i) => i !== 1299).filter((z, i) => i !== 1407)
-            //     const filteredZipcodesFeatures = filtered.filter((z, i) => {
-            //         let zipcodesPolygon
-            //         if (z.geometry.coordinates[0].length === 1) {
-            //             zipcodesPolygon = turf.polygon([z.geometry.coordinates[0][0]])
-            //             if (turf.booleanOverlap(zipcodesPolygon, targetPolygon) || turf.booleanContains(targetPolygon, zipcodesPolygon)) return true
-            //             return false
-            //         } else {
-            //             zipcodesPolygon = turf.polygon([z.geometry.coordinates[0]])
-            //             if (turf.booleanOverlap(zipcodesPolygon, targetPolygon) || turf.booleanContains(targetPolygon, zipcodesPolygon)) return true
-            //             return false
-            //         }
+//     const filtered = zipcodeFeatures.filter((z, i) => i !== 1299).filter((z, i) => i !== 1407)
+//     const filteredZipcodesFeatures = filtered.filter((z, i) => {
+//         let zipcodesPolygon
+//         if (z.geometry.coordinates[0].length === 1) {
+//             zipcodesPolygon = turf.polygon([z.geometry.coordinates[0][0]])
+//             if (turf.booleanOverlap(zipcodesPolygon, targetPolygon) || turf.booleanContains(targetPolygon, zipcodesPolygon)) return true
+//             return false
+//         } else {
+//             zipcodesPolygon = turf.polygon([z.geometry.coordinates[0]])
+//             if (turf.booleanOverlap(zipcodesPolygon, targetPolygon) || turf.booleanContains(targetPolygon, zipcodesPolygon)) return true
+//             return false
+//         }
 
-            //     })
+//     })
 
-            //     m.getSource("zipcodes").setData({
-            //         "type": "FeatureCollection",
-            //         "features": filteredZipcodesFeatures
-            // })
+//     m.getSource("zipcodes").setData({
+//         "type": "FeatureCollection",
+//         "features": filteredZipcodesFeatures
+// })
 
-            // const zipcodeFeaturesArray = []
+// const zipcodeFeaturesArray = []
 
-            // for (let i = 0; i < senateFeatures.length; i++) {
-            //     console.log(i)
-            //     if (i !== 25) {
-            //         const senatePolygon = turf.polygon([senateFeatures[i].geometry.coordinates[0]])
-            //         const filtered = zipcodeFeatures.filter((z, i) => i !== 1299).filter((z, i) => i !== 1407)
-            //         const filteredZipcodesFeatures = filtered.filter((z, i) => {
-            //             let zipcodesPolygon
-            //             if (z.geometry.coordinates[0].length === 1) {
-            //                 zipcodesPolygon = turf.polygon([z.geometry.coordinates[0][0]])
-            //                 if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
-            //                 return false
-            //             } else {
-            //                 zipcodesPolygon = turf.polygon([z.geometry.coordinates[0]])
-            //                 if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
-            //                 return false
-            //             }
-            //         })
-            //         zipcodeFeaturesArray.push(filteredZipcodesFeatures)
-            //     } else {
-            //         zipcodeFeaturesArray.push([])
-            //     }
-            // }
+// for (let i = 0; i < senateFeatures.length; i++) {
+//     console.log(i)
+//     if (i !== 25) {
+//         const senatePolygon = turf.polygon([senateFeatures[i].geometry.coordinates[0]])
+//         const filtered = zipcodeFeatures.filter((z, i) => i !== 1299).filter((z, i) => i !== 1407)
+//         const filteredZipcodesFeatures = filtered.filter((z, i) => {
+//             let zipcodesPolygon
+//             if (z.geometry.coordinates[0].length === 1) {
+//                 zipcodesPolygon = turf.polygon([z.geometry.coordinates[0][0]])
+//                 if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
+//                 return false
+//             } else {
+//                 zipcodesPolygon = turf.polygon([z.geometry.coordinates[0]])
+//                 if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
+//                 return false
+//             }
+//         })
+//         zipcodeFeaturesArray.push(filteredZipcodesFeatures)
+//     } else {
+//         zipcodeFeaturesArray.push([])
+//     }
+// }
+
+// senateFeatures.forEach((s, i) => {
+//     senateFeatures[i].properties.zipCodes = []
+// })
+// useEffect(() => {
+// senateFeatures.forEach((s, i) => {
+//     senateFeatures[i].properties.zipCodes = []
+// })
+// const senatePolygon = turf.polygon([senateFeatures[0].geometry.coordinates[0]])
+// const filtered = zipcodeFeatures.filter((z, i) => i !== 1299).filter((z, i) => i !== 1407)
+// const filteredZipcodesFeatures = filtered.filter((z, i) => {
+//     let zipcodesPolygon
+//     if (z.geometry.coordinates[0].length === 1) {
+//         zipcodesPolygon = turf.polygon([z.geometry.coordinates[0][0]])
+//         if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
+//         return false
+//     } else {
+//         zipcodesPolygon = turf.polygon([z.geometry.coordinates[0]])
+//         if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
+//         return false
+//     }
+
+// })
+// }, [])

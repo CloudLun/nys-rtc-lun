@@ -155,7 +155,7 @@ const MapProvider = ({ children }: Props) => {
 
         m.flyTo({
             center: targetCentroid as [number, number],
-            zoom: 6.9
+            zoom: 8
         })
 
         setGeopanelShown(true)
@@ -203,7 +203,16 @@ const MapProvider = ({ children }: Props) => {
             features: []
         })
 
+        map?.setPaintProperty("organizations", "circle-color", [
+            'case',
+            ["in", `Member`, ["get", "Membership Status"]],
+            "#802948", "#ffffff"
+        ])
+
+        map?.setPaintProperty("organizations", "circle-stroke-color", "#802948")
+
         setGeopanelShown(false)
+        setMemberpanelShown(false)
     }
 
 

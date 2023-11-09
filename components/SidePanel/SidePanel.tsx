@@ -91,6 +91,10 @@ const SidePanel = () => {
                 type: "FeatureCollection",
                 features: []
             })
+
+            // m.on("click", "districts", (e: MapMouseEvent & EventData) => {
+            //     mapClickHandler(m, e, legislations)
+            // })
         }
     }
 

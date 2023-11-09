@@ -27,6 +27,14 @@ const MapLayers = ({ districtsClickHandler }: Props) => {
 
     const membershipClickHandler = () => {
         setMembershipShown(!membershipShown)
+
+        // map?.setPaintProperty("organizations", "circle-color", [
+        //     'case',
+        //     ["in", `Member`, ["get", "Membership Status"]],
+        //     "#802948", "#ffffff"
+        // ])
+
+        // map?.setPaintProperty("organizations", "circle-stroke-color", "#802948")
     }
 
     // const [organizations, setOrganizations] = useState({
@@ -43,6 +51,7 @@ const MapLayers = ({ districtsClickHandler }: Props) => {
 
     useEffect(() => {
         membershipShown ? map?.setLayoutProperty('organizations', "visibility", "visible") : map?.setLayoutProperty('organizations', "visibility", "none")
+        
         // if (organizations["Members"]) {
         //     map?.setLayoutProperty('organizations_members', "visibility", "visible")
         // } else {

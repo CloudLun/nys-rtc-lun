@@ -18,6 +18,7 @@ import * as turf from "@turf/turf";
 import Legend from "./Legend";
 import MapLayers from "./MapLayers";
 import Geopanel from "../Geopanel/Geopanel";
+import Membershippanel from "../Geopanel/Membershippanel";
 
 import "./Map.css"
 
@@ -28,37 +29,12 @@ import pattern_demo from "../../public/icons/pattern_demo.svg"
 
 const Map = () => {
     const mapContainer = useRef<HTMLInputElement>(null);
-    const { map, setMap, districts, setDistricts, setGeopanelShown, legislations, mapClickHandler, defaultMapHandler } = useContext(MapContext) as MapContextType
+    const { map, setMap, districts, setDistricts, setGeopanelShown, setMemberpanelShown, legislations, mapClickHandler, defaultMapHandler } = useContext(MapContext) as MapContextType
 
     const senateFeatures = (senate as GeoJson).features
     const assemblyFeatures = (assembly as GeoJson).features
     const organizationsFeatures = (organizations as GeoJson).features
     const countiesFeatures = (counties as GeoJson).features
-
-    // senateFeatures.forEach((s, i) => {
-    //     senateFeatures[i].properties.zipCodes = []
-    // })
-    // useEffect(() => {
-    // senateFeatures.forEach((s, i) => {
-    //     senateFeatures[i].properties.zipCodes = []
-    // })
-    // const senatePolygon = turf.polygon([senateFeatures[0].geometry.coordinates[0]])
-    // const filtered = zipcodeFeatures.filter((z, i) => i !== 1299).filter((z, i) => i !== 1407)
-    // const filteredZipcodesFeatures = filtered.filter((z, i) => {
-    //     let zipcodesPolygon
-    //     if (z.geometry.coordinates[0].length === 1) {
-    //         zipcodesPolygon = turf.polygon([z.geometry.coordinates[0][0]])
-    //         if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
-    //         return false
-    //     } else {
-    //         zipcodesPolygon = turf.polygon([z.geometry.coordinates[0]])
-    //         if (turf.booleanOverlap(zipcodesPolygon, senatePolygon) || turf.booleanContains(senatePolygon, zipcodesPolygon)) return true
-    //         return false
-    //     }
-
-    // })
-    // }, [])
-
 
 
     const [lng, setLng] = useState(-78.5);
@@ -66,6 +42,7 @@ const Map = () => {
     const [zoom, setZoom] = useState(-6.25);
 
     const [selectedDistrictFeatures, setSelectedDistrictFeatures] = useState(null)
+    const [selectedMemberFeatures, setSelectedMemberFeatures] = useState(null)
 
 
     const districtsClickHandler = (districts: Districts) => {
@@ -175,13 +152,13 @@ const Map = () => {
                 },
             })
 
-            let patternRepImg = new Image(100,100)
+            let patternRepImg = new Image(100, 100)
             patternRepImg.onload = () => m.addImage("pattern_rep", patternRepImg, {
                 sdf: true,
             })
             patternRepImg.src = pattern_rep.src
 
-            let patternDemoImg = new Image(100,100)
+            let patternDemoImg = new Image(100, 100)
             patternDemoImg.onload = () => m.addImage("pattern_demo", patternDemoImg, {
                 sdf: true,
             })
@@ -405,10 +382,39 @@ const Map = () => {
                 }
             })
 
-
             m.on("click", "districts", (e: MapMouseEvent & EventData) => {
+                console.log(legislations)
+                setMemberpanelShown(false)
                 setSelectedDistrictFeatures(e.features[0])
                 mapClickHandler(m, e, legislations)
+            })
+
+            m.on('click', "organizations", (e: MapMouseEvent & EventData) => {
+                console.log(e.features[0].properties.Name)
+                setSelectedMemberFeatures(e.features[0])
+                setGeopanelShown(false)
+                setMemberpanelShown(true)
+
+                m.flyTo({
+                    center: [e.features[0].properties.lon, e.features[0].properties.lat],
+                    zoom: 9.5
+                })
+
+                m.setPaintProperty("organizations", "circle-color", [
+                    'case',
+                    ['all', ["==", ['get', "Name"], e.features[0].properties.Name]],
+                    "#ffe57f",
+                    ["in", `Member`, ["get", "Membership Status"]],
+                    "#802948", "#ffffff"
+                ])
+
+                m.setPaintProperty("organizations", "circle-stroke-color", [
+                    'case',
+                    ['all', ["==", ['get', "Name"], e.features[0].properties.Name]],
+                    "#ffe57f", "#802948"
+                ])
+
+
             })
 
 
@@ -525,6 +531,7 @@ const Map = () => {
             <Legend />
             <MapLayers districtsClickHandler={districtsClickHandler} />
             <Geopanel selectedDistrictFeatures={selectedDistrictFeatures} />
+            <Membershippanel selectedMemberFeatures={selectedMemberFeatures} />
         </>
     )
 
