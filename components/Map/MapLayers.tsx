@@ -28,45 +28,12 @@ const MapLayers = ({ districtsClickHandler }: Props) => {
     const membershipClickHandler = () => {
         setMembershipShown(!membershipShown)
 
-        // map?.setPaintProperty("organizations", "circle-color", [
-        //     'case',
-        //     ["in", `Member`, ["get", "Membership Status"]],
-        //     "#802948", "#ffffff"
-        // ])
-
-        // map?.setPaintProperty("organizations", "circle-stroke-color", "#802948")
     }
 
-    // const [organizations, setOrganizations] = useState({
-    //     Members: false,
-    //     Supporters: false,
-    //     Endorsers: false,
-    // })
 
-    // const organizationsClickHandler = (org: Organizations) => {
-    //     let newOrg = { ...organizations }
-    //     newOrg[org] = !newOrg[org]
-    //     setOrganizations(newOrg)
-    // }
 
     useEffect(() => {
-        membershipShown ? map?.setLayoutProperty('organizations', "visibility", "visible") : map?.setLayoutProperty('organizations', "visibility", "none")
-        
-        // if (organizations["Members"]) {
-        //     map?.setLayoutProperty('organizations_members', "visibility", "visible")
-        // } else {
-        //     map?.setLayoutProperty('organizations_members', "visibility", "none")
-        // }
-        // if (organizations["Supporters"]) {
-        //     map?.setLayoutProperty('organizations_supporters', "visibility", "visible")
-        // } else {
-        //     map?.setLayoutProperty('organizations_supporters', "visibility", "none")
-        // }
-        // if (organizations["Endorsers"]) {
-        //     map?.setLayoutProperty('organizations_endorsers', "visibility", "visible")
-        // } else {
-        //     map?.setLayoutProperty('organizations_endorsers', "visibility", "none")
-        // }
+        membershipShown ? map?.setLayoutProperty('members', "visibility", "visible") : map?.setLayoutProperty('members', "visibility", "none")
     }, [membershipShown])
 
 

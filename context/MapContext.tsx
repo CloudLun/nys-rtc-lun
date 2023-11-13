@@ -12,14 +12,18 @@ export type MapContextType = {
     setDistricts: Dispatch<SetStateAction<Districts>>
     membershipShown: boolean
     setMembershipShown: Dispatch<SetStateAction<boolean>>
-    memberpanelShown: boolean
-    setMemberpanelShown: Dispatch<SetStateAction<boolean>>
+    panelShown: {
+        geopanelShown: boolean,
+        memberpanelShown: boolean
+    },
+    setPanelShown: Dispatch<SetStateAction<{
+        geopanelShown: boolean,
+        memberpanelShown: boolean
+    }>>
     legislations: Legislations
     setLegislations: Dispatch<SetStateAction<Legislations>>
-    geopanelShown: boolean
-    setGeopanelShown: Dispatch<SetStateAction<boolean>>
     mapClickHandler: (m: mapboxgl.Map, e: MapMouseEvent & EventData, legislations: Legislations) => void
-    defaultMapHandler: () => void
+    defaultMapHandler: (legislations: Legislations) => void
 }
 
 type Props = {
@@ -33,10 +37,12 @@ const MapProvider = ({ children }: Props) => {
 
     const [map, setMap] = useState<mapboxgl.Map | null>(null)
     const [districts, setDistricts] = useState<Districts>("senate")
-    const [geopanelShown, setGeopanelShown] = useState(false)
+    const [panelShown, setPanelShown] = useState({
+        geopanelShown: false,
+        memberpanelShown: false
+    })
     const [membershipShown, setMembershipShown] = useState(false)
     const [legislations, setLegislations] = useState<Legislations>("Statewide RTC")
-    const [memberpanelShown, setMemberpanelShown] = useState(false)
 
     const mapClickHandler = (m: mapboxgl.Map, e: MapMouseEvent & EventData, legislations: Legislations) => {
 
@@ -48,66 +54,30 @@ const MapProvider = ({ children }: Props) => {
                 ["all", ["==", ["get", "District"], district], ["in", legislations, ["get", "HCMC support"]]],
                 .75,
                 ["in", legislations, ["get", "HCMC support"]],
-                .1,
+                .05,
                 0
             ])
-            m.setPaintProperty("pattern_rep", "fill-opacity", [
+            m.setPaintProperty("pattern", "fill-opacity", [
                 "case",
-                ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                .25, 0
-            ])
-
-            m.setPaintProperty("pattern_demo", "fill-opacity", [
-                "case",
-                ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
+                ["all", ["!", ["in", legislations, ["get", "HCMC support"]]]],
                 .25, 0
             ])
         }
 
-        if (e.features[0].properties.Party_x === "Republican" && !e.features[0].properties["HCMC support"].includes(legislations)) {
+        if (!e.features[0].properties["HCMC support"].includes(legislations)) {
             m.setPaintProperty("districts", "fill-opacity", [
                 "case",
                 ["in", legislations, ["get", "HCMC support"]],
-                .1, 0
+                .05, 0
             ])
-            m.setPaintProperty("pattern_rep", "fill-opacity", [
-                "case",
-                ["all", ["==", ["get", "District"], district], ["==", ["get", "Party_x"], "Republican"]],
-                .75,
-                ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                .25, 0
-            ])
-
-            m.setPaintProperty("pattern_demo", "fill-opacity", [
-                "case",
-                ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                .25, 0
-            ])
-
-        }
-
-        if (e.features[0].properties.Party_x === "Democratic" && !e.features[0].properties["HCMC support"].includes(legislations)) {
-            m.setPaintProperty("districts", "fill-opacity", [
-                "case",
-                ["in", legislations, ["get", "HCMC support"]],
-                .1, 0
-            ])
-            m.setPaintProperty("pattern_rep", "fill-opacity", [
-                "case",
-                ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                .25, 0
-            ])
-
-            m.setPaintProperty("pattern_demo", "fill-opacity", [
+            m.setPaintProperty("pattern", "fill-opacity", [
                 "case",
                 ["all", ["==", ["get", "District"], district]],
                 .75,
-                ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
+                ["all", ["!", ["in", legislations, ["get", "HCMC support"]]]],
                 .25, 0
             ])
-
         }
-
 
         let coordinatesArray = e.features[0].geometry.coordinates[0]
         while (coordinatesArray.length === 1) coordinatesArray = coordinatesArray[0]
@@ -140,62 +110,35 @@ const MapProvider = ({ children }: Props) => {
 
         map?.setPaintProperty("district_label", "text-opacity", 1)
 
-        /* @ts-ignore */
-        map?.getSource("click_area").setData({
-            type: "FeatureCollection",
-            features: []
-        })
-
-        /* @ts-ignore */
-        map?.getSource("click_label").setData({
-            type: "FeatureCollection",
-            features: []
-        })
-
 
         m.flyTo({
             center: targetCentroid as [number, number],
             zoom: 8
         })
 
-        setGeopanelShown(true)
+        setPanelShown({ ...panelShown, geopanelShown: true })
 
     }
 
-    const defaultMapHandler = () => {
+    const defaultMapHandler = (legislations: Legislations) => {
         map?.setPaintProperty("districts", "fill-opacity", [
             "case",
             ["in", `${legislations}`, ["get", "HCMC support"]],
             .75, 0
         ])
-        map?.setPaintProperty("pattern_rep", "fill-opacity", [
+        map?.setPaintProperty("pattern", "fill-opacity", [
             "case",
-            ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
+            ["all", ["!", ["in", legislations, ["get", "HCMC support"]]]],
             .5, 0
         ]
         )
-        map?.setPaintProperty("pattern_demo", "fill-opacity", [
-            "case",
-            ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-            .5, 0
-        ])
+
 
         map?.flyTo({
             center: [-78.5, 43.05] as [number, number],
             zoom: -6.25
         })
 
-        /* @ts-ignore */
-        map?.getSource("click_area").setData({
-            type: "FeatureCollection",
-            features: []
-        })
-
-        /* @ts-ignore */
-        map?.getSource("click_label").setData({
-            type: "FeatureCollection",
-            features: []
-        })
 
         /* @ts-ignore */
         map?.getSource("district_label").setData({
@@ -203,16 +146,16 @@ const MapProvider = ({ children }: Props) => {
             features: []
         })
 
-        map?.setPaintProperty("organizations", "circle-color", [
-            'case',
-            ["in", `Member`, ["get", "Membership Status"]],
-            "#802948", "#ffffff"
-        ])
+        // map?.setPaintProperty("organizations", "circle-color", [
+        //     'case',
+        //     ["in", `Member`, ["get", "Membership Status"]],
+        //     "#802948", "#ffffff"
+        // ])
 
-        map?.setPaintProperty("organizations", "circle-stroke-color", "#802948")
+        // map?.setPaintProperty("organizations", "circle-stroke-color", "#802948")
 
-        setGeopanelShown(false)
-        setMemberpanelShown(false)
+
+        setPanelShown({ ...panelShown, geopanelShown: false, memberpanelShown: false })
     }
 
 
@@ -220,7 +163,7 @@ const MapProvider = ({ children }: Props) => {
 
 
 
-    return <MapContext.Provider value={{ map, setMap, districts, setDistricts, membershipShown, setMembershipShown, geopanelShown, setGeopanelShown,memberpanelShown, setMemberpanelShown  ,legislations, setLegislations, mapClickHandler, defaultMapHandler }}>
+    return <MapContext.Provider value={{ map, setMap, districts, setDistricts, membershipShown, setMembershipShown, panelShown, setPanelShown, legislations, setLegislations, mapClickHandler, defaultMapHandler }}>
         {children}
     </MapContext.Provider>
 }

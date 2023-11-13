@@ -18,3 +18,36 @@ type dataType = {
   House?: string;
   Party?: string;
 };
+
+
+type selectedDistrictFeatures = {
+  properties: {
+      Address?: string
+      Address2?: string
+      City?: string
+      District: number
+      Geography: string
+      House: string
+      NAME: string
+      name: string
+      OBJECTID: string
+      Party_x: "Republican" | "Democratic"
+      Party_y: string
+      Phone: string
+      State: "NY"
+      Zip: string
+      dist_phone: string
+      email: string
+  },
+  geometry: {
+      coordinates: [][]
+      type: "Polygon"
+  }
+} | null
+
+type selectedDistrictOverlappedData = {
+  congressions: number[],
+  counties: string[],
+  district: number,
+  zip_codes: string[]
+} | null

@@ -8,12 +8,9 @@ import { GeoJSONSource } from 'mapbox-gl';
 
 import assembly from "../../public/nys_assembly.geo.json"
 import senate from "../../public/nys_senate.geo.json"
-import organizations from "../../public/rtc_members.geo.json"
-import counties from "../../public/nys_counties.geo.json"
-// import zipcodes from "../../public/nys_zipcodes.geo.json"
 
-import * as turf from "@turf/turf";
-
+import assemblyOverlapped from "../../public/assembly_overlapping_boundaries.json"
+import senateOverlapped from "../../public/senate_overlapping_boundaries.json"
 
 import Legend from "./Legend";
 import MapLayers from "./MapLayers";
@@ -27,15 +24,14 @@ import pattern_demo from "../../public/icons/pattern_demo.svg"
 
 
 
+
+
 const Map = () => {
     const mapContainer = useRef<HTMLInputElement>(null);
-    const { map, setMap, districts, setDistricts, setGeopanelShown, setMemberpanelShown, legislations, mapClickHandler, defaultMapHandler } = useContext(MapContext) as MapContextType
+    const { map, setMap, districts, setDistricts, panelShown, setPanelShown, legislations, mapClickHandler, defaultMapHandler } = useContext(MapContext) as MapContextType
 
     const senateFeatures = (senate as GeoJson).features
     const assemblyFeatures = (assembly as GeoJson).features
-    const organizationsFeatures = (organizations as GeoJson).features
-    const countiesFeatures = (counties as GeoJson).features
-
 
     const [lng, setLng] = useState(-78.5);
     const [lat, setLat] = useState(43.05);
@@ -43,6 +39,7 @@ const Map = () => {
 
     const [selectedDistrictFeatures, setSelectedDistrictFeatures] = useState(null)
     const [selectedMemberFeatures, setSelectedMemberFeatures] = useState(null)
+    const [selectedDistrictOverlappedData, setSelectedDistrictOverlappedData] = useState(null)
 
 
     const districtsClickHandler = (districts: Districts) => {
@@ -63,7 +60,7 @@ const Map = () => {
                 break
         }
 
-        defaultMapHandler()
+        defaultMapHandler(legislations)
     }
 
     useEffect(() => {
@@ -102,29 +99,6 @@ const Map = () => {
                 },
             })
 
-            m.addSource("click_area", {
-                type: "geojson",
-                data: {
-                    type: "FeatureCollection",
-                    features: [],
-                },
-            })
-
-            m.addSource("hover_area", {
-                type: "geojson",
-                data: {
-                    type: "FeatureCollection",
-                    features: [],
-                },
-            })
-
-            m.addSource("organizations", {
-                type: "geojson",
-                data: {
-                    type: "FeatureCollection",
-                    features: organizationsFeatures,
-                },
-            })
 
             m.addSource("district_label", {
                 type: "geojson",
@@ -134,23 +108,6 @@ const Map = () => {
                 },
             })
 
-
-            m.addSource("hover_label", {
-                type: "geojson",
-                data: {
-                    type: "FeatureCollection",
-                    features: []
-                },
-            })
-
-
-            m.addSource("click_label", {
-                type: "geojson",
-                data: {
-                    type: "FeatureCollection",
-                    features: []
-                },
-            })
 
             let patternRepImg = new Image(100, 100)
             patternRepImg.onload = () => m.addImage("pattern_rep", patternRepImg, {
@@ -163,20 +120,6 @@ const Map = () => {
                 sdf: true,
             })
             patternDemoImg.src = pattern_demo.src
-
-            // m.loadImage(patternRepImg, (error, image) => {
-            //     if (error) throw error;
-            //     m.addImage("pattern_rep", image as ImageBitmap, {
-            //         sdf: true,
-            //     });
-            // });
-
-            // m.loadImage("./icons/pattern_demo.png", (error, image) => {
-            //     if (error) throw error;
-            //     m.addImage("pattern_demo", image as ImageBitmap, {
-            //         sdf: true,
-            //     });
-            // });
 
             m.addLayer({
                 'id': 'districts',
@@ -214,148 +157,6 @@ const Map = () => {
                 }
             });
 
-
-            m.addLayer({
-                id: "pattern_rep",
-                type: "fill",
-                source: 'districts',
-                paint: {
-                    "fill-pattern": 'pattern_rep',
-                    'fill-opacity': [
-                        "case",
-                        ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                        .5, 0
-                    ]
-                }
-            })
-
-            m.addLayer({
-                id: "pattern_demo",
-                type: "fill",
-                source: 'districts',
-                paint: {
-                    "fill-pattern": 'pattern_demo',
-                    'fill-opacity': [
-                        "case",
-                        ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", legislations, ["get", "HCMC support"]]]],
-                        .5, 0
-                    ]
-                }
-            })
-
-
-            m.addLayer({
-                'id': 'hover_area',
-                'type': 'fill',
-                'source': 'hover_area',
-                'layout': {},
-                'paint': {
-                    'fill-color': "black",
-                    "fill-opacity": .3
-                }
-            })
-
-
-            m.addLayer({
-                'id': 'hover_area_outline',
-                'type': 'line',
-                'source': 'hover_area',
-                'layout': {},
-                'paint': {
-                    'line-color': "black",
-                    'line-opacity': 1
-                },
-            });
-
-            m.addLayer({
-                'id': 'click_area',
-                'type': 'fill',
-                'source': 'click_area',
-                'layout': {},
-                'paint': {
-                    'fill-color': [
-                        "case",
-                        ["all", ["==", ["get", "Party_x"], "Democratic"]],
-                        "#0057A8",
-                        "#A03327"
-                    ],
-                    "fill-opacity": .75
-                },
-            });
-
-            m.addLayer({
-                'id': 'click_area_outline',
-                'type': 'line',
-                'source': 'click_area',
-                'layout': {},
-                'paint': {
-                    'line-color': [
-                        "case",
-                        ["all", ["==", ["get", "Party_x"], "Democratic"]],
-                        "#0057A8",
-                        "#A03327"
-                    ],
-                    'line-width': 1.25
-                }
-            });
-
-
-
-            m.addLayer({
-                id: 'organizations',
-                type: 'circle',
-                source: 'organizations',
-                layout: {
-                    "visibility": "none"
-                },
-                paint: {
-                    "circle-radius": 4,
-                    "circle-stroke-width": 2.25,
-                    "circle-stroke-color": "#802948",
-                    "circle-color":
-                        [
-                            "case",
-                            ["in", `Member`, ["get", "Membership Status"]],
-                            "#802948", "#ffffff"
-                        ],
-                }
-            })
-
-
-            m.addLayer({
-                id: 'hover_label',
-                type: 'symbol',
-                source: 'hover_label',
-                layout: {
-                    'text-field': ['get', 'label'],
-                    'text-justify': 'auto',
-                    'text-size': 13,
-                    'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-                    'text-radial-offset': 0.5,
-                    'text-font': ["Arial Unicode MS Bold"]
-                },
-                paint: {
-                    'text-color': 'white'
-                }
-            })
-
-            m.addLayer({
-                id: 'click_label',
-                type: 'symbol',
-                source: 'click_label',
-                layout: {
-                    'text-field': ['get', 'label'],
-                    'text-justify': 'auto',
-                    'text-size': 13,
-                    'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-                    // 'text-radial-offset': 0.5,
-                    'text-font': ["Arial Unicode MS Bold"]
-                },
-                paint: {
-                    'text-color': 'white'
-                }
-            })
-
             m.addLayer({
                 id: "district_label",
                 type: 'symbol',
@@ -382,38 +183,69 @@ const Map = () => {
                 }
             })
 
-            m.on("click", "districts", (e: MapMouseEvent & EventData) => {
-                console.log(legislations)
-                setMemberpanelShown(false)
-                setSelectedDistrictFeatures(e.features[0])
-                mapClickHandler(m, e, legislations)
+            m.addLayer({
+                id: "pattern",
+                type: "fill",
+                source: 'districts',
+                paint: {
+                    "fill-pattern": [
+                        "case",
+                        ["all", ["==", ["get", "Party_x"], "Democratic"]],
+                        "pattern_demo", "pattern_rep"
+                    ],
+                    'fill-opacity': [
+                        "case",
+                        ["all", ["!", ["in", legislations, ["get", "HCMC support"]]]],
+                        .5, 0
+                    ]
+                }
             })
 
-            m.on('click', "organizations", (e: MapMouseEvent & EventData) => {
-                console.log(e.features[0].properties.Name)
+            m.setLayoutProperty('members', "visibility", "none")
+
+
+            m.moveLayer("districts", "counties_borders")
+            m.moveLayer("districts_outline", "counties_borders")
+            m.moveLayer("districts", "counties_labels")
+            m.moveLayer("districts_outline", "counties_labels")
+            m.moveLayer("districts", "zipcodes")
+            m.moveLayer("districts_outline", "zipcodes")
+            m.moveLayer("districts", "members")
+            m.moveLayer("districts_outline", "members")
+
+
+            m.on("click", "districts", (e: MapMouseEvent & EventData ) => {
+                setPanelShown({ ...panelShown, geopanelShown: false })
+                setSelectedDistrictFeatures(e.features[0])
+                mapClickHandler(m, e, legislations)
+
+                setSelectedDistrictOverlappedData((districts === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => d.district === e.features[0]?.properties.District)[0])
+            })
+
+            m.on('click', "members", (e: MapMouseEvent & EventData) => {
                 setSelectedMemberFeatures(e.features[0])
-                setGeopanelShown(false)
-                setMemberpanelShown(true)
+                setPanelShown({ ...panelShown, geopanelShown: false, memberpanelShown: true })
+
+
 
                 m.flyTo({
                     center: [e.features[0].properties.lon, e.features[0].properties.lat],
                     zoom: 9.5
                 })
 
-                m.setPaintProperty("organizations", "circle-color", [
-                    'case',
-                    ['all', ["==", ['get', "Name"], e.features[0].properties.Name]],
-                    "#ffe57f",
-                    ["in", `Member`, ["get", "Membership Status"]],
-                    "#802948", "#ffffff"
-                ])
+                // m.setPaintProperty("members", "circle-color", [
+                //     'case',
+                //     ['all', ["==", ['get', "Name"], e.features[0].properties.Name]],
+                //     "#ffe57f",
+                //     ["in", `Member`, ["get", "Membership Status"]],
+                //     "#802948", "#ffffff"
+                // ])
 
-                m.setPaintProperty("organizations", "circle-stroke-color", [
-                    'case',
-                    ['all', ["==", ['get', "Name"], e.features[0].properties.Name]],
-                    "#ffe57f", "#802948"
-                ])
-
+                // m.setPaintProperty("members", "circle-stroke-color", [
+                //     'case',
+                //     ['all', ["==", ['get', "Name"], e.features[0].properties.Name]],
+                //     "#ffe57f", "#802948"
+                // ])
 
             })
 
@@ -471,7 +303,7 @@ const Map = () => {
 
             m.on("mouseleave", "districts", () => popup.remove())
 
-            m.on("mousemove", 'organizations', (e: MapMouseEvent & EventData) => {
+            m.on("mousemove", 'members', (e: MapMouseEvent & EventData) => {
                 const { properties } = e.features[0]
 
                 let content = `<div class="content">
@@ -530,8 +362,8 @@ const Map = () => {
             </div >
             <Legend />
             <MapLayers districtsClickHandler={districtsClickHandler} />
-            <Geopanel selectedDistrictFeatures={selectedDistrictFeatures} />
-            <Membershippanel selectedMemberFeatures={selectedMemberFeatures} />
+            <Geopanel selectedDistrictFeatures={selectedDistrictFeatures} setSelectedDistrictFeatures={setSelectedDistrictFeatures} selectedDistrictOverlappedData={selectedDistrictOverlappedData} setSelectedDistrictOverlappedData={setSelectedDistrictOverlappedData} />
+            <Membershippanel selectedMemberFeatures={selectedMemberFeatures} setSelectedDistrictFeatures={setSelectedDistrictFeatures} selectedDistrictOverlappedData={selectedDistrictOverlappedData} setSelectedDistrictOverlappedData={setSelectedDistrictOverlappedData}/>
         </>
     )
 

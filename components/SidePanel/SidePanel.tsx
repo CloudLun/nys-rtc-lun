@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { MapContext, MapContextType } from '../../context/MapContext'
 
@@ -43,7 +43,7 @@ const legislationsData = {
 
 const SidePanel = () => {
 
-    const { map, setLegislations, mapClickHandler, setGeopanelShown, defaultMapHandler } = useContext(MapContext) as MapContextType
+    const { map, legislations, setLegislations, mapClickHandler, defaultMapHandler } = useContext(MapContext) as MapContextType
     const [expand, setExpand] = useState({
         "About": true,
         "Statewide RTC": false,
@@ -64,33 +64,33 @@ const SidePanel = () => {
 
         if (l !== "About") {
             setLegislations(l)
-            map?.setPaintProperty("districts", "fill-opacity", [
-                "case",
-                ["in", `${l}`, ["get", "HCMC support"]],
-                .75, 0
-            ])
-            map?.setPaintProperty("pattern_rep", "fill-opacity", [
-                "case",
-                ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", l, ["get", "HCMC support"]]]],
-                .5, 0
-            ]
-            )
-            map?.setPaintProperty("pattern_demo", "fill-opacity", [
-                "case",
-                ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", l, ["get", "HCMC support"]]]],
-                .5, 0
-            ])
-    
-            map?.flyTo({
-                center: [-78.5, 43.05] as [number, number],
-                zoom: -6.25
-            })
+            // map?.setPaintProperty("districts", "fill-opacity", [
+            //     "case",
+            //     ["in", `${l}`, ["get", "HCMC support"]],
+            //     .75, 0
+            // ])
+            // map?.setPaintProperty("pattern_rep", "fill-opacity", [
+            //     "case",
+            //     ["all", ["==", ["get", "Party_x"], "Republican"], ["!", ["in", l, ["get", "HCMC support"]]]],
+            //     .5, 0
+            // ]
+            // )
+            // map?.setPaintProperty("pattern_demo", "fill-opacity", [
+            //     "case",
+            //     ["all", ["==", ["get", "Party_x"], "Democratic"], ["!", ["in", l, ["get", "HCMC support"]]]],
+            //     .5, 0
+            // ])
 
-            /* @ts-ignore */
-            map?.getSource("district_label").setData({
-                type: "FeatureCollection",
-                features: []
-            })
+            // map?.flyTo({
+            //     center: [-78.5, 43.05] as [number, number],
+            //     zoom: -6.25
+            // })
+
+            // /* @ts-ignore */
+            // map?.getSource("district_label").setData({
+            //     type: "FeatureCollection",
+            //     features: []
+            // })
 
             // m.on("click", "districts", (e: MapMouseEvent & EventData) => {
             //     mapClickHandler(m, e, legislations)
@@ -102,13 +102,9 @@ const SidePanel = () => {
 
 
 
-    // useEffect(() => {
-    //     map?.setPaintProperty('districts', 'fill-opacity', [
-    //         "case",
-    //         ["in", `${legislations['current']}`, ["get", "HCMC support"]],
-    //         1, 0
-    //     ])
-    // }, [legislations])
+    useEffect(() => {
+        defaultMapHandler(legislations)
+    }, [legislations])
 
 
 
@@ -127,9 +123,9 @@ const SidePanel = () => {
                     <About expand={expand} legislationsClickHandler={legislationsClickHandler} />
                 </div>
                 <div>
-                    <LegislationColumns legislation={"Statewide RTC"} title={legislationsInfo[0]["Bill Name"]} name={legislationsInfo[0]["Bill Name"]} number={legislationsInfo[0]["Senate Number"]+" / "+legislationsInfo[0]["Assembly Number"]} content={legislationsInfo[0]["Bill Description"]} expand={expand["Statewide RTC"]} legislationsClickHandler={() => legislationsClickHandler("Statewide RTC")} />
-                    <LegislationColumns legislation={"Defend RTC"} title={legislationsInfo[2]["Bill Name"]} name={legislationsInfo[2]["Bill Name"]} number={legislationsInfo[2]["Senate Number"]+" / "+legislationsInfo[2]["Assembly Number"]} content={legislationsInfo[2]["Bill Description"]} expand={expand["Defend RTC"]} legislationsClickHandler={() => legislationsClickHandler("Defend RTC")} />
-                    <LegislationColumns legislation={"Winter Eviction Moratorium"} title={legislationsInfo[3]["Bill Name"]} name={legislationsInfo[3]["Bill Name"]} number={legislationsInfo[3]["Senate Number"]+" / "+legislationsInfo[3]["Assembly Number"]} content={legislationsInfo[3]["Bill Description"]} expand={expand["Winter Eviction Moratorium"]} legislationsClickHandler={() => legislationsClickHandler("Winter Eviction Moratorium")} />
+                    <LegislationColumns legislation={"Statewide RTC"} title={legislationsInfo[0]["Bill Name"]} name={legislationsInfo[0]["Bill Name"]} number={legislationsInfo[0]["Senate Number"] + " / " + legislationsInfo[0]["Assembly Number"]} content={legislationsInfo[0]["Bill Description"]} expand={expand["Statewide RTC"]} legislationsClickHandler={() => legislationsClickHandler("Statewide RTC")} />
+                    <LegislationColumns legislation={"Defend RTC"} title={legislationsInfo[2]["Bill Name"]} name={legislationsInfo[2]["Bill Name"]} number={legislationsInfo[2]["Senate Number"] + " / " + legislationsInfo[2]["Assembly Number"]} content={legislationsInfo[2]["Bill Description"]} expand={expand["Defend RTC"]} legislationsClickHandler={() => legislationsClickHandler("Defend RTC")} />
+                    <LegislationColumns legislation={"Winter Eviction Moratorium"} title={legislationsInfo[3]["Bill Name"]} name={legislationsInfo[3]["Bill Name"]} number={legislationsInfo[3]["Senate Number"] + " / " + legislationsInfo[3]["Assembly Number"]} content={legislationsInfo[3]["Bill Description"]} expand={expand["Winter Eviction Moratorium"]} legislationsClickHandler={() => legislationsClickHandler("Winter Eviction Moratorium")} />
 
                 </div>
             </div>

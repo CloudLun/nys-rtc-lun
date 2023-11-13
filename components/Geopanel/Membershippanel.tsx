@@ -1,12 +1,16 @@
-import React, { useContext, MouseEvent } from 'react'
+import React, { useContext, Dispatch, SetStateAction, MouseEvent } from 'react'
 
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { MapContext, MapContextType } from '@/context/MapContext'
 import GeoInfoBtns from './GeoInfoBtns'
 
+import assembly from "../../public/nys_assembly.geo.json"
+import senate from "../../public/nys_senate.geo.json"
 
-import members from "../../public/rtc_members.geo.json"
-import membersOverlapped from "../../public/rtc_members_overlapping.json"
+import assemblyOverlapped from "../../public/assembly_overlapping_boundaries.json"
+import senateOverlapped from "../../public/senate_overlapping_boundaries.json"
+
+import membersOverlapped from "../../public/rtc_members.json"
 
 import * as turf from "@turf/turf";
 
@@ -21,22 +25,80 @@ type Props = {
             Address: string,
             'Membership Status': string[],
         }
-    } | null
+    } | null,
+    setSelectedDistrictFeatures: Dispatch<SetStateAction<selectedDistrictFeatures>>,
+    setSelectedDistrictOverlappedData: Dispatch<SetStateAction<selectedDistrictOverlappedData>>
 }
 
 
-const Membershippanel = ({ selectedMemberFeatures }: Props) => {
+const Membershippanel = ({ selectedMemberFeatures, setSelectedDistrictFeatures, setSelectedDistrictOverlappedData }: Props) => {
 
-    const { map, districts, memberpanelShown, defaultMapHandler } = useContext(MapContext) as MapContextType
+    const { map, setDistricts, legislations, panelShown, setPanelShown, defaultMapHandler, mapClickHandler } = useContext(MapContext) as MapContextType
     const selectedMemberOverlappedData = (membersOverlapped).filter(m => m.Name === selectedMemberFeatures?.properties.Name)[0]
+
+
+    const districtClickHandler = (e: MouseEvent<HTMLElement>, district: Districts) => {
+        const selectedDistrict = (e.target as HTMLElement).innerText
+
+        map?.getSource("districts").setData({
+            type: "FeatureCollection",
+            features: ((district === "assembly" ? assembly : senate) as GeoJson).features
+        });
+
+        const clickedDistrictData = {
+            features: ((district === "assembly" ? assembly : senate) as GeoJson).features.filter((d, i) => d.properties.District.toString() === selectedDistrict)
+        }
+
+        /* @ts-ignore */
+        mapClickHandler(map!, clickedDistrictData, legislations)
+        setSelectedDistrictFeatures(clickedDistrictData.features[0])
+        setSelectedDistrictOverlappedData((district === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => d.district === clickedDistrictData.features[0]?.properties.District)[0])
+        district === "assembly" ? setDistricts("assembly") : setDistricts("senate")
+        setPanelShown({ ...panelShown, memberpanelShown: false, geopanelShown: true })
+    }
+
+
+
+    const countyMouseEnterHandler = (e: MouseEvent<HTMLElement>) => {
+        const selectedCounty = (e.target as HTMLElement).innerText
+
+        map?.setPaintProperty("counties_borders", "fill-opacity", [
+            "case",
+            ['all', ['==', ['get', "name"], selectedCounty + " County"]],
+            .5, 0
+        ])
+
+        map?.setPaintProperty("counties_labels", "text-opacity", [
+            "case",
+            ['all', ['==', ['get', "name"], selectedCounty + " County"]],
+            1, 0
+        ])
+    }
+
+    const zipcodeMouseEnterHandler = (e: MouseEvent<HTMLElement>) => {
+        const selectedZipcodes = (e.target as HTMLElement).innerText
+        map?.setPaintProperty("zipcodes", "fill-opacity", [
+            "case",
+            ['all', ['==', ['get', "ZCTA5CE10"], selectedZipcodes]],
+            .5, 0
+        ])
+    }
+
+    const removeHoverEventHandler = () => {
+        map?.setPaintProperty("counties_borders", "fill-opacity", 0)
+        map?.setPaintProperty("counties_labels", "text-opacity", 0)
+        map?.setPaintProperty("counties_labels", "text-opacity", 0)
+        map?.setPaintProperty("zipcodes", "fill-opacity", 0)
+    }
+
     return (
         <>
-            {memberpanelShown && (
+            {panelShown["memberpanelShown"] && (
                 <div className='flex flex-col absolute top-0 right-0 w-[14%] h-full z-20 overflow-y-scroll'>
                     <div className='px-[18px] py-[12px] w-full bg-rtc_purple'>
                         <div className={`flex items-start justify-between my-[12px] w-full `}>
                             <div className='w-[75%] font-semibold text-subheadline'>{selectedMemberFeatures?.properties.Name.toUpperCase()}</div>
-                            <XMarkIcon className='w-[20px] h-[20px] text-white cursor-pointer' onClick={defaultMapHandler} />
+                            <XMarkIcon className='w-[20px] h-[20px] text-white cursor-pointer' onClick={() => defaultMapHandler(legislations)} />
                         </div>
                         <div className='flex items-center gap-[6px]'>
                             <img src={selectedMemberFeatures?.properties["Membership Status"].includes("Member") ? "/icons/checked_member.svg" : "/icons/empty_member.svg"} alt="" className='w-[20px] h-[20px]' />
@@ -102,25 +164,25 @@ const Membershippanel = ({ selectedMemberFeatures }: Props) => {
                         <div>
                             <div className='mb-[5px] text-[10px] text-grey_1'>Senate Districts</div>
                             <div className='grid grid-cols-4 gap-[8px]'>
-                                <GeoInfoBtns name={"41"} />
+                                <GeoInfoBtns name={selectedMemberOverlappedData['Senate_District'].toString()} clickHandler={(e) => districtClickHandler(e, "senate")} />
                             </div>
                         </div>
                         <div className='my-[16px]'>
                             <div className='mb-[5px] text-[10px] text-grey_1'>Assembly Districts</div>
                             <div className='grid grid-cols-4 gap-[8px]'>
-                                <GeoInfoBtns name={"102"} />
+                                <GeoInfoBtns name={selectedMemberOverlappedData['Assembly_District'].toString()} clickHandler={(e) => districtClickHandler(e, "assembly")} />
                             </div>
                         </div>
                         <div className='my-[16px]'>
                             <div className='mb-[5px] text-[10px] text-grey_1'>Counties</div>
                             <div className='grid grid-cols-3 gap-[12px]'>
-                                <GeoInfoBtns name={"Greene"} />
+                                <GeoInfoBtns name={selectedMemberOverlappedData['County'].toString().replace(" County", "")} mouseEnterHandler={countyMouseEnterHandler} mouseOutHandler={removeHoverEventHandler} />
                             </div>
                         </div>
                         <div>
                             <div className='mb-[5px] text-[10px] text-grey_1'>Zip Codes</div>
                             <div className='grid grid-cols-3 gap-[12px]'>
-                                <GeoInfoBtns name={"12414"} />
+                                <GeoInfoBtns name={selectedMemberOverlappedData['Zip_Code'].toString()} mouseEnterHandler={zipcodeMouseEnterHandler} mouseOutHandler={removeHoverEventHandler} />
                             </div>
                         </div>
                     </div>
