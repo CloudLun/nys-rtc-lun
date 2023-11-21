@@ -37,12 +37,13 @@ const MapProvider = ({ children }: Props) => {
 
     const [map, setMap] = useState<mapboxgl.Map | null>(null)
     const [districts, setDistricts] = useState<Districts>("senate")
+    const [legislations, setLegislations] = useState<Legislations>("Statewide RTC")
+    const [membershipShown, setMembershipShown] = useState(false)
     const [panelShown, setPanelShown] = useState({
         geopanelShown: false,
         memberpanelShown: false
     })
-    const [membershipShown, setMembershipShown] = useState(false)
-    const [legislations, setLegislations] = useState<Legislations>("Statewide RTC")
+
 
     const mapClickHandler = (m: mapboxgl.Map, e: MapMouseEvent & EventData, legislations: Legislations) => {
 

@@ -38,6 +38,7 @@ type selectedDistrictFeatures = {
       Zip: string
       dist_phone: string
       email: string
+      "HCMC support":string[]
   },
   geometry: {
       coordinates: [][]
@@ -46,7 +47,7 @@ type selectedDistrictFeatures = {
 } | null
 
 type selectedDistrictOverlappedData = {
-  congressions: number[],
+  districts: number[],
   counties: string[],
   district: number,
   zip_codes: string[]

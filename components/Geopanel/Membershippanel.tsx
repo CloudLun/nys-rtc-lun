@@ -1,4 +1,4 @@
-import React, { useContext, Dispatch, SetStateAction, MouseEvent } from 'react'
+import React, { useContext, Dispatch, SetStateAction, MouseEvent, useEffect } from 'react'
 
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { MapContext, MapContextType } from '@/context/MapContext'
@@ -13,6 +13,7 @@ import senateOverlapped from "../../public/senate_overlapping_boundaries.json"
 import membersOverlapped from "../../public/rtc_members.json"
 
 import * as turf from "@turf/turf";
+import mapboxgl, { EventData, MapMouseEvent } from 'mapbox-gl';
 
 
 type Props = {
@@ -28,10 +29,11 @@ type Props = {
     } | null,
     setSelectedDistrictFeatures: Dispatch<SetStateAction<selectedDistrictFeatures>>,
     setSelectedDistrictOverlappedData: Dispatch<SetStateAction<selectedDistrictOverlappedData>>
+    setSelectedMemberFeatures: any
 }
 
 
-const Membershippanel = ({ selectedMemberFeatures, setSelectedDistrictFeatures, setSelectedDistrictOverlappedData }: Props) => {
+const Membershippanel = ({ selectedMemberFeatures, setSelectedDistrictFeatures, setSelectedDistrictOverlappedData, setSelectedMemberFeatures }: Props) => {
 
     const { map, setDistricts, legislations, panelShown, setPanelShown, defaultMapHandler, mapClickHandler } = useContext(MapContext) as MapContextType
     const selectedMemberOverlappedData = (membersOverlapped).filter(m => m.Name === selectedMemberFeatures?.properties.Name)[0]
@@ -39,7 +41,7 @@ const Membershippanel = ({ selectedMemberFeatures, setSelectedDistrictFeatures, 
 
     const districtClickHandler = (e: MouseEvent<HTMLElement>, district: Districts) => {
         const selectedDistrict = (e.target as HTMLElement).innerText
-
+        /* @ts-ignore */
         map?.getSource("districts").setData({
             type: "FeatureCollection",
             features: ((district === "assembly" ? assembly : senate) as GeoJson).features
@@ -53,7 +55,7 @@ const Membershippanel = ({ selectedMemberFeatures, setSelectedDistrictFeatures, 
         mapClickHandler(map!, clickedDistrictData, legislations)
         setSelectedDistrictFeatures(clickedDistrictData.features[0])
         setSelectedDistrictOverlappedData((district === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => d.district === clickedDistrictData.features[0]?.properties.District)[0])
-        district === "assembly" ? setDistricts("assembly") : setDistricts("senate")
+        setDistricts(district)
         setPanelShown({ ...panelShown, memberpanelShown: false, geopanelShown: true })
     }
 
@@ -90,6 +92,18 @@ const Membershippanel = ({ selectedMemberFeatures, setSelectedDistrictFeatures, 
         map?.setPaintProperty("counties_labels", "text-opacity", 0)
         map?.setPaintProperty("zipcodes", "fill-opacity", 0)
     }
+
+
+    useEffect(() => {
+        map?.on('click', "members", (e: MapMouseEvent & EventData) => {
+            setSelectedMemberFeatures(e.features[0])
+            setPanelShown({ ...panelShown, geopanelShown: false, memberpanelShown: true })
+            map?.flyTo({
+                center: [e.features[0].properties.lon, e.features[0].properties.lat],
+                zoom: 9.5
+            })
+        })
+    })
 
     return (
         <>

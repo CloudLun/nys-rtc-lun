@@ -23,9 +23,6 @@ import pattern_rep from "../../public/icons/pattern_rep.svg"
 import pattern_demo from "../../public/icons/pattern_demo.svg"
 
 
-
-
-
 const Map = () => {
     const mapContainer = useRef<HTMLInputElement>(null);
     const { map, setMap, districts, setDistricts, panelShown, setPanelShown, legislations, mapClickHandler, defaultMapHandler } = useContext(MapContext) as MapContextType
@@ -37,12 +34,13 @@ const Map = () => {
     const [lat, setLat] = useState(43.05);
     const [zoom, setZoom] = useState(-6.25);
 
-    const [selectedDistrictFeatures, setSelectedDistrictFeatures] = useState(null)
+    const [selectedDistrictFeatures, setSelectedDistrictFeatures] = useState<selectedDistrictFeatures | null>(null)
     const [selectedMemberFeatures, setSelectedMemberFeatures] = useState(null)
-    const [selectedDistrictOverlappedData, setSelectedDistrictOverlappedData] = useState(null)
+    const [selectedDistrictOverlappedData, setSelectedDistrictOverlappedData] = useState<selectedDistrictOverlappedData | null>(null)
 
 
     const districtsClickHandler = (districts: Districts) => {
+        console.log(districts)
         setDistricts(districts)
 
         switch (districts) {
@@ -59,7 +57,6 @@ const Map = () => {
                 });
                 break
         }
-
         defaultMapHandler(legislations)
     }
 
@@ -202,8 +199,6 @@ const Map = () => {
             })
 
             m.setLayoutProperty('members', "visibility", "none")
-
-
             m.moveLayer("districts", "counties_borders")
             m.moveLayer("districts_outline", "counties_borders")
             m.moveLayer("districts", "counties_labels")
@@ -212,22 +207,16 @@ const Map = () => {
             m.moveLayer("districts_outline", "zipcodes")
             m.moveLayer("districts", "members")
             m.moveLayer("districts_outline", "members")
-
-
-            m.on("click", "districts", (e: MapMouseEvent & EventData ) => {
-                setPanelShown({ ...panelShown, geopanelShown: false })
+            m.on("click", "districts", (e: MapMouseEvent & EventData) => {
                 setSelectedDistrictFeatures(e.features[0])
+                setSelectedDistrictOverlappedData((districts === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => +d.district === +e.features[0]?.properties.District)[0])
                 mapClickHandler(m, e, legislations)
-
-                setSelectedDistrictOverlappedData((districts === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => d.district === e.features[0]?.properties.District)[0])
+                setPanelShown({ ...panelShown, geopanelShown: false })
             })
 
             m.on('click', "members", (e: MapMouseEvent & EventData) => {
                 setSelectedMemberFeatures(e.features[0])
                 setPanelShown({ ...panelShown, geopanelShown: false, memberpanelShown: true })
-
-
-
                 m.flyTo({
                     center: [e.features[0].properties.lon, e.features[0].properties.lat],
                     zoom: 9.5
@@ -363,7 +352,7 @@ const Map = () => {
             <Legend />
             <MapLayers districtsClickHandler={districtsClickHandler} />
             <Geopanel selectedDistrictFeatures={selectedDistrictFeatures} setSelectedDistrictFeatures={setSelectedDistrictFeatures} selectedDistrictOverlappedData={selectedDistrictOverlappedData} setSelectedDistrictOverlappedData={setSelectedDistrictOverlappedData} />
-            <Membershippanel selectedMemberFeatures={selectedMemberFeatures} setSelectedDistrictFeatures={setSelectedDistrictFeatures} selectedDistrictOverlappedData={selectedDistrictOverlappedData} setSelectedDistrictOverlappedData={setSelectedDistrictOverlappedData}/>
+            <Membershippanel selectedMemberFeatures={selectedMemberFeatures} setSelectedDistrictFeatures={setSelectedDistrictFeatures} setSelectedDistrictOverlappedData={setSelectedDistrictOverlappedData} setSelectedMemberFeatures={setSelectedMemberFeatures} />
         </>
     )
 

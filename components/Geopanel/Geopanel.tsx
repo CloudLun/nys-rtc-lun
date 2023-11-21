@@ -4,13 +4,15 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 import { MapContext, MapContextType } from '@/context/MapContext'
 import GeoInfoBtns from './GeoInfoBtns'
 
+
+
+
 import assembly from "../../public/nys_assembly.geo.json"
 import senate from "../../public/nys_senate.geo.json"
 
 import assemblyOverlapped from "../../public/assembly_overlapping_boundaries.json"
 import senateOverlapped from "../../public/senate_overlapping_boundaries.json"
 
-import * as turf from "@turf/turf";
 import mapboxgl, { EventData, MapMouseEvent } from 'mapbox-gl';
 
 
@@ -27,24 +29,19 @@ type Props = {
 const Geopanel = ({ selectedDistrictFeatures, setSelectedDistrictFeatures, selectedDistrictOverlappedData, setSelectedDistrictOverlappedData }: Props) => {
 
     const { map, districts, setDistricts, legislations, mapClickHandler, panelShown, defaultMapHandler } = useContext(MapContext) as MapContextType
-
-    const districtClickHandler = (e: MouseEvent<HTMLElement>, district: Districts) => {
+    const districtBtnClickHandler = (e: MouseEvent<HTMLElement>, district: Districts) => {
+        const overlappedData = district === "senate" ? senateOverlapped : assemblyOverlapped
+        console.log(overlappedData)
         const selectedDistrict = (e.target as HTMLElement).innerText
-
-        map?.getSource("districts").setData({
-            type: "FeatureCollection",
-            features: ((district === "assembly" ? assembly : senate) as GeoJson).features
-        });
-
         const clickedDistrictData = {
             features: ((district === "assembly" ? assembly : senate) as GeoJson).features.filter((d, i) => d.properties.District.toString() === selectedDistrict)
         }
-
         /* @ts-ignore */
         mapClickHandler(map!, clickedDistrictData, legislations)
         setSelectedDistrictFeatures(clickedDistrictData.features[0])
-        setSelectedDistrictOverlappedData((district === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => d.district === clickedDistrictData.features[0]?.properties.District)[0])
-        district === "assembly" ? setDistricts("assembly") : setDistricts("senate")
+        console.log((overlappedData).filter(d => d.district === clickedDistrictData.features[0]?.properties.District)[0])
+        setSelectedDistrictOverlappedData((overlappedData).filter(d => d.district === clickedDistrictData.features[0]?.properties.District)[0])
+        setDistricts(district)
     }
 
     const zipcodeMouseEnterHandler = (e: MouseEvent<HTMLElement>) => {
@@ -58,13 +55,11 @@ const Geopanel = ({ selectedDistrictFeatures, setSelectedDistrictFeatures, selec
 
     const countyMouseEnterHandler = (e: MouseEvent<HTMLElement>) => {
         const selectedCounty = (e.target as HTMLElement).innerText
-
         map?.setPaintProperty("counties_borders", "fill-opacity", [
             "case",
             ['all', ['==', ['get', "name"], selectedCounty + " County"]],
             .5, 0
         ])
-
         map?.setPaintProperty("counties_labels", "text-opacity", [
             "case",
             ['all', ['==', ['get', "name"], selectedCounty + " County"]],
@@ -77,11 +72,20 @@ const Geopanel = ({ selectedDistrictFeatures, setSelectedDistrictFeatures, selec
         map?.setPaintProperty("counties_borders", "fill-opacity", 0)
         map?.setPaintProperty("counties_labels", "text-opacity", 0)
         map?.setPaintProperty("zipcodes", "fill-opacity", 0)
-        // map?.setPaintProperty("district_label", "text-opacity", 1)
     }
 
     useEffect(() => {
-        console.log(selectedDistrictOverlappedData)
+        /* @ts-ignore */
+        map?.getSource("districts").setData({
+            type: "FeatureCollection",
+            features: ((districts === "assembly" ? assembly : senate) as GeoJson).features
+        });
+
+        map?.on("click", "districts", (e: MapMouseEvent & EventData) => {
+            setSelectedDistrictFeatures(e.features[0])
+            setSelectedDistrictOverlappedData((districts === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => +d.district === +e.features[0]?.properties.District)[0])
+            mapClickHandler(map, e, legislations)
+        })
     })
 
     return (
@@ -101,22 +105,19 @@ const Geopanel = ({ selectedDistrictFeatures, setSelectedDistrictFeatures, selec
                         <div className='text-[10px] text-regular text-grey_1'>HCMC Campaign Support</div>
                         <div className="flex flex-col gap-[5px] mt-[6px] text-rtc_navy">
                             <div className="flex items-center gap-[5px] ">
-                                {/* @ts-ignore */}
                                 <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Statewide RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Statewide RTC</div>
                             </div>
                             <div className="flex items-center gap-[5px]">
-                                {/* @ts-ignore */}
                                 <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Winter Eviction Moratorium") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Winter Eviction Moratorium</div>
                             </div>
                             <div className="flex items-center gap-[5px]">
-                                {/* @ts-ignore */}
                                 <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Defend RTC") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Defend RTC</div>
                             </div>
                             <div className="flex items-center gap-[5px]">
-                                {/* @ts-ignore */}
+
                                 <img src={selectedDistrictFeatures?.properties!["HCMC support"].includes("Fund Local Law 53") ? "/icons/checked.svg" : "/icons/empty.svg"} alt="" className="w-[16px] h-[16px]" />
                                 <div className="font-bold text-label">Power to Organize:<br /> Fund Local Law 53</div>
                             </div>
@@ -158,12 +159,12 @@ const Geopanel = ({ selectedDistrictFeatures, setSelectedDistrictFeatures, selec
                             <div className='grid grid-cols-4 gap-[8px]'>
                                 {
                                     selectedDistrictOverlappedData &&
-                                    selectedDistrictOverlappedData.congressions
+                                    selectedDistrictOverlappedData.districts
                                         .map((c, i) => {
                                             if (districts === 'senate')
-                                                return <GeoInfoBtns key={i} name={c.toString()} clickHandler={(e) => districtClickHandler(e, "assembly")} />
+                                                return <GeoInfoBtns key={i} name={c.toString()} clickHandler={(e) => districtBtnClickHandler(e, "assembly")} />
                                             if (districts === 'assembly')
-                                                return <GeoInfoBtns key={i} name={c.toString()} clickHandler={(e) => districtClickHandler(e, "senate")} />
+                                                return <GeoInfoBtns key={i} name={c.toString()} clickHandler={(e) => districtBtnClickHandler(e, "senate")} />
                                         }
 
                                         )

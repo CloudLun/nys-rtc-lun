@@ -25,8 +25,18 @@ type Props = {
 type labels = "senateDemoVotes" | 'senateRepVotes' | 'assemblyDemoVotes' | 'assemblyRepVotes' | 'simpleMajority' | 'superMajority'
 
 const VotesVisualization = ({ legislation }: Props) => {
-    const { map, districts, setDistricts ,defaultMapHandler } = useContext(MapContext) as MapContextType
+    const { map, legislations, districts, setDistricts ,defaultMapHandler } = useContext(MapContext) as MapContextType
 
+    const [labelShown, setLabelShown] = useState(
+        {
+            senateDemoVotes: false,
+            senateRepVotes: false,
+            assemblyDemoVotes: false,
+            assemblyRepVotes: false,
+            simpleMajority: false,
+            superMajority: false
+        }
+    )
 
 
     const senateFeatures = (senateGeoJson as GeoJson).features
@@ -51,20 +61,11 @@ const VotesVisualization = ({ legislation }: Props) => {
                 break
         }
 
-        defaultMapHandler()
+        defaultMapHandler(legislations)
     }
 
 
-    const [labelShown, setLabelShown] = useState(
-        {
-            senateDemoVotes: false,
-            senateRepVotes: false,
-            assemblyDemoVotes: false,
-            assemblyRepVotes: false,
-            simpleMajority: false,
-            superMajority: false
-        }
-    )
+
 
     const labelMouseoverHandler = (l: labels) => {
         let newLabelShown = { ...labelShown }
