@@ -7,7 +7,6 @@ import exp from 'constants'
 
 type Props = {
     legislation: Legislations
-    title: string
     name: string
     number: string
     content: string
@@ -15,7 +14,7 @@ type Props = {
     legislationsClickHandler: () => void
 }
 
-const LegislationColumns = ({ legislation, title, name, number, content, expand, legislationsClickHandler }: Props) => {
+const LegislationColumns = ({ legislation, name, number, content, expand, legislationsClickHandler }: Props) => {
 
     return (
         <div className={`px-[30px] pt-[10.5px] pb-[20px] text-rtc_navy ${expand ? "bg-white  h-[calc(100vh-112px-220px)]" : "h-[45px] bg-background_blue"} border-b-[1px] border-grey_1 overflow-y-hidden cursor-pointer`} onClick={legislationsClickHandler}>

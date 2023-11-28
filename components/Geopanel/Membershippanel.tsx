@@ -4,32 +4,21 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 import { MapContext, MapContextType } from '@/context/MapContext'
 import GeoInfoBtns from './GeoInfoBtns'
 
-import assembly from "../../public/nys_assembly.geo.json"
-import senate from "../../public/nys_senate.geo.json"
+import assembly from "../../public/assembly.geo.json"
+import senate from "../../public/senate.geo.json"
 
 import assemblyOverlapped from "../../public/assembly_overlapping_boundaries.json"
 import senateOverlapped from "../../public/senate_overlapping_boundaries.json"
-
 import membersOverlapped from "../../public/rtc_members.json"
 
-import * as turf from "@turf/turf";
-import mapboxgl, { EventData, MapMouseEvent } from 'mapbox-gl';
+import { EventData, MapMouseEvent } from 'mapbox-gl';
 
 
 type Props = {
-    selectedMemberFeatures: {
-        properties: {
-            Website: string,
-            Name: string,
-            Legislation: string[],
-            Phone: string,
-            Address: string,
-            'Membership Status': string[],
-        }
-    } | null,
+    selectedMemberFeatures: selectedMemberFeatures | null,
     setSelectedDistrictFeatures: Dispatch<SetStateAction<selectedDistrictFeatures>>,
     setSelectedDistrictOverlappedData: Dispatch<SetStateAction<selectedDistrictOverlappedData>>
-    setSelectedMemberFeatures: any
+    setSelectedMemberFeatures: Dispatch<SetStateAction<selectedMemberFeatures | null>>
 }
 
 
@@ -63,7 +52,6 @@ const Membershippanel = ({ selectedMemberFeatures, setSelectedDistrictFeatures, 
 
     const countyMouseEnterHandler = (e: MouseEvent<HTMLElement>) => {
         const selectedCounty = (e.target as HTMLElement).innerText
-
         map?.setPaintProperty("counties_borders", "fill-opacity", [
             "case",
             ['all', ['==', ['get', "name"], selectedCounty + " County"]],

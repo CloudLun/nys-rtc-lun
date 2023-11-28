@@ -7,8 +7,8 @@ import { GeoJSONSource } from 'mapbox-gl';
 import votes from "../../public/legislation_votes.json"
 
 
-import senateGeoJson from "../../public/nys_senate.geo.json"
-import assemblyGeoJson from "../../public/nys_assembly.geo.json"
+import senateGeoJson from "../../public/senate.geo.json"
+import assemblyGeoJson from "../../public/assembly.geo.json"
 
 
 import * as d3 from "d3"

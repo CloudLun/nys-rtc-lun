@@ -3,8 +3,8 @@ import { MapContext, MapContextType } from '../../context/MapContext'
 
 import { GeoJSONSource } from 'mapbox-gl';
 
-import assembly from "../../public/nys_assembly.geo.json"
-import senate from "../../public/nys_senate.geo.json"
+import assembly from "../../public/assembly.geo.json"
+import senate from "../../public/senate.geo.json"
 
 import * as d3 from "d3"
 

@@ -7,8 +7,8 @@ import GeoInfoBtns from './GeoInfoBtns'
 
 
 
-import assembly from "../../public/nys_assembly.geo.json"
-import senate from "../../public/nys_senate.geo.json"
+import assembly from "../../public/assembly.geo.json"
+import senate from "../../public/senate.geo.json"
 
 import assemblyOverlapped from "../../public/assembly_overlapping_boundaries.json"
 import senateOverlapped from "../../public/senate_overlapping_boundaries.json"
@@ -31,7 +31,6 @@ const Geopanel = ({ selectedDistrictFeatures, setSelectedDistrictFeatures, selec
     const { map, districts, setDistricts, legislations, mapClickHandler, panelShown, defaultMapHandler } = useContext(MapContext) as MapContextType
     const districtBtnClickHandler = (e: MouseEvent<HTMLElement>, district: Districts) => {
         const overlappedData = district === "senate" ? senateOverlapped : assemblyOverlapped
-        console.log(overlappedData)
         const selectedDistrict = (e.target as HTMLElement).innerText
         const clickedDistrictData = {
             features: ((district === "assembly" ? assembly : senate) as GeoJson).features.filter((d, i) => d.properties.District.toString() === selectedDistrict)
@@ -39,12 +38,12 @@ const Geopanel = ({ selectedDistrictFeatures, setSelectedDistrictFeatures, selec
         /* @ts-ignore */
         mapClickHandler(map!, clickedDistrictData, legislations)
         setSelectedDistrictFeatures(clickedDistrictData.features[0])
-        console.log((overlappedData).filter(d => d.district === clickedDistrictData.features[0]?.properties.District)[0])
         setSelectedDistrictOverlappedData((overlappedData).filter(d => d.district === clickedDistrictData.features[0]?.properties.District)[0])
         setDistricts(district)
     }
 
     const zipcodeMouseEnterHandler = (e: MouseEvent<HTMLElement>) => {
+        console.log("aa")
         const selectedZipcodes = (e.target as HTMLElement).innerText
         map?.setPaintProperty("zipcodes", "fill-opacity", [
             "case",
@@ -65,7 +64,6 @@ const Geopanel = ({ selectedDistrictFeatures, setSelectedDistrictFeatures, selec
             ['all', ['==', ['get', "name"], selectedCounty + " County"]],
             1, 0
         ])
-
     }
 
     const removeHoverEventHandler = () => {
@@ -86,7 +84,7 @@ const Geopanel = ({ selectedDistrictFeatures, setSelectedDistrictFeatures, selec
             setSelectedDistrictOverlappedData((districts === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => +d.district === +e.features[0]?.properties.District)[0])
             mapClickHandler(map, e, legislations)
         })
-    })
+    }, [selectedDistrictOverlappedData])
 
     return (
         <>

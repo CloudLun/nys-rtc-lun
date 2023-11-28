@@ -6,8 +6,8 @@ import { MapContext, MapContextType } from "../../context/MapContext";
 import mapboxgl, { EventData, MapMouseEvent } from 'mapbox-gl';
 import { GeoJSONSource } from 'mapbox-gl';
 
-import assembly from "../../public/nys_assembly.geo.json"
-import senate from "../../public/nys_senate.geo.json"
+import assembly from "../../public/assembly.geo.json"
+import senate from "../../public/senate.geo.json"
 
 import assemblyOverlapped from "../../public/assembly_overlapping_boundaries.json"
 import senateOverlapped from "../../public/senate_overlapping_boundaries.json"
@@ -35,12 +35,11 @@ const Map = () => {
     const [zoom, setZoom] = useState(-6.25);
 
     const [selectedDistrictFeatures, setSelectedDistrictFeatures] = useState<selectedDistrictFeatures | null>(null)
-    const [selectedMemberFeatures, setSelectedMemberFeatures] = useState(null)
+    const [selectedMemberFeatures, setSelectedMemberFeatures] = useState<selectedMemberFeatures | null>(null)
     const [selectedDistrictOverlappedData, setSelectedDistrictOverlappedData] = useState<selectedDistrictOverlappedData | null>(null)
 
 
     const districtsClickHandler = (districts: Districts) => {
-        console.log(districts)
         setDistricts(districts)
 
         switch (districts) {
@@ -96,6 +95,14 @@ const Map = () => {
                 },
             })
 
+
+            m.addSource("districts_senate", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features: senateFeatures,
+                },
+            })
 
             m.addSource("district_label", {
                 type: "geojson",
@@ -154,6 +161,7 @@ const Map = () => {
                 }
             });
 
+
             m.addLayer({
                 id: "district_label",
                 type: 'symbol',
@@ -211,7 +219,7 @@ const Map = () => {
                 setSelectedDistrictFeatures(e.features[0])
                 setSelectedDistrictOverlappedData((districts === "senate" ? senateOverlapped : assemblyOverlapped).filter(d => +d.district === +e.features[0]?.properties.District)[0])
                 mapClickHandler(m, e, legislations)
-                setPanelShown({ ...panelShown, geopanelShown: false })
+                setPanelShown({ ...panelShown, geopanelShown: true })
             })
 
             m.on('click', "members", (e: MapMouseEvent & EventData) => {
