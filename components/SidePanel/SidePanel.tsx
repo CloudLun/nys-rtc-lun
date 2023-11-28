@@ -13,7 +13,7 @@ export type Columns = "About" | "Statewide RTC" | "Winter Eviction Moratorium" |
 
 
 const SidePanel = () => {
-    const {legislations, setLegislations, mapClickHandler, defaultMapHandler } = useContext(MapContext) as MapContextType
+    const { legislations, setLegislations, mapClickHandler, defaultMapHandler } = useContext(MapContext) as MapContextType
     const [expand, setExpand] = useState({
         "About": true,
         "Statewide RTC": false,
@@ -47,11 +47,11 @@ const SidePanel = () => {
 
 
     return (
-        <div className="flex flex-col justify-between absolute py-[20px] w-[450px] h-full bg-background_blue z-50">
+        <div className="absolute flex flex-col justify-between w-[35%] md:w-[32%] lg:w-[30%]  xl:w-[28%]  h-[100vh] bg-background_blue z-50">
             <div className="flex flex-col justify-between">
                 <div>
-                    <div className="mb-[20px] px-[30px]">
-                        <h1 className="font-bold text-headline text-rtc_purple">Housing Courts Must Change!</h1>
+                    <div className="mt-[20px] mb-[20px] px-[25px]">
+                        <h1 className="mb-[5px] font-bold text-[24px] text-rtc_purple leading-[1.25]">Housing Courts Must Change!</h1>
                         <h2 className="font-bold text-subheadline text-rtc_navy">NY State Right to Counsel Map for HCMC Support</h2>
                     </div>
                     <About expand={expand} legislationsClickHandler={legislationsClickHandler} />
@@ -62,16 +62,16 @@ const SidePanel = () => {
                     <LegislationColumns legislation={"Winter Eviction Moratorium"} name={legislationsInfo[3]["Bill Name"]} number={legislationsInfo[3]["Senate Number"] + " / " + legislationsInfo[3]["Assembly Number"]} content={legislationsInfo[3]["Bill Description"]} expand={expand["Winter Eviction Moratorium"]} legislationsClickHandler={() => legislationsClickHandler("Winter Eviction Moratorium")} />
                 </div>
             </div>
-            <div className="flex items-center gap-[15px] px-[30px]">
+            <div className="flex items-center gap-[15px] px-[30px] pb-[10px]">
                 <Image
                     src="/logos/RTC.png"
-                    width={131.79}
+                    width={131.79*0.8}
                     height={30}
                     alt="RTC"
                 />
                 <Image
                     src="/logos/betaNYC.svg"
-                    width={97.65}
+                    width={97.65*0.8}
                     height={40}
                     alt="BetaNYC"
                 />

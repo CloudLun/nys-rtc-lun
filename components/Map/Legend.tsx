@@ -25,7 +25,7 @@ const Legend = () => {
 
     return (
         <>
-            <div className='absolute left-[480px] top-[20px] drop-shadow-xl cursor-pointer z-20 '>
+            <div className='absolute left-[37%] md:left-[34%] lg:left-[32%] xl:left-[30%] top-[20px] drop-shadow-xl cursor-pointer z-20 '>
                 <div className='w-[48px] h-[48px] bg-rtc_purple rounded-full'></div>
                 <Image
                     src="/icons/legend_active.svg"
@@ -37,7 +37,7 @@ const Legend = () => {
                 />
             </div>
             {panelShown && (
-                <div className='absolute left-[480px] top-[20px] p-[15px] text-rtc_navy bg-white rounded-[8px] drop-shadow-xl z-20'>
+                <div className='absolute left-[37%] md:left-[34%] lg:left-[32%] xl:left-[30%] top-[20px] p-[15px] w-[24%] md:w-[26%] lg:w-[30%] text-rtc_navy bg-white rounded-[8px] drop-shadow-xl z-20'>
                     <div className='flex justify-between'>
                         <h2 className='mb-[8px] font-bold text-title leading-[22.5px]'>
                             {legislations === "Statewide RTC" ? "Statewide Right to Counsel " : legislations === "Defend RTC" ? "Defend Right to Counsel " : "Winter Eviction Moratorium "}

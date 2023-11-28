@@ -41,7 +41,7 @@ const MapLayers = ({ districtsClickHandler }: Props) => {
     return (
 
         <>
-            <div className='absolute left-[480px] bottom-[30px]  drop-shadow-xl cursor-pointer z-20 '>
+            <div className='absolute left-[37%] md:left-[34%] lg:left-[32%] xl:left-[30%] bottom-[20px]  drop-shadow-xl cursor-pointer z-20 '>
                 <Image
                     src="/icons/map_layer_active.svg"
                     width={50}
@@ -52,7 +52,7 @@ const MapLayers = ({ districtsClickHandler }: Props) => {
                 />
             </div>
             {panelShown && (
-                <div className='absolute left-[480px] bottom-[30px] p-[25px] min-w-[290px] text-rtc_navy bg-white rounded-[18.23px] drop-shadow-xl z-20'>
+                <div className='absolute left-[37%] md:left-[34%] lg:left-[32%]  xl:left-[30%] bottom-[20px] p-[25px] min-w-[290px] text-rtc_navy bg-white rounded-[18.23px] drop-shadow-xl z-20'>
                     <div className='flex items-center justify-between gap-[29px] pb-[12px] border-b-[1px] border-grey_1'>
                         <h2 className='font-bold text-title'>Map Layers</h2>
                         <XMarkIcon className='w-[22px] h-[22px] text-grey_2 cursor-pointer' onClick={() => panelClickHandler(false)} />
